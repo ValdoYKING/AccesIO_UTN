@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.pixelfusion.accesio_utn.components.LoginScreen
 import com.pixelfusion.accesio_utn.ui.theme.AccesIOUTNTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,12 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AccesIOUTNTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "AccesIO UTN",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                LoginScreen()
+
             }
         }
     }
