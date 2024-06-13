@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.pixelfusion.accesio_utn.components.LoginScreen
+import com.pixelfusion.accesio_utn.components.MyApp
 import com.pixelfusion.accesio_utn.ui.theme.AccesIOUTNTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +21,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AccesIOUTNTheme {
-                LoginScreen()
+                //LoginScreen()
+                MyApp()
 
             }
         }
