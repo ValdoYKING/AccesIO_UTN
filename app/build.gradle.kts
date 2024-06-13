@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     //implementation("androidx.compose.animation:animation:1.6.8")
     implementation(libs.androidx.animation)
+    //implementation("androidx.core:core-splashscreen:1.0.1")
+    implementation(libs.androidx.core.splashscreen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
