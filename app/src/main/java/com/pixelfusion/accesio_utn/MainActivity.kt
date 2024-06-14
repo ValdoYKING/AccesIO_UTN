@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.pixelfusion.accesio_utn.components.LoginScreen
 import com.pixelfusion.accesio_utn.components.MyApp
+import com.pixelfusion.accesio_utn.navigation.AppNavigation
 import com.pixelfusion.accesio_utn.ui.theme.AccesIOUTNTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,26 +23,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AccesIOUTNTheme {
-                //LoginScreen()
-                MyApp()
+
+                //MyApp()
+                AppNavigation()
 
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AccesIOUTNTheme {
-        Greeting("Android")
     }
 }

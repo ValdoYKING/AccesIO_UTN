@@ -105,7 +105,7 @@ fun MyApp() {
 }
 
 @Composable
-fun StartScreen2(navController: NavHostController) {
+fun StartScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -207,7 +207,7 @@ fun RegisterScreen(navController: NavHostController) {
     }
 }
 @Composable
-fun StartScreen(navController: NavHostController) {
+fun StartScreen3(navController: NavHostController) {
     var isVisible by remember { mutableStateOf(false) }
 
     // La animación se ejecuta una vez que se crea la pantalla
