@@ -39,10 +39,10 @@ fun ImageCamView(navController: NavController) {
     Scaffold(
         topBar = {
             Spacer(modifier = Modifier.height(26.dp))
-            TopAppBar(title = { Text("Toma la imagen",
+            TopAppBar(title = { Text("Toma una foto a tu credencial 😉",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                fontSize = 40.sp, // Increased font size
+                fontSize = 40.sp,
                 fontWeight = FontWeight.Bold ) })
         }
     ) {

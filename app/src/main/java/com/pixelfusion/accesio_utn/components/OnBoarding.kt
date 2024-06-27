@@ -50,7 +50,7 @@ fun StartScreen(navController: NavHostController) {
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = { navController.navigate("register_screen") }) {
+        Button(onClick = { navController.navigate("image_cam_view") }) {
             Text(text = "Comenzar")
         }
     }
