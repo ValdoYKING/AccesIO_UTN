@@ -20,7 +20,6 @@ import androidx.navigation.NavHostController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.navigation.AppScreens
 import kotlinx.coroutines.delay
-import com.pixelfusion.accesio_utn.components.MyApp
 
 @Composable
 fun SplashScreen(navController: NavHostController){
