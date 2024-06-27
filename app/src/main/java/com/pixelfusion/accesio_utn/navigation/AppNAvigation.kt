@@ -1,6 +1,7 @@
 package com.pixelfusion.accesio_utn.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -8,9 +9,12 @@ import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.ImageCamView
+import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.RegisterScreen
+import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
+import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 
 @Composable
 fun AppNavigation() {
@@ -31,9 +35,14 @@ fun MyApp() {
     NavHost(navController, startDestination = "start_screen") {
         composable("start_screen") { StartScreen(navController) }
         composable("register_screen") { RegisterScreen(navController) }
-        composable("login_screen") { LoginScreen(navController) }
+        composable("login_screen") {
+            val viewModelUL: LoginViewModel = viewModel();
+            LoginScreen(navController, viewModelUL) }
         composable("legal_screen") { LegalScreen(navController) }
         composable("image_cam_view") { ImageCamView(navController) }
-        composable("form_register_view") { FormRegisterView(navController) }
+        composable("form_register_view") {
+            val viewModelU: FormRegisterViewModel = viewModel();
+            FormRegisterView(navController, viewModelU) }
+        composable("image_user_view") { ImageUserView(navController) }
     }
 }

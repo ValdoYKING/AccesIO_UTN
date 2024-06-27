@@ -38,7 +38,7 @@ fun LegalScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title ={
-                    Text("Términos y Condiciones", color = Color.White)
+                    Text("Ultima actualización 25 Jun 2024", color = Color.White, fontSize = 16.sp)
                 },
                 modifier = Modifier.background(Color(0xFF1E88E5))
             )
@@ -61,7 +61,7 @@ fun LegalScreen(navController: NavController) {
             }
             item { // Header item
                 Text(
-                    text = "Términos y Condiciones",
+                    text = "Aviso de privacidad",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -81,7 +81,7 @@ fun LegalScreen(navController: NavController) {
 
             item { // Button item
                 Button(
-                    onClick = { navController.navigate("image_cam_view") },
+                    onClick = { navController.navigate("login_screen") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
