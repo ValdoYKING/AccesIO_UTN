@@ -71,6 +71,11 @@ dependencies {
     //Coil
     //implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation (libs.coil.compose)
+    //ZXing
+    //implementation ("com.google.zxing:core:3.5.3")
+    implementation (libs.core)
+    //implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation (libs.zxing.android.embedded)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
