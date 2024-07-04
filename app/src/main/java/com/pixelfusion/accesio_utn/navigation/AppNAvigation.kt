@@ -15,6 +15,7 @@ import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.RegisterScreen
+import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 
@@ -43,14 +44,15 @@ fun MyApp() {
         composable("legal_screen") { LegalScreen(navController) }
         composable("image_cam_view") { ImageCamView(navController) }
         composable("form_register_view") {
-            val viewModelU: FormRegisterViewModel = viewModel();
+            val viewModelU: FormRegisterViewModel = viewModel()
             FormRegisterView(navController, viewModelU) }
         composable("image_user_view") { ImageUserView(navController) }
         composable("home_user_view"){
             HomeUserView(navController)
         }
         composable("credential_view") {
-            CredentialView(navController)
+            val viewModelC: CredentialViewModel = viewModel()
+            CredentialView(navController,viewModelC)
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +40,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,6 +54,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
@@ -62,6 +65,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.CardTittle
@@ -71,17 +76,19 @@ import com.pixelfusion.accesio_utn.components.SquashedOval
 import com.pixelfusion.accesio_utn.ui.theme.GreenUTN80
 import com.pixelfusion.accesio_utn.ui.theme.GuindaColor
 import com.pixelfusion.accesio_utn.ui.theme.WhiteColor
+import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CredentialView(navController: NavController) {
+fun CredentialView(navController: NavController, viewModel: CredentialViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var isFront by remember { mutableStateOf(true) }
     val rotation = remember { Animatable(0f) }
     val titleCard = if (isFront) "Mi credencial" else "Mi QR"
+    val dataC = viewModel.state
 
     LaunchedEffect(isFront) {
         rotation.animateTo(
@@ -138,7 +145,7 @@ fun CredentialView(navController: NavController) {
                                     cameraDistance = 12f * density
                                 }
                         ) {
-                            ContenidoFrontalCard()
+                            ContenidoFrontalCard(viewModel)
                         }
                         Box(
                             modifier = Modifier
@@ -149,7 +156,7 @@ fun CredentialView(navController: NavController) {
                                     cameraDistance = 12f * density
                                 }
                         ) {
-                            ContenidoTraseroCard()
+                            ContenidoTraseroCard(viewModel)
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -169,8 +176,50 @@ fun CredentialView(navController: NavController) {
 
 
 @Composable
-fun ContenidoFrontalCard() {
+fun ContenidoFrontalCard(dataC:CredentialViewModel) {
     val backgroundPainter = painterResource(id = R.drawable.edomex02)
+    val rainbowColorsBrush = remember {
+        Brush.sweepGradient(
+            /*listOf(
+                Color(0xFF9575CD),
+                Color(0xFFBA68C8),
+                Color(0xFFE57373),
+                Color(0xFFFFB74D),
+                Color(0xFFFFF176),
+                Color(0xFFAED581),
+                Color(0xFF4DD0E1),
+                Color(0xFF9575CD)
+            )*/
+            listOf(
+                Color(0xFFFFFFFF),
+                Color(0xFFFCE4EC),
+                Color(0xFFF8BBD0),
+                Color(0xFFF48FB1),
+                Color(0xFFF06292),
+                Color(0xFFEC407A),
+                Color(0xFFE91E63),
+                Color(0xFFD81B60),
+                Color(0xFFC2185B),
+                Color(0xFFAD1457),
+                Color(0xFF880E4F),
+                Color(0xFF6D0A3B),
+                Color(0xFF6D0A3B),
+                Color(0xFF880E4F),
+                Color(0xFFAD1457),
+                Color(0xFFC2185B),
+                Color(0xFFD81B60),
+                Color(0xFFE91E63),
+                Color(0xFFEC407A),
+                Color(0xFFF06292),
+                Color(0xFFF48FB1),
+                Color(0xFFF8BBD0),
+                Color(0xFFFCE4EC),
+                Color(0xFFFFFFFF)
+            )
+
+        )
+    }
+    val borderWidth = 4.dp
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
@@ -179,7 +228,8 @@ fun ContenidoFrontalCard() {
         border = BorderStroke(1.dp, Color.Black),        modifier = Modifier.fillMaxSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Box(modifier = Modifier.fillMaxSize()
+        Box(modifier = Modifier
+            .fillMaxSize()
             .background(WhiteColor)
         ) {
             Image(
@@ -213,7 +263,13 @@ fun ContenidoFrontalCard() {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(200.dp)
-                        .clip(SquashedOval())
+                        //.clip(SquashedOval())
+                        .border(
+                            BorderStroke(borderWidth, rainbowColorsBrush),
+                            CircleShape
+                        )
+                        .padding(borderWidth)
+                        .clip(CircleShape)
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -225,8 +281,9 @@ fun ContenidoFrontalCard() {
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
+                    //nombre completo
                     Text(
-                        text = "VILLALBA MENDOZA OSVALDO",
+                        text = dataC.state.nombre,
                         fontSize = 14.sp,
                         color = Color.Black
                     )
@@ -237,7 +294,7 @@ fun ContenidoFrontalCard() {
                         color = Color.Black
                     )
                     Text(
-                        text = "232271007",
+                        text = dataC.state.matricula,
                         fontSize = 14.sp,
                         color = Color.Black
                     )
@@ -249,13 +306,13 @@ fun ContenidoFrontalCard() {
                 )
                 // Carrera - ocupacion
                 Text(
-                    text = "ING. EN DESARROLLO Y GESTIÓN DE SOFTWARE",
+                    text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                     color = Color.Black
                 )
                 Text(
-                    text = "ESTUDIANTE",
+                    text = dataC.state.tipoUser,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -267,7 +324,7 @@ fun ContenidoFrontalCard() {
 
 
 @Composable
-fun ContenidoTraseroCard() {
+fun ContenidoTraseroCard(dataC: CredentialViewModel) {
     val backgroundPainter = painterResource(id = R.drawable.edomex02)
 
     OutlinedCard(
@@ -283,7 +340,8 @@ fun ContenidoTraseroCard() {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .background(WhiteColor)
         ) {
             Image(
@@ -345,13 +403,13 @@ fun ContenidoTraseroCard() {
                     modifier = Modifier.fillMaxWidth()
                 )
                 Text(
-                    text = "ING. EN DESARROLLO Y GESTIÓN DE SOFTWARE",
+                    text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
                     color = Color.Black
                 )
                 Text(
-                    text = "ESTUDIANTE",
+                    text = dataC.state.tipoUser,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
