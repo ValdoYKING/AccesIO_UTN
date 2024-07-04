@@ -170,6 +170,15 @@ fun FormRegisterView(navController: NavController, viewModel: FormRegisterViewMo
                     Text("Enviar")
                 }
             }
+            item{
+                Button(
+                    onClick = {
+                        navController.navigate("legal_screen")
+                    }
+                ) {
+                    Text("Saltar")
+                }
+            }
         }
     }
 }

@@ -7,7 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
+import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
+import com.pixelfusion.accesio_utn.view.HomeUserView
 import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
@@ -44,5 +46,11 @@ fun MyApp() {
             val viewModelU: FormRegisterViewModel = viewModel();
             FormRegisterView(navController, viewModelU) }
         composable("image_user_view") { ImageUserView(navController) }
+        composable("home_user_view"){
+            HomeUserView(navController)
+        }
+        composable("credential_view") {
+            CredentialView(navController)
+        }
     }
 }
