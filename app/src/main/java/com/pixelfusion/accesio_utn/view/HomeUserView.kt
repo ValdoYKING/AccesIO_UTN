@@ -42,20 +42,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.DrawerContent
+import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeUserView(navController: NavController) {
+fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val dataH = viewModelUser.stateHome
 
     ModalNavigationDrawer(
         drawerContent = {
-            DrawerContent(navController)
+            DrawerContent(navController = navController)
         },
         drawerState = drawerState,
+        //gesturesEnabled = drawerState.isOpen,
         content = {
             Scaffold(
                 topBar = {
@@ -65,18 +68,12 @@ fun HomeUserView(navController: NavController) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                //Spacer(modifier = Modifier.height(4.dp))
                                 Image(
                                     painter = painterResource(id = R.drawable.utnfoto),
                                     contentDescription = "Logo UTN",
                                     modifier = Modifier
                                         .size(50.dp)
                                         .padding(4.dp)
-                                )
-                                Text(
-                                    text = "4 cuatrimestre",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
                                 )
                             }
                         },
@@ -120,13 +117,13 @@ fun HomeUserView(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Estudiante",
+                            text = dataH.tipoUser,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Luis Enrique Lopez Hernandez",
+                            text = dataH.nombre,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         )
@@ -141,32 +138,19 @@ fun HomeUserView(navController: NavController) {
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
-                                text = "232250015",
+                                text = dataH.matricula,
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal
                             )
                         }
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Ultima Actualización 25 Feb 2024",
+                            text = dataH.actualizacion,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Normal
                         )
                     }
                     Spacer(modifier = Modifier.height(32.dp))
-
-                    Button(
-                        onClick = { navController.navigate("form_register_view") },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Text(
-                            text = "Enviar",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(16.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -186,13 +170,13 @@ fun HomeUserView(navController: NavController) {
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.AccountCircle,
-                                    contentDescription = "Credential",
-                                    modifier = Modifier.size(24.dp)
+                                    contentDescription = "Credencial",
+                                    modifier = Modifier.size(34.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Credential",
-                                    fontSize = 16.sp,
+                                    text = "Credencial",
+                                    fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -215,12 +199,12 @@ fun HomeUserView(navController: NavController) {
                                 Icon(
                                     imageVector = Icons.Filled.DateRange,
                                     contentDescription = "Horarios",
-                                    modifier = Modifier.size(24.dp)
+                                    modifier = Modifier.size(34.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Horarios",
-                                    fontSize = 16.sp,
+                                    fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
