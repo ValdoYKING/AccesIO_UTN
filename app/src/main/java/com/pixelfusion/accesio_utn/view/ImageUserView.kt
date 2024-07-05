@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
+import com.pixelfusion.accesio_utn.components.ButtonNext
 import java.io.IOException
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -97,15 +98,7 @@ fun ImageUserView(navController: NavController) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = {
-                    navController.navigate("home_user_view")
-                }
-            ) {
-                Text("Enviar ")
-                //lakfj
-            }
+            ButtonNext(navController, "home_user_view")
         }
     }
 }

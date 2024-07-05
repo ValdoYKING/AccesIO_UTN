@@ -116,3 +116,14 @@ fun SuperiorData(
         },
     )
 }
+
+@Composable
+fun ButtonNext(navController: NavController, route: String){
+    Button(
+        onClick = {
+            navController.navigate(route)
+        }
+    ) {
+        Text("Saltar ")
+    }
+}

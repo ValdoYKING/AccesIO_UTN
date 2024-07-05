@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.components.ButtonNext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -67,6 +68,7 @@ fun LegalScreen(navController: NavController) {
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(16.dp)
                 )
+                ButtonNext(navController, "login_screen")
             }
 
             items(termsAndConditions) { item ->
@@ -81,7 +83,7 @@ fun LegalScreen(navController: NavController) {
 
             item { // Button item
                 Button(
-                    onClick = { navController.navigate("login_screen") },
+                    onClick = {/* TODO */},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)

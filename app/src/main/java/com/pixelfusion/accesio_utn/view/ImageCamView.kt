@@ -30,6 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.pixelfusion.accesio_utn.components.ButtonNext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -42,7 +43,7 @@ fun ImageCamView(navController: NavController) {
             TopAppBar(title = { Text("Toma una foto a tu credencial 😉",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
-                fontSize = 40.sp,
+                fontSize = 35.sp,
                 fontWeight = FontWeight.Bold ) })
         }
     ) {
@@ -55,12 +56,11 @@ fun ImageCamView(navController: NavController) {
         ) {
 
             Button(
-                onClick = {
-                    navController.navigate("form_register_view")
-                }
+                onClick = {/*TODO*/}
             ) {
                 Text("Enviar")
             }
+            ButtonNext(navController, "form_register_view")
         }
     }
 

@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -171,13 +172,7 @@ fun FormRegisterView(navController: NavController, viewModel: FormRegisterViewMo
                 }
             }
             item{
-                Button(
-                    onClick = {
-                        navController.navigate("legal_screen")
-                    }
-                ) {
-                    Text("Saltar")
-                }
+                ButtonNext(navController, "legal_screen")
             }
         }
     }

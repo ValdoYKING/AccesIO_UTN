@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -107,9 +108,11 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             }
             item { Spacer(modifier = Modifier.height(70.dp)) }
             item {
-                Button(onClick = { navController.navigate("image_user_view") }) {
+                Button(onClick = {/* TODO */ }) {
                     Text(text = "Iniciar sesión")
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                ButtonNext(navController, "image_user_view")
             }
         }
     }

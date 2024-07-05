@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
@@ -100,6 +101,7 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     val dataC = viewModel.state
 
     LaunchedEffect(isFront) {
+        //viewModel.fetchData()
         rotation.animateTo(
             targetValue = if (isFront) 0f else 180f,
             animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
@@ -125,58 +127,65 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = titleCard,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        //color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp)
-                            .height(600.dp)
-                            .clickable { isFront = !isFront }
-                            .graphicsLayer {
-                                rotationY = rotation.value
-                                cameraDistance = 12f * density
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        // Ensure both cards are in the composition tree
+                    if(viewModel.isLoading){
+                        Spacer(modifier = Modifier.height(20.dp))
+                        /*Text(
+                            text = "Cargando...",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            //color = Color.Black
+                        )*/
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(alignment = Alignment.CenterHorizontally)
+                        )
+                    }else{
+                        Text(
+                            text = titleCard,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold,
+                            //color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .height(600.dp)
+                                .clickable { isFront = !isFront }
                                 .graphicsLayer {
-                                    alpha = if (rotation.value <= 90f) 1f else 0f
                                     rotationY = rotation.value
                                     cameraDistance = 12f * density
-                                }
+                                },
+                            contentAlignment = Alignment.Center
                         ) {
-                            ContenidoFrontalCard(viewModel)
+                            // Ensure both cards are in the composition tree
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .graphicsLayer {
+                                        alpha = if (rotation.value <= 90f) 1f else 0f
+                                        rotationY = rotation.value
+                                        cameraDistance = 12f * density
+                                    }
+                            ) {
+                                ContenidoFrontalCard(viewModel)
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .graphicsLayer {
+                                        alpha = if (rotation.value > 90f) 1f else 0f
+                                        rotationY = rotation.value - 180f
+                                        cameraDistance = 12f * density
+                                    }
+                            ) {
+                                ContenidoTraseroCard(viewModel)
+                            }
                         }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .graphicsLayer {
-                                    alpha = if (rotation.value > 90f) 1f else 0f
-                                    rotationY = rotation.value - 180f
-                                    cameraDistance = 12f * density
-                                }
-                        ) {
-                            ContenidoTraseroCard(viewModel)
-                        }
+                        Spacer(modifier = Modifier.height(12.dp))
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    /*Button(
-                        onClick = {
-                            navController.navigate("home_user_view")
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(text = "Enviar")
-                    }*/
                 }
             }
         }
@@ -241,17 +250,16 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
             .fillMaxSize()
             .background(BackgroundCredential)
         ) {
-            Image(
+            /*Image(
                 painter = backgroundPainter,
                 contentDescription = "Fondo de la tarjeta",
                 //contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                    // Para disminuir el brillo, ajusta los valores a menos de 1
                     setToScale(0.5f, 0.5f, 0.5f, 1f)
                 }),
                 //modifier = Modifier.fillMaxSize()
                 modifier = Modifier.fillMaxWidth()
-            )
+            )*/
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -353,16 +361,15 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                 .fillMaxSize()
                 .background(BackgroundCredential)
         ) {
-            Image(
+            /*Image(
                 painter = backgroundPainter,
                 contentDescription = "Fondo de la tarjeta",
                 //contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                    // Para disminuir el brillo, ajusta los valores a menos de 1
                     setToScale(0.5f, 0.5f, 0.5f, 1f)
                 }),
                 modifier = Modifier.fillMaxWidth()
-            )
+            )*/
             Column(
                 modifier = Modifier
                     .fillMaxSize()
