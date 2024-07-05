@@ -11,3 +11,12 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 val GreenUTN40 = Color(0xFF0D9462)
+
+//Colores app componentes
+val GuindaColor = Color(0xFF800040)
+val WhiteColor = Color(0xFFD0DFEF)
+val WhiteColor2 = Color(0xFFFFFFFF)
+val BlackColor = Color(0x0F000000)
+//val BackgroundCredential = Color(0xAD111D0D)
+//0xC383CCA6
+val BackgroundCredential = Color(0xAD1A4568)

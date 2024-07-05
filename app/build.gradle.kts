@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id ("kotlin-kapt")
+    id ("com.google.dagger.hilt.android")
 }
 
 android {
@@ -50,6 +52,30 @@ android {
 }
 
 dependencies {
+    //Dagger Hilt
+    //implementation("com.google.dagger:hilt-android:2.51.1")
+    implementation(libs.hilt.android)
+    //kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    kapt(libs.hilt.android.compiler)
+    //Retrofit
+    //implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation(libs.retrofit)
+    //Gson com.squareup.retrofit2:converter-gson
+    //implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation(libs.converter.gson)
+    //Pagination
+    //implementation ("androidx.paging:paging-runtime:3.3.0")
+    implementation (libs.androidx.paging.runtime.ktx)
+    //implementation ("androidx.paging:paging-compose:3.3.0")
+    implementation (libs.androidx.paging.compose)
+    //Coil
+    //implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation (libs.coil.compose)
+    //ZXing
+    //implementation ("com.google.zxing:core:3.5.3")
+    implementation (libs.core)
+    //implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation (libs.zxing.android.embedded)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -72,3 +98,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
