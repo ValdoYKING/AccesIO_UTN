@@ -36,7 +36,7 @@ fun CardTittle(){
         fontSize = 16.sp,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center,
-        color = Color.Black
+        //color = Color.Black
     )
 }
 

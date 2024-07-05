@@ -1,6 +1,7 @@
 package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -58,8 +59,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,9 +76,15 @@ import com.pixelfusion.accesio_utn.components.CardTittle
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
 import com.pixelfusion.accesio_utn.components.DrawerContent
 import com.pixelfusion.accesio_utn.components.SquashedOval
+import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode128
+import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode39
+import com.pixelfusion.accesio_utn.logicadependencias.generateQRCode
+import com.pixelfusion.accesio_utn.ui.theme.BackgroundCredential
+import com.pixelfusion.accesio_utn.ui.theme.BlackColor
 import com.pixelfusion.accesio_utn.ui.theme.GreenUTN80
 import com.pixelfusion.accesio_utn.ui.theme.GuindaColor
 import com.pixelfusion.accesio_utn.ui.theme.WhiteColor
+import com.pixelfusion.accesio_utn.ui.theme.WhiteColor2
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -120,7 +129,7 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
                         text = titleCard,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Box(
@@ -223,14 +232,14 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = WhiteColor.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
+            containerColor = BackgroundCredential.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
         ),
         border = BorderStroke(1.dp, Color.Black),        modifier = Modifier.fillMaxSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(modifier = Modifier
             .fillMaxSize()
-            .background(WhiteColor)
+            .background(BackgroundCredential)
         ) {
             Image(
                 painter = backgroundPainter,
@@ -252,7 +261,7 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
             ) {
                 CardTittle()
                 Divider(
-                    color = Color.Black,
+                    //color = Color.Black,
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -279,28 +288,28 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                         text = "NOMBRE:",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                     //nombre completo
                     Text(
                         text = dataC.state.nombre,
                         fontSize = 14.sp,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                     Text(
                         text = "MATRICULA:",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                     Text(
                         text = dataC.state.matricula,
                         fontSize = 14.sp,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                 }
                 Divider(
-                    color = Color.Black,
+                    //color = Color.Black,
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -309,13 +318,13 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.Black
+                    //color = Color.Black
                 )
                 Text(
                     text = dataC.state.tipoUser,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    //color = Color.Black,
                 )
             }
         }
@@ -329,7 +338,7 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = WhiteColor.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
+            containerColor = BackgroundCredential.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
         ),
         border = BorderStroke(1.dp, Color.Black),
         modifier = Modifier
@@ -342,7 +351,7 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(WhiteColor)
+                .background(BackgroundCredential)
         ) {
             Image(
                 painter = backgroundPainter,
@@ -364,41 +373,48 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                 // Título
                 CardTittle()
                 Divider(
-                    color = Color.Black,
+                    //color = Color.Black,
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth()
                 )
+                BarcodeImage(content = dataC.state.matricula, width = 220, height = 80)
+                Text(
+                        text = dataC.state.matricula,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        //color = Color.Black
+                    )
+                val hora = "13:58:33"
+                val fecha = "14-06-2024"
+                val matricula = "232271007"
+
+                val qrContent = "Hora: $hora\nFecha: $fecha\nMatrícula: $matricula"
+                QRCode(content = qrContent)
                 // Imagen de perfil
-                Image(
+                /*Image(
                     painter = painterResource(id = R.drawable.qr_example),
                     contentDescription = "QR profile",
                     modifier = Modifier
                         .size(150.dp)
-                )
+                )*/
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "|||||||||||||||||||||||",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
                         text = "Vigencia:",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                     Text(
                         text = "2023-2025",
                         fontSize = 14.sp,
-                        color = Color.Black
+                        //color = Color.Black
                     )
                 }
                 Divider(
-                    color = Color.Black,
+                    //color = Color.Black,
                     thickness = 1.dp,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -406,15 +422,71 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                     text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    color = Color.Black
+                    //color = Color.Black
                 )
                 Text(
                     text = dataC.state.tipoUser,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Black,
+                    //color = Color.Black,
                 )
             }
         }
+    }
+}
+
+
+@Composable
+fun BarcodeImage(content: String, width: Int, height: Int) {
+    val context = LocalContext.current
+    var barcodeBitmap by remember { mutableStateOf<Bitmap?>(null) }
+
+    LaunchedEffect(content) {
+        barcodeBitmap = generateBarcodeCode39(content)
+    }
+
+    barcodeBitmap?.let { bitmap ->
+        Image(
+            bitmap = bitmap.asImageBitmap(),
+            contentDescription = null,
+            //modifier = Modifier.size(width.dp, height.dp),
+            modifier = Modifier.size(width.dp, height.dp),
+            contentScale = ContentScale.Fit,
+            //colorFilter = ColorFilter.tint(BlackColor)
+        )
+    }
+}
+
+
+@Composable
+fun QRCodeAndBarcode(contentQR: String, qrWidth: Int = 300, qrHeight: Int = 300,) {
+    val qrCodeBitmap = generateBarcodeCode128(contentQR, qrWidth, qrHeight)
+
+    Column {
+        qrCodeBitmap?.let {
+            Image(
+                bitmap = it.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier.size(qrWidth.dp, qrHeight.dp)
+            )
+        }
+
+    }
+}
+
+
+@Composable
+fun QRCode(content: String, qrWidth: Int = 300, qrHeight: Int = 300) {
+    //val qrCodeBitmap = generateQRCode(content, qrWidth.toString(), qrHeight.toString())
+    val qrCodeBitmap = generateQRCode("15:36","14-06-2024","232271007", qrWidth, qrHeight)
+    //hora: String, fecha: String, matricula: String, width: Int, height: Int
+
+    qrCodeBitmap?.let {
+        Image(
+            bitmap = it.asImageBitmap(),
+            contentDescription = null,
+            //modifier = Modifier.size(qrWidth.dp, qrHeight.dp)
+            modifier = Modifier.size(280.dp)
+        )
     }
 }

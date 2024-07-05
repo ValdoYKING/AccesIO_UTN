@@ -65,18 +65,18 @@ fun HomeUserView(navController: NavController) {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                Text(
-                                    text = "4 cuatrimestre",
-                                    fontSize = 18.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
+                                //Spacer(modifier = Modifier.height(4.dp))
                                 Image(
                                     painter = painterResource(id = R.drawable.utnfoto),
                                     contentDescription = "Logo UTN",
                                     modifier = Modifier
                                         .size(50.dp)
                                         .padding(4.dp)
+                                )
+                                Text(
+                                    text = "4 cuatrimestre",
+                                    fontSize = 18.sp,
+                                    fontWeight = FontWeight.Bold
                                 )
                             }
                         },

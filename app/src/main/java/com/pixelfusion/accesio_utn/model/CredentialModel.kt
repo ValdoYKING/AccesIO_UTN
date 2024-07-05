@@ -10,7 +10,7 @@ data class CredentialModel(
         "Villalba Mendoza Osvaldo",
         "232271007",
         "ESTUDIANTE",
-        "ING, EN DESARROLLO Y GESTION DE SOFTWARE"
+        "ING. DESARROLLO Y GESTION DE SOFTWARE"
     )
 }
 
