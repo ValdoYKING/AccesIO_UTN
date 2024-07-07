@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,8 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.components.DrawerContent
+import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SuperiorData
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -29,12 +32,15 @@ import com.pixelfusion.accesio_utn.components.SuperiorData
 fun PerfilView(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     ModalNavigationDrawer(
-        drawerContent = {
-            DrawerContent(navController)
-        },
         drawerState = drawerState,
+        drawerContent = {
+            //DrawerContent(navController)
+            DrawerContent3(navController, currentRoute)
+        },
         content = {
             Scaffold(
                 topBar = {

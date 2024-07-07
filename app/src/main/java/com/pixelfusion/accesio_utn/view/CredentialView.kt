@@ -10,6 +10,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +45,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -64,6 +67,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -72,10 +76,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.CardTittle
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
 import com.pixelfusion.accesio_utn.components.DrawerContent
+import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SquashedOval
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode128
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode39
@@ -99,6 +105,8 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     val rotation = remember { Animatable(0f) }
     val titleCard = if (isFront) "Mi credencial" else "Mi QR"
     val dataC = viewModel.state
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     LaunchedEffect(isFront) {
         //viewModel.fetchData()
@@ -109,10 +117,11 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     }
 
     ModalNavigationDrawer(
-        drawerContent = {
-            DrawerContent(navController)
-        },
         drawerState = drawerState,
+        drawerContent = {
+            //DrawerContent(navController)
+            DrawerContent3(navController, currentRoute)
+        },
         content = {
             Scaffold(
                 topBar = {
@@ -192,7 +201,6 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     )
 }
 
-
 @Composable
 fun ContenidoFrontalCard(dataC:CredentialViewModel) {
     val backgroundPainter = painterResource(id = R.drawable.edomex02)
@@ -241,14 +249,20 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
-            containerColor = BackgroundCredential.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
+            //containerColor = BackgroundCredential.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
+            //containerColor = backgroundColor
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f)
+
         ),
-        border = BorderStroke(1.dp, Color.Black),        modifier = Modifier.fillMaxSize(),
+        //border = BorderStroke(1.dp, Color.White),
+        border = BorderStroke(1.dp, if (isSystemInDarkTheme()) Color.White else Color.Black),
+        //border = BorderStroke(1.dp, MaterialTheme.colorScheme.surface),
+        modifier = Modifier.fillMaxSize(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Box(modifier = Modifier
             .fillMaxSize()
-            .background(BackgroundCredential)
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
         ) {
             /*Image(
                 painter = backgroundPainter,
@@ -268,10 +282,10 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
                 CardTittle()
-                Divider(
-                    //color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    thickness = 1.dp
                 )
                 // Imagen de perfil
                 Image(
@@ -301,7 +315,7 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     //nombre completo
                     Text(
                         text = dataC.state.nombre,
-                        fontSize = 14.sp,
+                        fontSize = 18.sp,
                         //color = Color.Black
                     )
                     Text(
@@ -312,14 +326,14 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     )
                     Text(
                         text = dataC.state.matricula,
-                        fontSize = 14.sp,
+                        fontSize = 18.sp,
                         //color = Color.Black
                     )
                 }
-                Divider(
-                    //color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    thickness = 1.dp
                 )
                 // Carrera - ocupacion
                 Text(
@@ -348,7 +362,8 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
         colors = CardDefaults.cardColors(
             containerColor = BackgroundCredential.copy(alpha = 0.8f) // Ajusta la opacidad si es necesario
         ),
-        border = BorderStroke(1.dp, Color.Black),
+        //border = BorderStroke(1.dp, Color.Black),
+        border = BorderStroke(1.dp, if (isSystemInDarkTheme()) Color.White else Color.Black),
         modifier = Modifier
             .fillMaxSize()
             .graphicsLayer {
@@ -379,10 +394,10 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
             ) {
                 // Título
                 CardTittle()
-                Divider(
-                    //color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    thickness = 1.dp
                 )
                 BarcodeImage(content = dataC.state.matricula, width = 220, height = 80)
                 Text(
@@ -420,10 +435,10 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                         //color = Color.Black
                     )
                 }
-                Divider(
-                    //color = Color.Black,
-                    thickness = 1.dp,
-                    modifier = Modifier.fillMaxWidth()
+                HorizontalDivider(
+                    modifier = Modifier.fillMaxWidth(),
+                    color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                    thickness = 1.dp
                 )
                 Text(
                     text = dataC.state.carrera,

@@ -39,7 +39,9 @@ fun LegalScreen(navController: NavController) {
         topBar = {
             TopAppBar(
                 title ={
-                    Text("Ultima actualización 25 Jun 2024", color = Color.White, fontSize = 16.sp)
+                    Text("Ultima actualización 25 Jun 2024",
+                        //color = Color.White,
+                        fontSize = 16.sp)
                 },
                 modifier = Modifier.background(Color(0xFF1E88E5))
             )

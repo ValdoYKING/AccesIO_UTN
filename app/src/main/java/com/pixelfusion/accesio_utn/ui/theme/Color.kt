@@ -19,4 +19,5 @@ val WhiteColor2 = Color(0xFFFFFFFF)
 val BlackColor = Color(0x0F000000)
 //val BackgroundCredential = Color(0xAD111D0D)
 //0xC383CCA6
-val BackgroundCredential = Color(0xAD1A4568)
+//Azul marino       0xAD1A4568
+val BackgroundCredential = Color(0xFFB68D57)
