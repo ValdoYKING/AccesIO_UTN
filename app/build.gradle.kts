@@ -76,6 +76,9 @@ dependencies {
     implementation (libs.core)
     //implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation (libs.zxing.android.embedded)
+    //Text from image
+    //implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
+    implementation(libs.play.services.mlkit.text.recognition)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
