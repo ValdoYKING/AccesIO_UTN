@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "909206857547",
+    "project_id": "accesio-utn",
+    "storage_bucket": "accesio-utn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909206857547:android:97f451d317edd347ebeace",
+        "android_client_info": {
+          "package_name": "com.pixelfusion.accesio_utn"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC78l5i3vZCxgQSWvbKrUN05mwY4RC2hnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
