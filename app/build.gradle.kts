@@ -80,6 +80,24 @@ dependencies {
     //implementation("com.google.android.gms:play-services-mlkit-text-recognition:19.0.0")
     implementation(libs.play.services.mlkit.text.recognition)
 
+    //Constraint layout compose dependency
+    //implementation(libs.androidx.constraintlayout.compose)
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    //implementation(platform(libs.firebase.bom))
+
+
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+    //implementation(libs.firebase.analytics)
+
+    // Add the dependency for the Realtime Database library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    //implementation(libs.firebase.database)
+    implementation("com.google.firebase:firebase-database")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
