@@ -4,37 +4,25 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,10 +42,14 @@ import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun FormRegisterView(navController: NavController, viewModel: FormRegisterViewModel) {
+fun FormRegisterView(
+    navController: NavController,
+    viewModel: FormRegisterViewModel,
+) {
     val context = LocalContext.current
     val dataU = viewModel.state
 
@@ -154,6 +146,12 @@ fun FormRegisterView(navController: NavController, viewModel: FormRegisterViewMo
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
                 )
             }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item {
+                Button(onClick = { navController.navigate("login_screen") }) {
+                    Text(text = "Ya tengo cuenta")
+                }
+            }
             item { Spacer(modifier = Modifier.height(30.dp)) }
             item {
                 Button(
@@ -205,7 +203,7 @@ fun TopBarRegister(){
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "¿Tus datos son correctos?",
+                text = "Registrate",
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 30.sp,

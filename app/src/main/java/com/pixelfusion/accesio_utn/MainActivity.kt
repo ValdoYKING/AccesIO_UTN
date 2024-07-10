@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.FirebaseApp
 import com.pixelfusion.accesio_utn.navigation.AppNavigation
 import com.pixelfusion.accesio_utn.ui.theme.AccesIOUTNTheme
 import com.pixelfusion.accesio_utn.util.Constants
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
         //enableEdgeToEdge()
         setContent { 
             AccesIOUTNTheme {
