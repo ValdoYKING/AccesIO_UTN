@@ -1,7 +1,6 @@
 package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,11 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -22,20 +19,22 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.components.ButtonNext
+import com.pixelfusion.accesio_utn.model.StudentInfo
+import com.pixelfusion.accesio_utn.model.extractStudentInfo
+import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
+import kotlin.math.min
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ImageCamView(navController: NavController) {
+fun ImageCamView(navController: NavController, viewModel: ScannerViewModel) {
 
     Scaffold(
         topBar = {
@@ -55,6 +54,8 @@ fun ImageCamView(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
 
+            CameraView(viewModel, navController) {  }
+
             Button(
                 onClick = {/*TODO*/}
             ) {
@@ -65,3 +66,4 @@ fun ImageCamView(navController: NavController) {
     }
 
 }
+

@@ -7,6 +7,8 @@
 
     <!-- Splash screen theme -->
     <style name="Theme.AccesIOUTN.Splash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowDisablePreview">true</item>
         <item name="android:windowBackground">@drawable/logo_splash</item>
     </style>
+
 </resources>

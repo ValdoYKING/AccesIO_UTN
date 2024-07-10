@@ -114,6 +114,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                 Spacer(modifier = Modifier.height(16.dp))
                 ButtonNext(navController, "image_user_view")
             }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item {
+                Button(onClick = { navController.navigate("form_register_view") }) {
+                    Text(text = "Registrarme")
+                }
+            }
         }
     }
 }
