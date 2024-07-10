@@ -60,6 +60,11 @@ fun AboutView(navController: NavController) {
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
+                    Text(
+                        text = "Sobre nosotros",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
 
                     ButtonNext(navController, "home_user_view")
                 }
