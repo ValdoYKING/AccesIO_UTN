@@ -1,8 +1,11 @@
 package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,6 +44,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +65,8 @@ import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
     val dataUserLogin = viewModel.state
     val focusManager = LocalFocusManager.current
+    //var context = LocalContext.current
+    val context = LocalContext.current
     var passwordVisible by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
@@ -108,17 +115,25 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             }
             item { Spacer(modifier = Modifier.height(70.dp)) }
             item {
-                Button(onClick = {/* TODO */ }) {
+                Button(onClick = {
+                    viewModel.loginUser(navController, context)
+
+                }) {
                     Text(text = "Iniciar sesión")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                ButtonNext(navController, "image_user_view")
+                //ButtonNext(navController, "image_user_view")
+                //ButtonNext(navController, "legal_screen")
             }
-            item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
-                Button(onClick = { navController.navigate("form_register_view") }) {
-                    Text(text = "Registrarme")
-                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "¿No tienes cuenta?",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        navController.navigate("form_register_view")
+                    }
+                )
             }
         }
     }
