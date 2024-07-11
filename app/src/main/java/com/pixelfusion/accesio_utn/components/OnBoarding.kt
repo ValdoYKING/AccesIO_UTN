@@ -53,7 +53,7 @@ fun StartScreen(navController: NavHostController) {
         /*Button(onClick = { navController.navigate("image_cam_view") }) {
             Text(text = "Comenzar")
         }*/
-        Button(onClick = { navController.navigate("form_register_view") }) {
+        Button(onClick = { navController.navigate("login_screen") }) {
             Text(text = "Comenzar")
         }
     }

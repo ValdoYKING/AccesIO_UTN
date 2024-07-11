@@ -19,6 +19,8 @@ pagingRuntimeKtx = "3.3.0"
 playServicesMlkitTextRecognition = "19.0.0"
 retrofit = "2.11.0"
 zxingAndroidEmbedded = "4.3.0"
+googleGmsGoogleServices = "4.4.2"
+firebaseAuth = "23.0.0"
 
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -48,8 +50,10 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 play-services-mlkit-text-recognition = { module = "com.google.android.gms:play-services-mlkit-text-recognition", version.ref = "playServicesMlkitTextRecognition" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxingAndroidEmbedded" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
 
