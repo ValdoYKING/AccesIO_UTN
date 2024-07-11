@@ -24,13 +24,6 @@ class FormRegisterViewModel: ViewModel(){
     private lateinit var auth: FirebaseAuth
     private val database = Firebase.database.reference
 
-    /*private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val _loading = mutableStateOf(false)*/
-
-    /*private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-    private val usersRef = database.getReference("users")*/
-
     fun onValue(value: String, key: String){
         when(key){
             "nombre"-> state = state.copy(nombre = value)

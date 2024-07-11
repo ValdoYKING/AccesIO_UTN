@@ -218,13 +218,7 @@ fun AboutView(navController: NavController) {
                     Spacer(modifier = Modifier.height(32.dp))
 
 
-
-
-
-
-
-
-                    ButtonNext(navController, "home_user_view")
+                    //ButtonNext(navController, "home_user_view")
                 }
             }
         }
