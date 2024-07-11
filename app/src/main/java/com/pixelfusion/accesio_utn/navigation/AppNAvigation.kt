@@ -1,6 +1,7 @@
 package com.pixelfusion.accesio_utn.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -57,7 +58,9 @@ fun MyApp() {
         composable("login_screen") {
             val viewModelUL: LoginViewModel = viewModel();
             LoginScreen(navController, viewModelUL) }
-        composable("legal_screen") { LegalScreen(navController) }
+        composable("legal_screen") {
+            LegalScreen(navController, LocalContext.current)
+        }
         composable("image_cam_view") {
             val viewModel: ScannerViewModel = viewModel()
             ImageCamView(navController, viewModel) }
