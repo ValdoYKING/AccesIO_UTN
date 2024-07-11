@@ -1,6 +1,8 @@
 package com.pixelfusion.accesio_utn.viewmodel
 
+import android.content.ContentValues.TAG
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,13 +10,19 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.model.UsuarioData
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 
 class FormRegisterViewModel: ViewModel(){
     var state by mutableStateOf(UsuarioData())
         private set
+
+    private lateinit var auth: FirebaseAuth
+    private val database = Firebase.database.reference
 
     /*private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val _loading = mutableStateOf(false)*/
@@ -44,27 +52,41 @@ class FormRegisterViewModel: ViewModel(){
     }
 
     fun registerUser(navController: NavController, context: Context) {
-        val auth = FirebaseAuth.getInstance()
-        auth.createUserWithEmailAndPassword(state.correo_electronico, "default_password") // Use a proper password
+        auth = Firebase.auth
+        auth.createUserWithEmailAndPassword(state.correo_electronico, state.contrasena)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val userId = task.result?.user?.uid ?: return@addOnCompleteListener
-                    val database = FirebaseDatabase.getInstance().reference
-                    database.child("users").child(userId).setValue(state)
-                        .addOnCompleteListener { dbTask ->
-                            if (dbTask.isSuccessful) {
-                                navController.navigate("main_screen")
-                            } else {
-                                Toast.makeText(context, "Database error: ${dbTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                    // Registro exitoso, guarda los datos adicionales en la base de datos
+                    Log.d(TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    user?.let {
+                        val userId = it.uid
+                        database.child("users").child(userId).setValue(state)
+                            .addOnCompleteListener { dbTask ->
+                                if (dbTask.isSuccessful) {
+                                    // Datos guardados exitosamente, navega a la siguiente pantalla
+                                    navController.navigate("legal_screen")
+                                } else {
+                                    Log.w(TAG, "setValue:failure", dbTask.exception)
+                                    Toast.makeText(
+                                        context,
+                                        "Failed to save user data.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                             }
-                        }
+                    }
                 } else {
-                    Toast.makeText(context, "Registration failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                    // Si el registro falla, muestra un mensaje al usuario
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    Toast.makeText(
+                        context,
+                        "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
-
-
 
 }
 
