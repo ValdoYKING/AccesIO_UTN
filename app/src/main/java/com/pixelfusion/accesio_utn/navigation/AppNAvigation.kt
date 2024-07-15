@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
+import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
@@ -43,8 +44,16 @@ fun AppNavigation() {
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "start_screen") {
-        composable("start_screen") { StartScreen(navController) }
+    val context = LocalContext.current
+    val prefs = PreferenceHelper(context)
+
+    // Verificar si ya se ha visto la pantalla de inicio
+    val startDestination = if (prefs.hasSeenStartScreen) "login_screen" else "start_screen"
+
+    NavHost(navController, startDestination = startDestination) {
+        composable("start_screen") {
+            StartScreen(navController, context)
+        }
 
         composable("form_register_view") {
             val viewModelU: FormRegisterViewModel = viewModel()
@@ -52,36 +61,43 @@ fun MyApp() {
         }
 
         composable("login_screen") {
-            val viewModelUL: LoginViewModel = viewModel();
-            LoginScreen(navController, viewModelUL) }
+            val viewModelUL: LoginViewModel = viewModel()
+            LoginScreen(navController, viewModelUL)
+        }
 
         composable("legal_screen") {
             LegalScreen(navController, LocalContext.current)
         }
+
         composable("image_cam_view") {
             val viewModel: ScannerViewModel = viewModel()
-            ImageCamView(navController, viewModel) }
+            ImageCamView(navController, viewModel)
+        }
 
         composable("image_user_view") {
             val viewModel: ImageUserViewModel = viewModel()
             ImageUserView(navController, viewModel)
         }
 
-        composable("home_user_view"){
-            val viewModelHome : HomeViewModel = viewModel()
-            HomeUserView(navController,viewModelHome)
+        composable("home_user_view") {
+            val viewModelHome: HomeViewModel = viewModel()
+            HomeUserView(navController, viewModelHome)
         }
+
         composable("credential_view") {
             val viewModelC: CredentialViewModel = viewModel()
-            CredentialView(navController,viewModelC)
+            CredentialView(navController, viewModelC)
         }
-        composable("horario_view"){
+
+        composable("horario_view") {
             HorarioView(navController)
         }
-        composable("profile_view"){
+
+        composable("profile_view") {
             PerfilView(navController)
         }
-        composable("about_view"){
+
+        composable("about_view") {
             AboutView(navController)
         }
     }

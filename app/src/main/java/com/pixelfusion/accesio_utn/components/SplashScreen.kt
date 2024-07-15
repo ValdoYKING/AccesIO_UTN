@@ -43,13 +43,13 @@ fun Splash() {
         Image(
             painter = painterResource(id = R.drawable.ut_logo_super),
             contentDescription = "Logo UT",
-            modifier = Modifier.size(250.dp, 250.dp) // Tamaño de la imagen aumentado
+            modifier = Modifier.size(250.dp, 250.dp)
         )
         Text(
             text = "AccesIO UTN",
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.White // Cambiado a blanco para mejor visibilidad
+            color = Color.White
         )
     }
 }

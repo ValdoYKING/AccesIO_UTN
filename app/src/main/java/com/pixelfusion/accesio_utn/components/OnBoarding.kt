@@ -1,5 +1,6 @@
 package com.pixelfusion.accesio_utn.components
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +23,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 
 @Composable
-fun StartScreen(navController: NavHostController) {
+fun StartScreen(navController: NavHostController, context: Context) {
+    val prefs = PreferenceHelper(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +60,10 @@ fun StartScreen(navController: NavHostController) {
         Button(
             //color green
             colors = ButtonDefaults.buttonColors(Color(0xFF0D9462)),
-            onClick = { navController.navigate("login_screen") }) {
+            onClick = {
+                prefs.hasSeenStartScreen = true // Guardar el estado
+                navController.navigate("login_screen")
+            }) {
             Text(text = "Comenzar")
         }
     }
