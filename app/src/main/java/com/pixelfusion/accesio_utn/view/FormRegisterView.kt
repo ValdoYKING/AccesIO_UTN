@@ -437,7 +437,7 @@ fun FormRegisterView(
                 Button(
                     onClick = {
                         if (dataU.nombre.isEmpty() || dataU.apellido.isEmpty() || dataU.matricula.isEmpty() || dataU.carrera.isEmpty() || dataU.correo_electronico.isEmpty()
-                            || dataU.num_seguro_social.isEmpty() || dataU.contrasena.isEmpty()
+                            || dataU.fecha_nacimiento.isEmpty() || dataU.contrasena.isEmpty()
                         ) {
                             Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                         } else {
