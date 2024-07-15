@@ -39,6 +39,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.firebase.FirebaseApp
+import com.pixelfusion.accesio_utn.components.DynamicStatusBarColor
 import com.pixelfusion.accesio_utn.navigation.AppNavigation
 import com.pixelfusion.accesio_utn.ui.theme.AccesIOUTNTheme
 import com.pixelfusion.accesio_utn.util.Constants
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
         setContent { 
             AccesIOUTNTheme {
                 //MyApp()
+                DynamicStatusBarColor()
                 AppNavigation()
                 //FlipCard()
             }
