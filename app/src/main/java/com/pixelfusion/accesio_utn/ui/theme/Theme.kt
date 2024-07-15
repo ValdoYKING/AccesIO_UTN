@@ -1,7 +1,11 @@
+@file:Suppress("DEPRECATION")
+
 package com.pixelfusion.accesio_utn.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import android.view.View
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -9,7 +13,9 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 
 private val DarkColorScheme = darkColorScheme(
     //primary = Purple80,
@@ -51,9 +57,22 @@ fun AccesIOUTNTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
+    }
+
+    val view = LocalView.current
+    val context = LocalContext.current
+    if (!view.isInEditMode) {
+        view.post {
+            val window = (context as ComponentActivity).window
+            window.statusBarColor = colorScheme.primary.toArgb()
+            window.decorView.systemUiVisibility = if (darkTheme) {
+                0 // Clear flags for dark theme
+            } else {
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR // Light theme: dark icons on light background
+            }
+        }
     }
 
     MaterialTheme(
