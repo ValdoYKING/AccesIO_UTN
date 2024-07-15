@@ -14,7 +14,8 @@ data class UsuarioData(
     val cuatrimestre: Int,
     val token: String,
     val carrera: String,
-    val id_rol: Int
+    val id_rol: Int,
+    val image_path: String
 
 ) {
     constructor() : this(
@@ -31,6 +32,7 @@ data class UsuarioData(
         0,
         "",
         "",
-        0
+        0,
+        ""
     )
 }

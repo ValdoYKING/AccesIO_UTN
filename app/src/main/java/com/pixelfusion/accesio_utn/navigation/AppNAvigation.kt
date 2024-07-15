@@ -23,6 +23,7 @@ import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 
@@ -61,7 +62,10 @@ fun MyApp() {
             val viewModel: ScannerViewModel = viewModel()
             ImageCamView(navController, viewModel) }
 
-        composable("image_user_view") { ImageUserView(navController) }
+        composable("image_user_view") {
+            val viewModel: ImageUserViewModel = viewModel()
+            ImageUserView(navController, viewModel)
+        }
 
         composable("home_user_view"){
             val viewModelHome : HomeViewModel = viewModel()

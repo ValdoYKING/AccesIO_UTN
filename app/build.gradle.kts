@@ -100,6 +100,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     //Auth
     implementation ("com.google.firebase:firebase-auth")
+    //storage
+    implementation("com.google.firebase:firebase-storage")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

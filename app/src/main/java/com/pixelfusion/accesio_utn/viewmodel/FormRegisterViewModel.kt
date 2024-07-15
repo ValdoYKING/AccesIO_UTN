@@ -40,6 +40,7 @@ class FormRegisterViewModel: ViewModel(){
             "token"-> state = state.copy(token = value)
             "carrera"-> state = state.copy(carrera = value)
             "id_rol"-> state = state.copy(id_rol = value.toInt())
+            "image_path" -> state = state.copy(image_path = value)
         }
 
     }
