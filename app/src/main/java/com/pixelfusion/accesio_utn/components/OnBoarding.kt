@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
+import com.pixelfusion.accesio_utn.ui.theme.utnGreen
 
 @Composable
 fun StartScreen(navController: NavHostController, context: Context) {
@@ -59,10 +60,13 @@ fun StartScreen(navController: NavHostController, context: Context) {
         }*/
         Button(
             //color green
-            colors = ButtonDefaults.buttonColors(Color(0xFF0D9462)),
+            colors = ButtonDefaults.buttonColors(utnGreen),
             onClick = {
-                prefs.hasSeenStartScreen = true // Guardar el estado
+                prefs.hasSeenStartScreen = true
                 navController.navigate("login_screen")
+                /*navController.navigate("login_screen") {
+                    popUpTo("start_screen") { inclusive = true }
+                }*/
             }) {
             Text(text = "Comenzar")
         }

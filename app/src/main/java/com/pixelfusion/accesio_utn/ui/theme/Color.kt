@@ -13,6 +13,9 @@ val Pink40 = Color(0xFF7D5260)
 val GreenUTN40 = Color(0xFF0D9462)
 
 //Colores app componentes
+val utnGreen = Color(0xFF0D9462)
+val utnGreenLight = Color(0xFF8DE6B8)
+val blackdark = Color(0xFF020202)
 val GuindaColor = Color(0xFF800040)
 val WhiteColor = Color(0xFFD0DFEF)
 val WhiteColor2 = Color(0xFFFFFFFF)

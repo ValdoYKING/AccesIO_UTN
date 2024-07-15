@@ -1,5 +1,6 @@
 package com.pixelfusion.accesio_utn.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,12 +48,27 @@ fun MyApp() {
     val navController = rememberNavController()
     val context = LocalContext.current
     val prefs = PreferenceHelper(context)
+    val currentUser = FirebaseAuth.getInstance().currentUser
 
     // Verificar si ya se ha visto la pantalla de inicio
-    val currentUser = FirebaseAuth.getInstance().currentUser
     //val startDestination = if (prefs.hasSeenStartScreen) "login_screen" else "start_screen"
+    /*val startDestination = when {
+        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado
+        else -> "home_user_view" // Autenticado
+    }
+    */
+    // Verificar si ya se ha visto la pantalla de inicio
+    /*Log.d("PreferenceHelper", "hasSeenStartScreen: ${prefs.hasSeenStartScreen}")
     val startDestination = when {
         currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado
+        prefs.hasSeenStartScreen -> "home_user_view" // Autenticado y ya vio la pantalla de inicio
+        else -> "start_screen" // No autenticado y no ha visto la pantalla de inicio
+    }*/
+
+    // Determinar la pantalla de inicio
+    val startDestination = when {
+        currentUser?.email.isNullOrEmpty() && !prefs.hasSeenStartScreen -> "start_screen" // No autenticado y no ha visto la pantalla de inicio
+        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado pero ha visto la pantalla de inicio
         else -> "home_user_view" // Autenticado
     }
 
