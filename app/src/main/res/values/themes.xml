@@ -2,13 +2,17 @@
 <resources>
     <!-- Base application theme -->
     <style name="Theme.AccesIOUTN" parent="android:Theme.Material.Light.NoActionBar">
-        <!-- Customize your theme here -->
+        <!--<item name="android:statusBarColor">@color/temporaly</item>
+        <item name="android:windowLightStatusBar">false</item>-->
     </style>
 
     <!-- Splash screen theme -->
     <style name="Theme.AccesIOUTN.Splash" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/utnGreen</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowBackground">@drawable/logo_splash</item>
     </style>
+
 
 </resources>

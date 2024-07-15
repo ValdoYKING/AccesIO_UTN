@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green_background">#0D9462</color>
     <color name="green_text">#FF4CAF50</color>
+    <color name="utnGreen">#FF0D9462</color>
+    <color name="utnGreenLight">#FF8DE6B8</color>
+    <color name="temporaly">#01371B</color>
 
 </resources>
