@@ -171,13 +171,13 @@ fun HomeUserView(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = dataH.id_rol,
-                            fontSize = 16.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = dataH.nombre + " " + dataH.apellido,
-                            fontSize = 16.sp,
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.Normal
                         )
                         Spacer(modifier = Modifier.height(4.dp))
@@ -187,12 +187,12 @@ fun HomeUserView(
                         ) {
                             Text(
                                 text = "Matricula",
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium
                             )
                             Text(
                                 text = dataH.matricula,
-                                fontSize = 14.sp,
+                                fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal
                             )
                         }
@@ -208,7 +208,7 @@ fun HomeUserView(
 
                         Text(
                             text = dataH.fecha_actualizacion,
-                            fontSize = 12.sp,
+                            fontSize = 14.sp,
                             fontWeight = FontWeight.Normal
                         )
                         Spacer(modifier = Modifier.height(32.dp))
@@ -226,8 +226,9 @@ fun HomeUserView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
+                        /*Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(80.dp),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -237,6 +238,25 @@ fun HomeUserView(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Credencial",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }*/
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.AccountCircle,
+                                contentDescription = "Credencial",
+                                modifier = Modifier.size(48.dp) // Increased icon size
+                            )
+                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
                             Text(
                                 text = "Credencial",
                                 fontSize = 20.sp,
@@ -254,8 +274,9 @@ fun HomeUserView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
+                        /*Row(
+                            modifier = Modifier.fillMaxWidth()
+                                .height(80.dp),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -265,6 +286,25 @@ fun HomeUserView(
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "Horarios",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }*/
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.DateRange,
+                                contentDescription = "Horarios",
+                                modifier = Modifier.size(48.dp) // Increased icon size
+                            )
+                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
                             Text(
                                 text = "Horarios",
                                 fontSize = 20.sp,
