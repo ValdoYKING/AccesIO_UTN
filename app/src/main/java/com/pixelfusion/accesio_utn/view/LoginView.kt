@@ -123,7 +123,17 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
             item { Spacer(modifier = Modifier.height(70.dp)) }
             item {
                 Button(onClick = {
-                    viewModel.loginUser(navController, context)
+                    if (dataUserLogin.correo_electronico.isEmpty()
+                        || dataUserLogin.contrasena.isEmpty()
+                    ) {
+                        Toast.makeText(
+                            context,
+                            "Por favor, completa todos los campos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        viewModel.loginUser(navController, context)
+                    }
 
                 }) {
                     Text(text = "Iniciar sesión")

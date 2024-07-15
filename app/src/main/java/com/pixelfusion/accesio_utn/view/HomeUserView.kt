@@ -17,8 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
@@ -28,12 +28,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -50,12 +54,16 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
+fun HomeUserView(
+    navController: NavController,
+    viewModelUser: HomeViewModel
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val dataH = viewModelUser.stateHome
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
+    var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModelUser.fetchData()
@@ -96,7 +104,8 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                     },
                     actions = {
                         IconButton(onClick = {
-                            viewModelUser.salirApp()
+                            //viewModelUser.salirApp()
+                            showDialog = true
                         }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ExitToApp,
@@ -105,6 +114,26 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                         }
                     },
                 )
+                if (showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text("Salir de la aplicación") },
+                        text = { Text("¿Estás seguro de que quieres salir de la aplicación?") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                viewModelUser.salirApp()
+                                showDialog = false
+                            }) {
+                                Text("Sí")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showDialog = false }) {
+                                Text("No")
+                            }
+                        }
+                    )
+                }
             },
         ) { paddingValues ->
             Column(
