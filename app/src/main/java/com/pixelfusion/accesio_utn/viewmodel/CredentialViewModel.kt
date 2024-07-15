@@ -49,8 +49,9 @@ class CredentialViewModel:ViewModel() {
     fun onValue(value:String, key:String){
         when(key){
             "nombre"-> state = state.copy(nombre = value)
+            "apellido" -> state = state.copy(apellido = value)
             "matricula"-> state = state.copy(matricula = value)
-            "tipouser"-> state = state.copy(tipoUser = value)
+            "id_rol" -> state = state.copy(id_rol = value)
             "carrera"-> state = state.copy(carrera = value)
             "image_path" -> state = state.copy(image_path = value)
         }

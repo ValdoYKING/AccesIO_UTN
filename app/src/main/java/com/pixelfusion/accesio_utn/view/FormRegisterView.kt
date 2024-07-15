@@ -13,21 +13,34 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,10 +51,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,12 +68,17 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
+import java.time.Instant
+import java.time.ZoneId
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun FormRegisterView(
@@ -67,6 +88,39 @@ fun FormRegisterView(
     val context = LocalContext.current
     val dataU = viewModel.state
     var passwordVisible by remember { mutableStateOf(false) }
+    val state = rememberDatePickerState()
+    var expanded by remember { mutableStateOf(false) }
+    var textfieldSize by remember { mutableStateOf(Size.Zero) }
+    val suggestions = listOf(
+        "PERSONAL",
+        "ADMINISTRATIVO",
+        "PROFESOR",
+        "VISITA",
+        "TSU en TI Infraestructura de Redes Digitales",
+        "TSU en TI Desarrollo de Software Multiplataforma",
+        "TSU en Mecatrónica Área Sistemas de Manufactura Flexible",
+        "TSU en Desarrollo de Negocios Área Mercadotecnia",
+        "TSU en Química Área Ambiental",
+        "TSU en TI Entornos Virtuales y Negocios Digitales",
+        "TSU en Administración Área Capital Humano",
+        "TSU en Procesos Industriales Área Manufactura",
+        "TSU en Mantenimiento Aeronáutico Área Aviónica",
+        "ING. EN MECATRÓNICA",
+        "ING. EN TECNOLOGIÁS DE LA PRODUCCIÓN",
+        "ING. EN DESARROLLO Y GESTIÓN DE SOFTWARE",
+        "ING. EN REDES INTELIGENTES Y CIBERSEGURIDAD",
+        "ING. EN ENTORNOS VIRTUALES Y NEGOCIOS",
+        "ING. EN TECNOLOGÍA AMBIENTAL",
+        "LIC. EN GESTIÓN DEL CAPITAL HUMANO",
+        "LIC EN INNOVACIÓN DE NEGOCIOS Y MERCADOTECNIA",
+        "MAESTRÍA EN GESTIÓN E INNOVACIÓN DE LAS ORGANIZACIONES",
+        "MAESTRÍA EN SISTEMAS DE GESTIÓN AMBIENTAL",
+        "MAESTRÍA EN INNOVACIÓN Y NEGOCIOS"
+    )
+    val icon = if (expanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
 
     val focusManager = LocalFocusManager.current
 
@@ -90,8 +144,10 @@ fun FormRegisterView(
                     onValueChange = { viewModel.onValue(it, "nombre") },
                     label = { Text("Nombre") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(18.dp)),
+                        .fillMaxWidth(),
+                    //.clip(RoundedCornerShape(18.dp)),
+                    singleLine = true,
+                    maxLines = 1,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
                 )
@@ -103,36 +159,72 @@ fun FormRegisterView(
                     onValueChange = { viewModel.onValue(it, "apellido") },
                     label = { Text("Apellidos") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(18.dp)),
+                        .fillMaxWidth(),
+                    //.clip(RoundedCornerShape(18.dp)),
+                    singleLine = true,
+                    maxLines = 1,
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
+                if (viewModel.showDialog) {
+                    DatePickerDialog(
+                        onDismissRequest = { viewModel.closeDialog() },
+                        confirmButton = {
+                            Button(onClick = { viewModel.closeDialog() }) {
+                                Text(text = "Confirmar")
+                            }
+                        },
+                        dismissButton = {
+                            OutlinedButton(onClick = { viewModel.closeDialog() }) {
+                                Text(text = "Cancelar")
+                            }
+                        },
+                        modifier = Modifier,
+                        shape = DatePickerDefaults.shape,
+                        properties = DialogProperties(usePlatformDefaultWidth = true)
+                    ) {
+                        val date = state.selectedDateMillis
+                        date?.let {
+                            val localDate =
+                                Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
+                            val fechaFormateada =
+                                "${localDate.dayOfMonth}/${localDate.monthValue}/${localDate.year}"
+                            viewModel.onValue(fechaFormateada, "fecha_nacimiento")
+                        }
+                        DatePicker(state = state, modifier = Modifier.padding(8.dp))
+                    }
+                }
                 OutlinedTextField(
-                    value = dataU.matricula,
-                    onValueChange = { viewModel.onValue(it, "matricula") },
-                    label = { Text("Matrícula") },
+                    value = dataU.fecha_nacimiento,
+                    onValueChange = { viewModel.onValue(it, "fecha_nacimiento") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
-                )
-            }
-            item { Spacer(modifier = Modifier.height(8.dp)) }
-            item {
-                OutlinedTextField(
-                    value = dataU.carrera,
-                    onValueChange = { viewModel.onValue(it, "carrera") },
-                    label = { Text("Carrera") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .fillMaxWidth(),
+                    label = {
+                        Text(
+                            text = "Fecha de nacimiento",
+                            //fontSize = 18.sp,
+                            //fontWeight = FontWeight.Bold
+                        )
+                    },
                     keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
-                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(
+                            FocusDirection.Down
+                        )
+                    }),
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.DateRange,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(30.dp)
+                                .padding(4.dp)
+                                .clickable { viewModel.openDialog() }
+                        )
+                    }
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -142,21 +234,138 @@ fun FormRegisterView(
                     onValueChange = { viewModel.onValue(it, "correo_electronico") },
                     label = { Text("Correo electrónico") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
+                        .fillMaxWidth(),
+                    //.clip(RoundedCornerShape(8.dp)),
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(
+                            FocusDirection.Down
+                        )
+                    })
+                )
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item {
+                OutlinedTextField(
+                    value = dataU.matricula,
+                    onValueChange = { viewModel.onValue(it, "matricula") },
+                    label = { Text("Matrícula") },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    //.clip(RoundedCornerShape(8.dp)),
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
+            /*item {
+                OutlinedTextField(
+                    value = dataU.carrera,
+                    onValueChange = { viewModel.onValue(it, "carrera") },
+                    label = { Text("Carrera") },
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                        //.clip(RoundedCornerShape(8.dp)),
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) })
+                )
+            }*/
+            item {
+                OutlinedTextField(
+                    value = dataU.carrera,
+                    onValueChange = { viewModel.onValue(it, "carrera") },
+                    modifier = Modifier
+                        //.padding(horizontal = 12.dp)
+                        .fillMaxWidth()
+                        .onGloballyPositioned { coordinates ->
+                            //This value is used to assign to the DropDown the same width
+                            textfieldSize = coordinates.size.toSize()
+                        },
+                    label = {
+                        Text(
+                            text = "Cargo o carrera"
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(
+                            FocusDirection.Down
+                        )
+                    }),
+                    trailingIcon = {
+                        Icon(icon, "contentDescription",
+                            Modifier.clickable { expanded = !expanded })
+                    }
+                )
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    /*modifier = Modifier
+                        .width(with(LocalDensity.current){textfieldSize.width.toDp()})*/
+                    modifier = Modifier
+                        .width(with(LocalDensity.current) { (textfieldSize.width * 0.9f).toDp() })
+                ) {
+                    suggestions.forEach { label ->
+                        DropdownMenuItem(
+                            text = { Text(text = label) },
+                            onClick = {
+                                viewModel.onValue(label, "carrera")
+                                expanded = false
+                            })
+                    }
+                }
+            }
+            item {
+                if (dataU.carrera.isNotEmpty() && dataU.carrera != "PERSONAL" && dataU.carrera != "ADMINISTRATIVO" && dataU.carrera != "DOCENTE" && dataU.carrera != "VISITA") {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = dataU.cuatrimestre,
+                        onValueChange = { viewModel.onValue(it, "cuatrimestre") },
+                        label = { Text("Cuatrimestre") },
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        //.clip(RoundedCornerShape(8.dp)),
+                        singleLine = true,
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Next
+                        ),
+                        keyboardActions = KeyboardActions(onNext = {
+                            focusManager.moveFocus(
+                                FocusDirection.Down
+                            )
+                        })
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+                if (dataU.carrera.isEmpty()) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                } else {
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+            }
+
+            //item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
                 OutlinedTextField(
                     value = dataU.num_seguro_social,
                     onValueChange = { viewModel.onValue(it, "num_seguro_social") },
                     label = { Text("Número seguro social") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
+                        .fillMaxWidth(),
+                    //.clip(RoundedCornerShape(8.dp)),
+                    singleLine = true,
+                    maxLines = 1,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Next
@@ -171,12 +380,46 @@ fun FormRegisterView(
             item { Spacer(modifier = Modifier.height(8.dp)) }
             item {
                 OutlinedTextField(
+                    value = dataU.telefono,
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    maxLines = 1,
+                    onValueChange = { viewModel.onValue(it, "telefono") },
+                    label = {
+                        Text(
+                            text = "Telefono",
+                            //fontSize = 18.sp,
+                            //fontWeight = FontWeight.Bold
+                        )
+                    },
+                    //keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone)
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(
+                            FocusDirection.Down
+                        )
+                    })
+
+                )
+            }
+            item { Spacer(modifier = Modifier.height(8.dp)) }
+            item {
+                OutlinedTextField(
                     value = dataU.contrasena,
                     onValueChange = { viewModel.onValue(it, "contrasena") },
                     label = { Text("Contraseña") },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     trailingIcon = {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {

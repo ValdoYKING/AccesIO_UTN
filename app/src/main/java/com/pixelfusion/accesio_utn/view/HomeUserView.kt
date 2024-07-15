@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -53,6 +56,10 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
     val dataH = viewModelUser.stateHome
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
+
+    LaunchedEffect(Unit) {
+        viewModelUser.fetchData()
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,9 +95,11 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* TODO: Handle logout */ }) {
+                        IconButton(onClick = {
+                            viewModelUser.salirApp()
+                        }) {
                             Icon(
-                                imageVector = Icons.Filled.ExitToApp,
+                                imageVector = Icons.AutoMirrored.Filled.ExitToApp,
                                 contentDescription = "Logout"
                             )
                         }
@@ -110,47 +119,72 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = "Mi cuenta",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = dataH.tipoUser,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = dataH.nombre,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
+                    if (viewModelUser.isLoading) {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        /*Text(
+                            text = "Cargando...",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            //color = Color.Black
+                        )*/
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(alignment = Alignment.CenterHorizontally)
+                        )
+                    } else {
+
                         Text(
-                            text = "Matricula",
-                            fontSize = 14.sp,
+                            text = "Mi cuenta",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = dataH.id_rol,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = dataH.matricula,
-                            fontSize = 14.sp,
+                            text = dataH.nombre + " " + dataH.apellido,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Normal
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Matricula",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = dataH.matricula,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                        var dateString = ""
+                        /*if(dataH.fecha_actualizacion != null){
+                             dateString = viewModelUser.longToDateString(dataH.fecha_actualizacion.toLong())
+                        }else{
+                             dateString = ""
+                        }*/
+
+
+
+                        Text(
+                            text = dataH.fecha_actualizacion,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = dataH.actualizacion,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal
-                    )
                 }
-                Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -171,7 +205,7 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                             Icon(
                                 imageVector = Icons.Filled.AccountCircle,
                                 contentDescription = "Credencial",
-                                modifier = Modifier.size(34.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
@@ -199,7 +233,7 @@ fun HomeUserView(navController: NavController, viewModelUser: HomeViewModel) {
                             Icon(
                                 imageVector = Icons.Filled.DateRange,
                                 contentDescription = "Horarios",
-                                modifier = Modifier.size(34.dp)
+                                modifier = Modifier.size(24.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
