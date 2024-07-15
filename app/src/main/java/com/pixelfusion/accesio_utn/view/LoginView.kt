@@ -89,6 +89,8 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                     onValueChange = { viewModel.onValue(it, "correo_electronico") },
                     label = { Text("Correo electrónico") },
                     modifier = Modifier.fillMaxWidth(),
+                    singleLine = true,
+                    maxLines = 1,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next),
                     keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Down) }),
                 )
@@ -101,7 +103,12 @@ fun LoginScreen(navController: NavController, viewModel: LoginViewModel) {
                     label = { Text("Contraseña") },
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
+                    singleLine = true,
+                    maxLines = 1,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                     trailingIcon = {
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {

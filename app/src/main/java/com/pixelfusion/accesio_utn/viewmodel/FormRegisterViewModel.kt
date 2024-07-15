@@ -24,6 +24,9 @@ class FormRegisterViewModel: ViewModel(){
     private lateinit var auth: FirebaseAuth
     private val database = Firebase.database.reference
 
+    val fecha_creacion = System.currentTimeMillis()
+
+
     fun onValue(value: String, key: String){
         when(key){
             "nombre"-> state = state.copy(nombre = value)
@@ -36,13 +39,39 @@ class FormRegisterViewModel: ViewModel(){
             "matricula"-> state = state.copy(matricula = value)
             "num_seguro_social"-> state = state.copy(num_seguro_social = value)
             "telefono"-> state = state.copy(telefono = value)
-            "cuatrimestre"-> state = state.copy(cuatrimestre = value.toInt())
+            "cuatrimestre" -> state = state.copy(cuatrimestre = value)
             "token"-> state = state.copy(token = value)
             "carrera"-> state = state.copy(carrera = value)
-            "id_rol"-> state = state.copy(id_rol = value.toInt())
+            "id_rol" -> state = state.copy(id_rol = value)
             "image_path" -> state = state.copy(image_path = value)
         }
 
+        state.fecha_creacion = fecha_creacion.toString()
+
+        when (state.carrera) {
+            "PERSONAL" -> state.id_rol = "PERSONAL"
+            "ADMINISTRATIVO" -> state.id_rol = "ADMINISTRATIVO"
+            "DOCENTE" -> state.id_rol = "DOCENTE"
+            else -> state.id_rol = "ESTUDIANTE"
+        }
+
+    }
+
+    var show by mutableStateOf(false)
+        private set
+
+    var showDialog by mutableStateOf(false)
+
+    fun enviar() {
+        show = true
+    }
+
+    fun openDialog() {
+        showDialog = true
+    }
+
+    fun closeDialog() {
+        showDialog = false
     }
 
     fun registerUser(navController: NavController, context: Context) {
