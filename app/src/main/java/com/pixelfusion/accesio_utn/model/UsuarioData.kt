@@ -6,15 +6,15 @@ data class UsuarioData(
     val correo_electronico: String,
     val contrasena: String,
     val fecha_nacimiento: String,
-    val fecha_creacion: String,
+    var fecha_creacion: String,
     val fecha_actualizacion: String,
     val matricula: String,
     val num_seguro_social: String,
     val telefono: String,
-    val cuatrimestre: Int,
+    val cuatrimestre: String,
     val token: String,
     val carrera: String,
-    val id_rol: Int,
+    var id_rol: String,
     val image_path: String
 
 ) {
@@ -29,10 +29,10 @@ data class UsuarioData(
         "",
         "",
         "",
-        0,
         "",
         "",
-        0,
+        "",
+        "",
         ""
     )
 }

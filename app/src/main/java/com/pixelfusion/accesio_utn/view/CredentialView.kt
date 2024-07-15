@@ -116,7 +116,7 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     LaunchedEffect(isFront) {
         rotation.animateTo(
             targetValue = if (isFront) 0f else 180f,
-            animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
+            animationSpec = tween(durationMillis = 900, easing = FastOutSlowInEasing)
         )
     }
 
@@ -320,7 +320,7 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     )
                     //nombre completo
                     Text(
-                        text = dataC.state.nombre,
+                        text = dataC.state.nombre + " " + dataC.state.apellido,
                         fontSize = 18.sp,
                         //color = Color.Black
                     )
@@ -349,7 +349,7 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     //color = Color.Black
                 )
                 Text(
-                    text = dataC.state.tipoUser,
+                    text = dataC.state.id_rol,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     //color = Color.Black,
@@ -453,7 +453,7 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                     //color = Color.Black
                 )
                 Text(
-                    text = dataC.state.tipoUser,
+                    text = dataC.state.id_rol,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     //color = Color.Black,

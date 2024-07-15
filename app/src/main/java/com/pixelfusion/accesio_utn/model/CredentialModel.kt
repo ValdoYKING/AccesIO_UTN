@@ -2,8 +2,9 @@ package com.pixelfusion.accesio_utn.model
 
 data class CredentialModel(
     val nombre : String,
+    val apellido: String,
     val matricula : String,
-    val tipoUser :String,
+    val id_rol: String,
     val carrera: String,
     val image_path: String
 ){
@@ -12,7 +13,8 @@ data class CredentialModel(
         "",
         "",
         "",
-        ""
+        "",
+        "",
     )
 }
 
