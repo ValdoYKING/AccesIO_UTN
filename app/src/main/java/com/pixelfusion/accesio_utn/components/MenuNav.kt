@@ -32,67 +32,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun DrawerContent(navController: NavController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        DrawerItem(
-            label = "Mi credencial",
-            icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Mi credencial") },
-            onClick = {
-                navController.navigate("credential_view")
-                navController.popBackStack()
-            }
-        )
-        DrawerItem(
-            label = "Mi horario",
-            icon = { Icon(Icons.Filled.DateRange, contentDescription = "Mi horario") },
-            onClick = {
-                navController.navigate("horario_view")
-                navController.popBackStack()
-            }
-        )
-        DrawerItem(
-            label = "Mis datos",
-            icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Mis datos") },
-            onClick = {
-                navController.navigate("profile_view")
-                navController.popBackStack()
-            }
-        )
-        DrawerItem(
-            label = "Acerca de",
-            icon = { Icon(Icons.Filled.Info, contentDescription = "Acerca de") },
-            onClick = {
-                navController.navigate("about_view")
-                navController.popBackStack()
-            }
-        )
-    }
-}
-
-@Composable
-fun DrawerItem(label: String, icon: @Composable () -> Unit, onClick: () -> Unit) {
-    TextButton(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            icon()
-            Spacer(modifier = Modifier.width(16.dp))
-            Text(label)
-        }
-    }
-}
-
-
-
-@Composable
 fun DrawerContent3(navController: NavController, currentRoute: String?) {
     Column {
         NavigationRail {
