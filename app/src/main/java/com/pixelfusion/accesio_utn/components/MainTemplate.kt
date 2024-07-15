@@ -25,12 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -40,12 +42,14 @@ import kotlinx.coroutines.launch
 fun MainTemplate(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     ModalNavigationDrawer(
-        drawerContent = {
-            DrawerContent(navController)
-        },
         drawerState = drawerState,
+        drawerContent = {
+            DrawerContent3(navController, currentRoute)
+        },
         content = {
             Scaffold(
                 topBar = {

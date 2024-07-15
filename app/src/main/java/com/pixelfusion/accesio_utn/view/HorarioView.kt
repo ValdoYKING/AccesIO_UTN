@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.components.ButtonNext
-import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
+import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -44,7 +44,7 @@ fun HorarioView(navController: NavController) {
 
             Scaffold(
                 topBar = {
-                    ContenidoSuperiorCredentialView(drawerState, scope)
+                    ContenidoSuperior(drawerState, scope, navController)
                 },
             ) { paddingValues ->
                 Column(

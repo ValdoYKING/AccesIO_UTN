@@ -117,7 +117,7 @@ fun HomeUserView(
                 if (showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
-                        title = { Text("Salir de la aplicación") },
+                        title = { Text("Salir de AccesIO UTN") },
                         text = { Text("¿Estás seguro de que quieres salir de la aplicación?") },
                         confirmButton = {
                             TextButton(onClick = {
