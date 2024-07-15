@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.firebase.auth.FirebaseAuth
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
@@ -48,7 +49,12 @@ fun MyApp() {
     val prefs = PreferenceHelper(context)
 
     // Verificar si ya se ha visto la pantalla de inicio
-    val startDestination = if (prefs.hasSeenStartScreen) "login_screen" else "start_screen"
+    val currentUser = FirebaseAuth.getInstance().currentUser
+    //val startDestination = if (prefs.hasSeenStartScreen) "login_screen" else "start_screen"
+    val startDestination = when {
+        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado
+        else -> "home_user_view" // Autenticado
+    }
 
     NavHost(navController, startDestination = startDestination) {
         composable("start_screen") {
