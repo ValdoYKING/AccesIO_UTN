@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,7 @@ import androidx.compose.material.icons.materialPath
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -155,8 +157,15 @@ fun FormRegisterView(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp)),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(onNext = {
+                        focusManager.moveFocus(
+                            FocusDirection.Down
+                        )
+                    })
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -180,11 +189,6 @@ fun FormRegisterView(
                 )
             }
             item { Spacer(modifier = Modifier.height(8.dp)) }
-            item {
-                Button(onClick = { navController.navigate("login_screen") }) {
-                    Text(text = "Ya tengo cuenta")
-                }
-            }
             item { Spacer(modifier = Modifier.height(30.dp)) }
             item {
                 Button(
@@ -194,19 +198,26 @@ fun FormRegisterView(
                         ) {
                             Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                         } else {
-                            // Aquí puedes implementar la lógica para guardar o enviar los datos
-                            //navController.navigate("legal_screen")
                             viewModel.registerUser(navController, context)
-                            //Toast.makeText(context, "Datos enviados correctamente", Toast.LENGTH_SHORT).show()
                         }
                     }
                 ) {
                     Text("Enviar")
                 }
             }
-            item{
-                ButtonNext(navController, "login_screen")
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Ya tengo cuenta",
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickable {
+                        navController.navigate("login_screen")
+                    }
+                )
             }
+            /*item{
+                ButtonNext(navController, "login_screen")
+            }*/
         }
     }
 }

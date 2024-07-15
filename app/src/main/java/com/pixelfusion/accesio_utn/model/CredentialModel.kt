@@ -4,13 +4,15 @@ data class CredentialModel(
     val nombre : String,
     val matricula : String,
     val tipoUser :String,
-    val carrera : String
+    val carrera: String,
+    val image_path: String
 ){
     constructor(): this(
-        "Villalba Mendoza Osvaldo",
-        "232271007",
-        "ESTUDIANTE",
-        "ING. DESARROLLO Y GESTION DE SOFTWARE"
+        "",
+        "",
+        "",
+        "",
+        ""
     )
 }
 

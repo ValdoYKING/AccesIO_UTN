@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -53,7 +54,10 @@ fun StartScreen(navController: NavHostController) {
         /*Button(onClick = { navController.navigate("image_cam_view") }) {
             Text(text = "Comenzar")
         }*/
-        Button(onClick = { navController.navigate("login_screen") }) {
+        Button(
+            //color green
+            colors = ButtonDefaults.buttonColors(Color(0xFF0D9462)),
+            onClick = { navController.navigate("login_screen") }) {
             Text(text = "Comenzar")
         }
     }

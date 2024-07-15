@@ -77,12 +77,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberAsyncImagePainter
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.CardTittle
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
 import com.pixelfusion.accesio_utn.components.DrawerContent
 import com.pixelfusion.accesio_utn.components.DrawerContent3
-import com.pixelfusion.accesio_utn.components.SquashedOval
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode128
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode39
 import com.pixelfusion.accesio_utn.logicadependencias.generateQRCode
@@ -108,8 +108,12 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
+    LaunchedEffect(Unit) {
+        viewModel.fetchData()
+    }
+
+
     LaunchedEffect(isFront) {
-        //viewModel.fetchData()
         rotation.animateTo(
             targetValue = if (isFront) 0f else 180f,
             animationSpec = tween(durationMillis = 600, easing = FastOutSlowInEasing)
@@ -289,7 +293,9 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                 )
                 // Imagen de perfil
                 Image(
-                    painter = painterResource(id = R.drawable.valdo_pixel),
+                    //image_path
+                    painter = rememberAsyncImagePainter(dataC.state.image_path),
+                    //painter = painterResource(id = R.drawable.valdo_pixel),
                     contentDescription = "Perfil usuario",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
