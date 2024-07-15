@@ -47,7 +47,7 @@ class LoginViewModel: ViewModel() {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
                     Toast.makeText(
                         context,
-                        "Authentication failed.",
+                        "Inicio de sesión incorrecto, verifique sus datos.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
