@@ -43,7 +43,6 @@ import com.pixelfusion.accesio_utn.ui.theme.utnGreenLight
 fun DrawerContent3(navController: NavController, currentRoute: String?) {
     Column {
         NavigationRail {
-            //Spacer(modifier = Modifier.width(8.dp))
             NavigationRailItem(
                 icon = { Icon(Icons.Filled.Home, contentDescription = "Inicio") },
                 label = { Text("Inicio") },
@@ -56,10 +55,8 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("home_user_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
@@ -75,10 +72,8 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("credential_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
@@ -94,10 +89,8 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("horario_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
@@ -113,10 +106,8 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("profile_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
@@ -132,30 +123,11 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("about_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
-                        launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
-
-            /*NavigationRailItem(
-                icon = { Icon(Icons.Filled.ThumbUp, contentDescription = "Prueba") },
-                label = { Text("Siuuuu") },
-                selected = currentRoute == "home_user_view",
-                onClick = {
-                    navController.navigate("home_user_view") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )*/
-            // Puedes agregar más NavigationRailItem aquí para otras vistas
         }
     }
 }
-
