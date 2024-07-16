@@ -16,8 +16,8 @@ class MainActivity : ComponentActivity() {
         //enableEdgeToEdge()
         setContent { 
             AccesIOUTNTheme {
-                DynamicStatusBarColor()
                 AppNavigation()
+                DynamicStatusBarColor()
             }
         }
     }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SplashActivity : ComponentActivity() {
 
-    private val splashScreenDuration = 1000L // Duración de la splash screen en milisegundos
+    private val splashScreenDuration = 1200L // Duración de la splash screen en milisegundos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

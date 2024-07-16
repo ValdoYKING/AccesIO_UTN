@@ -9,9 +9,10 @@
     <!-- Splash screen theme -->
     <style name="Theme.AccesIOUTN.Splash" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/utnGreen</item>
-        <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowDisablePreview">true</item>
         <item name="android:windowBackground">@drawable/logo_splash</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!--<item name="android:windowDisablePreview">true</item>-->
+
     </style>
 
 
