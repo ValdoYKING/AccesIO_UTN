@@ -2,6 +2,7 @@ package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,11 +13,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -40,6 +46,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +55,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.DrawerContent3
+import com.pixelfusion.accesio_utn.ui.theme.BlueColor
+import com.pixelfusion.accesio_utn.ui.theme.BlueMarine
+import com.pixelfusion.accesio_utn.ui.theme.WhiteColor2
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -140,7 +150,8 @@ fun HomeUserView(
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(16.dp)
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -226,24 +237,7 @@ fun HomeUserView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        /*Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(80.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.AccountCircle,
-                                contentDescription = "Credencial",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Credencial",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }*/
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -252,9 +246,10 @@ fun HomeUserView(
                             verticalArrangement = Arrangement.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Filled.AccountCircle,
+                                imageVector = Icons.Filled.AccountBox,
                                 contentDescription = "Credencial",
-                                modifier = Modifier.size(48.dp) // Increased icon size
+                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                modifier = Modifier.size(48.dp)
                             )
                             Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
                             Text(
@@ -274,24 +269,6 @@ fun HomeUserView(
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
                     ) {
-                        /*Row(
-                            modifier = Modifier.fillMaxWidth()
-                                .height(80.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.DateRange,
-                                contentDescription = "Horarios",
-                                modifier = Modifier.size(24.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(
-                                text = "Horarios",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }*/
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -302,9 +279,10 @@ fun HomeUserView(
                             Icon(
                                 imageVector = Icons.Filled.DateRange,
                                 contentDescription = "Horarios",
-                                modifier = Modifier.size(48.dp) // Increased icon size
+                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                modifier = Modifier.size(48.dp)
                             )
-                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
+                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Horarios",
                                 fontSize = 20.sp,
@@ -313,6 +291,159 @@ fun HomeUserView(
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Button(
+                        onClick = {
+                            navController.navigate("scan_qr_assist_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageChecklistResource = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_checklist_dark
+                            } else {
+                                R.drawable.icon_checklist_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageChecklistResource),
+                                contentDescription = "Mi asistencia",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Mi asistencia",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("scan_qr_access_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageQRResource = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_qr_scan_dark
+                            } else {
+                                R.drawable.icon_qr_scan_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageQRResource),
+                                contentDescription = "Escanear QR seguridad ",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
+                            Text(
+                                text = "Escanear QR",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Button(
+                        onClick = {
+                            navController.navigate("generate_qr_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageGenerateQrResource = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_qr_dark
+                            } else {
+                                R.drawable.icons8_qr_code_100_l
+                            }
+                            Image(
+                                painter = painterResource(id = imageGenerateQrResource),
+                                contentDescription = "Generar QR lugar",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Generar QR",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("history_user_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                R.drawable.historial_dark
+                            } else {
+                                R.drawable.historial_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageHistorialResource),
+                                contentDescription = "Historial entradas y salidas",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Historial",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
+
             }
         }
     }

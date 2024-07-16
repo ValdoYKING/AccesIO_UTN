@@ -286,24 +286,26 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     Text(
                         text = "NOMBRE:",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        //fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
                     //nombre completo
                     Text(
                         text = dataC.state.nombre + " " + dataC.state.apellido,
                         fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
                     Text(
                         text = "MATRICULA:",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                        //fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
                     Text(
                         text = dataC.state.matricula,
                         fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
                 }
@@ -317,6 +319,7 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
                     //color = Color.Black
                 )
                 Text(
