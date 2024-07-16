@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -39,17 +40,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -72,9 +70,7 @@ import androidx.compose.ui.unit.toSize
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.pixelfusion.accesio_utn.R
-import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
-import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 import java.time.Instant
 import java.time.ZoneId
 
@@ -441,11 +437,18 @@ fun FormRegisterView(
                         ) {
                             Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                         } else {
-                            viewModel.registerUser(navController, context)
+                            //viewModel.registerUser(navController, context)
+                            viewModel.fetchData(navController, context)
                         }
                     }
                 ) {
                     Text("Enviar")
+                }
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(40.dp)
+                    )
                 }
             }
             item {
