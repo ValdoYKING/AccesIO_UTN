@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,12 +29,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -66,7 +73,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.Objects
-
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,9 +86,25 @@ fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
         context.packageName + ".provider", file
     )
 
+    // Estado para la existencia de imagen
+    var hasImage by remember { mutableStateOf(false) }
+
+    // Verificar si el usuario ya tiene una imagen
+    LaunchedEffect(Unit) {
+        viewModel.checkUserImage { exists ->
+            hasImage = exists
+            if (exists) {
+                // Navegar a la vista correspondiente si ya tiene imagen
+                navController.navigate("home_user_view") {
+                    popUpTo("image_user_view") { inclusive = true }
+                }
+            }
+        }
+    }
+
     // Estados
     var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val imageDefault = R.drawable.photo
+    val imageDefault = R.drawable.cam_image
 
     // Lógica para lanzar la cámara
     val cameraLauncher = rememberLauncherForActivityResult(
@@ -112,19 +134,27 @@ fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
     // Interfaz de usuario
     Scaffold(
         topBar = {
-            Spacer(modifier = Modifier.height(26.dp))
+            Spacer(modifier = Modifier.height(46.dp))
             TopAppBar(title = {
                 Text(
-                    "Agrega tu imagen 😎",
+                    "Tómate una fotografía 😎",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    fontSize = 40.sp,
+                    fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
                 )
             })
         }
     ) {
-        if (imageUri != null) {
+        // Mostrar círculo de carga si está en proceso
+        if (viewModel.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else if (imageUri != null) {
             // Vista previa de la imagen
             Column(
                 modifier = Modifier
@@ -140,18 +170,19 @@ fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row {
-                    Button(onClick = {
-                        // Lógica para subir la imagen
-                        //imageUri?.let { viewModel.uploadImageAndUpdateUser(context, it) }
-                        imageUri?.let {
-                            viewModel.uploadImageAndUpdateUser(context, it) {
-                                // Navigate to home_user_view after upload and update are successful
-                                navController.navigate("home_user_view") {
-                                    popUpTo("image_user_view") { inclusive = true }
+                    Button(
+                        onClick = {
+                            imageUri?.let {
+                                viewModel.uploadImageAndUpdateUser(context, it) {
+                                    // Navegar a home_user_view después de la carga
+                                    navController.navigate("home_user_view") {
+                                        popUpTo("image_user_view") { inclusive = true }
+                                    }
                                 }
                             }
-                        }
-                    }) {
+                        },
+                        enabled = !viewModel.isLoading // Deshabilitar botón si está cargando
+                    ) {
                         Text("Subir")
                     }
                     Spacer(modifier = Modifier.width(16.dp))
@@ -169,14 +200,32 @@ fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("Sugerencias para tomar la fotografía:")
+                Text(
+                    text = "Sugerencias para tomar la fotografía:",
+                    fontSize = 25.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("1. Cara descubierta")
-                Text("2. Sin maquillaje")
-                Text("3. Sin anteojos")
+
+                val suggestions = listOf(
+                    "Cara descubierta 🙂",
+                    "Sin maquillaje 👩",
+                    "Sin anteojos 👱‍♂️",
+                    "Fondo claro 🌅",
+                )
+
+                suggestions.forEach { suggestion ->
+                    SuggestionItem(suggestion)
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
-
+                Text(
+                    text = "Presiona la cámara cuando estés listo 👀",
+                    fontSize = 15.sp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
                 Image(
                     modifier = Modifier
                         .clickable {
@@ -192,11 +241,12 @@ fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                ButtonNext(navController, "home_user_view")
+                //ButtonNext(navController, "home_user_view")
             }
         }
     }
 }
+
 
 @SuppressLint("SimpleDateFormat")
 fun Context.createImageFileUser(): File {
@@ -210,124 +260,26 @@ fun Context.createImageFileUser(): File {
     )
 }
 
-
-/*
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageUserView(navController: NavController, viewModel: ImageUserViewModel) {
-    val context = LocalContext.current
-
-    val file = context.createImageFileUser()
-    val uri = FileProvider.getUriForFile(
-        Objects.requireNonNull(context),
-        context.packageName + ".provider", file
-    )
-
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
-    val imageDefault = R.drawable.photo
-
-    val cameraLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.TakePicture()
-    ) { success ->
-        if (success) {
-            imageUri = uri
-        }
-    }
-
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            viewModel.showToast(context, "Permiso Concedido")
-            cameraLauncher.launch(uri)
-        } else {
-            viewModel.showToast(context, "Permiso Denegado")
-        }
-    }
-
-    val permissionCheckResult = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
-
-    Scaffold(
-        topBar = {
-            Spacer(modifier = Modifier.height(26.dp))
-            TopAppBar(title = {
-                Text(
-                    "Agrega tu imagen 😎",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    fontSize = 40.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            })
-        }
+fun SuggestionItem(suggestion: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
-        if (imageUri != null) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = null,
-                    modifier = Modifier.size(400.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Row {
-                    Button(onClick = {
-                        imageUri?.let {
-                            viewModel.uploadImageAndUpdateUser(context, it) {
-                                viewModel.setImageUri(it) // Establece la URI de la imagen en el ViewModel
-                                navController.navigate("home_user_view") {
-                                    popUpTo("image_user_view") { inclusive = true }
-                                }
-                            }
-                        }
-                    }) {
-                        Text("Subir")
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Button(onClick = { imageUri = null }) {
-                        Text("Cancelar")
-                    }
-                }
-            }
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("Sugerencias para tomar la fotografía:")
-                Spacer(modifier = Modifier.height(8.dp))
-                Text("1. Cara descubierta")
-                Text("2. Sin maquillaje")
-                Text("3. Sin anteojos")
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Image(
-                    modifier = Modifier
-                        .clickable {
-                            if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                                cameraLauncher.launch(uri)
-                            } else {
-                                permissionLauncher.launch(Manifest.permission.CAMERA)
-                            }
-                        }
-                        .padding(16.dp, 8.dp),
-                    painter = rememberAsyncImagePainter(imageDefault),
-                    contentDescription = null
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-                ButtonNext(navController, "home_user_view")
-            }
-        }
+        Icon(
+            imageVector = Icons.Default.CheckCircle,
+            contentDescription = null,
+            tint = Color.Green,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = suggestion,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+        )
     }
-}*/
+}

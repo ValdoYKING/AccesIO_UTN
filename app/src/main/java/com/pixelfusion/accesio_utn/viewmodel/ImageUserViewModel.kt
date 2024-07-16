@@ -53,14 +53,12 @@ class ImageUserViewModel : ViewModel() {
         imageUri: Uri,
         onSuccess: () -> Unit
     ) {
+        isLoading = true // Establecer en true al iniciar la carga
         val userId = auth.currentUser?.uid ?: return
         val storageRef =
             storage.reference.child("user_images/${userId}/${imageUri.lastPathSegment}")
 
-        Log.d("ImageUpload", "Uploading to: ${storageRef.path}")
-
         val uploadTask = storageRef.putFile(imageUri)
-
 
         uploadTask.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -77,6 +75,22 @@ class ImageUserViewModel : ViewModel() {
             }
         }.addOnFailureListener { exception ->
             showToast(context, "Error al subir la imagen: ${exception.message}")
+        }.addOnCompleteListener {
+            isLoading = false // Establecer en false al finalizar la carga
         }
     }
+
+    fun checkUserImage(onImageExists: (Boolean) -> Unit) {
+        val userId = auth.currentUser?.uid ?: return
+        database.child("users").child(userId).child("image_path").get()
+            .addOnSuccessListener { snapshot ->
+                val imagePath = snapshot.value as? String
+                onImageExists(imagePath != null && imagePath.isNotEmpty())
+            }
+            .addOnFailureListener { exception ->
+                // Manejar el error si es necesario
+                onImageExists(false)
+            }
+    }
+
 }
