@@ -60,7 +60,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("home_user_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
+                            inclusive = true
                         }
                     }
                 }
@@ -77,7 +77,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("credential_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
+                            inclusive = true
                         }
                     }
                 }
@@ -94,7 +94,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("profile_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
+                            inclusive = true
                         }
                     }
                 }
@@ -123,7 +123,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 onClick = {
                     navController.navigate("history_user_view") {
                         popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
+                            inclusive = true
                         }
                     }
                 }
