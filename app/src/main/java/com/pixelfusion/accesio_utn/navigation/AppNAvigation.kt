@@ -16,6 +16,8 @@ import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
+import com.pixelfusion.accesio_utn.view.GenerateQrView
+import com.pixelfusion.accesio_utn.view.HistoryUserView
 import com.pixelfusion.accesio_utn.view.HomeUserView
 import com.pixelfusion.accesio_utn.view.HorarioView
 import com.pixelfusion.accesio_utn.view.ImageCamView
@@ -23,6 +25,8 @@ import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.PerfilView
+import com.pixelfusion.accesio_utn.view.ScanQRAccessView
+import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
@@ -49,22 +53,6 @@ fun MyApp() {
     val context = LocalContext.current
     val prefs = PreferenceHelper(context)
     val currentUser = FirebaseAuth.getInstance().currentUser
-
-    // Verificar si ya se ha visto la pantalla de inicio
-    //val startDestination = if (prefs.hasSeenStartScreen) "login_screen" else "start_screen"
-    /*val startDestination = when {
-        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado
-        else -> "home_user_view" // Autenticado
-    }
-    */
-    // Verificar si ya se ha visto la pantalla de inicio
-    /*Log.d("PreferenceHelper", "hasSeenStartScreen: ${prefs.hasSeenStartScreen}")
-    val startDestination = when {
-        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado
-        prefs.hasSeenStartScreen -> "home_user_view" // Autenticado y ya vio la pantalla de inicio
-        else -> "start_screen" // No autenticado y no ha visto la pantalla de inicio
-    }*/
-
     // Determinar la pantalla de inicio
     val startDestination = when {
         currentUser?.email.isNullOrEmpty() && !prefs.hasSeenStartScreen -> "start_screen" // No autenticado y no ha visto la pantalla de inicio
@@ -121,6 +109,22 @@ fun MyApp() {
 
         composable("about_view") {
             AboutView(navController)
+        }
+
+        composable("scan_qr_access_view") {
+            ScanQRAccessView(navController)
+        }
+
+        composable("scan_qr_assist_view") {
+            ScanQRAssistView(navController)
+        }
+
+        composable("generate_qr_view") {
+            GenerateQrView(navController)
+        }
+
+        composable("history_user_view") {
+            HistoryUserView(navController)
         }
     }
 }
