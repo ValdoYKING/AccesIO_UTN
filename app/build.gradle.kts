@@ -82,26 +82,28 @@ dependencies {
     implementation(libs.play.services.mlkit.text.recognition)
 
     //Constraint layout compose dependency
-    //implementation(libs.androidx.constraintlayout.compose)
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    //implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
+    implementation(libs.androidx.constraintlayout.compose)
     // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
-    //implementation(platform(libs.firebase.bom))
+    //implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+    implementation(platform(libs.firebase.bom))
 
 
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
-    //implementation(libs.firebase.analytics)
+    //implementation("com.google.firebase:firebase-analytics")
+    implementation(libs.firebase.analytics)
 
     // Add the dependency for the Realtime Database library
     // When using the BoM, you don't specify versions in Firebase library dependencies
-    //implementation(libs.firebase.database)
-    implementation("com.google.firebase:firebase-database")
+    //implementation("com.google.firebase:firebase-database")
+    implementation(libs.firebase.database)
     //Auth
-    implementation ("com.google.firebase:firebase-auth")
+    //implementation ("com.google.firebase:firebase-auth")
+    implementation(libs.google.firebase.auth)
     //storage
-    implementation("com.google.firebase:firebase-storage")
+    //implementation("com.google.firebase:firebase-storage")
+    implementation(libs.firebase.storage)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
