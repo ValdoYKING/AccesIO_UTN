@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -16,15 +17,32 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.model.UsuarioData
 import com.pixelfusion.accesio_utn.view.FormRegisterView
+import kotlinx.coroutines.launch
 
 class FormRegisterViewModel: ViewModel(){
     var state by mutableStateOf(UsuarioData())
+        private set
+
+    var isLoading by mutableStateOf(false)
         private set
 
     private lateinit var auth: FirebaseAuth
     private val database = Firebase.database.reference
 
     val fecha_creacion = System.currentTimeMillis()
+
+    fun fetchData(navController: NavController, context: Context) {
+        viewModelScope.launch {
+            try {
+                isLoading = true
+                registerUser(navController, context)
+            } catch (e: Exception) {
+                println("Error ${e.message}")
+            } finally {
+                isLoading = false
+            }
+        }
+    }
 
 
     fun onValue(value: String, key: String){
@@ -74,7 +92,7 @@ class FormRegisterViewModel: ViewModel(){
         showDialog = false
     }
 
-    fun registerUser(navController: NavController, context: Context) {
+    private suspend fun registerUser(navController: NavController, context: Context) {
         auth = Firebase.auth
         auth.createUserWithEmailAndPassword(state.correo_electronico, state.contrasena)
             .addOnCompleteListener { task ->
