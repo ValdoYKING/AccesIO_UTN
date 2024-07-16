@@ -1,6 +1,7 @@
 package com.pixelfusion.accesio_utn.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -32,8 +35,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.ui.theme.WhiteColor2
 import com.pixelfusion.accesio_utn.ui.theme.blackdark
 import com.pixelfusion.accesio_utn.ui.theme.utnGreen
@@ -61,7 +66,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 }
             )
             NavigationRailItem(
-                icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Credencial") },
+                icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Credencial") },
                 label = { Text("Credencial") },
                 selected = currentRoute == "credential_view",
                 colors = NavigationRailItemDefaults.colors(
@@ -78,24 +83,7 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 }
             )
             NavigationRailItem(
-                icon = { Icon(Icons.Filled.DateRange, contentDescription = "Horarios") },
-                label = { Text("Horarios") },
-                selected = currentRoute == "horario_view",
-                colors = NavigationRailItemDefaults.colors(
-                    selectedIconColor = if (isSystemInDarkTheme()) utnGreenLight else utnGreen,
-                    selectedTextColor = if (isSystemInDarkTheme()) WhiteColor2 else blackdark,
-                    indicatorColor = if (isSystemInDarkTheme()) utnGreen else utnGreenLight
-                ),
-                onClick = {
-                    navController.navigate("horario_view") {
-                        popUpTo(navController.graph.startDestinationId) {
-                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
-                        }
-                    }
-                }
-            )
-            NavigationRailItem(
-                icon = { Icon(Icons.Filled.AccountBox, contentDescription = "Mis datos") },
+                icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Mis datos") },
                 label = { Text("Mis datos") },
                 selected = currentRoute == "profile_view",
                 colors = NavigationRailItemDefaults.colors(
@@ -105,6 +93,35 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 ),
                 onClick = {
                     navController.navigate("profile_view") {
+                        popUpTo(navController.graph.startDestinationId) {
+                            inclusive = true // Eliminar todas las pantallas anteriores de la pila
+                        }
+                    }
+                }
+            )
+            NavigationRailItem(
+                //icon = { Icon(Icons.Filled.Refresh, contentDescription = "Historial") },
+                icon = {
+                    val imageHistorialResource = if (isSystemInDarkTheme()) {
+                        R.drawable.historial_light
+                    } else {
+                        R.drawable.historial_black
+                    }
+                    Image(
+                        painter = painterResource(id = imageHistorialResource),
+                        contentDescription = "Historial entradas y salidas",
+                        modifier = Modifier.size(22.dp)
+                    )
+                },
+                label = { Text("Historial") },
+                selected = currentRoute == "history_user_view",
+                colors = NavigationRailItemDefaults.colors(
+                    selectedIconColor = if (isSystemInDarkTheme()) utnGreenLight else utnGreen,
+                    selectedTextColor = if (isSystemInDarkTheme()) WhiteColor2 else blackdark,
+                    indicatorColor = if (isSystemInDarkTheme()) utnGreen else utnGreenLight
+                ),
+                onClick = {
+                    navController.navigate("history_user_view") {
                         popUpTo(navController.graph.startDestinationId) {
                             inclusive = true // Eliminar todas las pantallas anteriores de la pila
                         }
