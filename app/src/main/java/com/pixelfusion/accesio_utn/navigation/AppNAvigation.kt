@@ -10,7 +10,7 @@ import androidx.navigation.navArgument
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.view.AboutView
-import com.pixelfusion.accesio_utn.view.AuthScreen
+
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.HomeUserView
@@ -21,7 +21,7 @@ import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.RegisterScreen
-import com.pixelfusion.accesio_utn.viewmodel.AuthViewModel
+
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
@@ -47,10 +47,10 @@ fun MyApp() {
     NavHost(navController, startDestination = "start_screen") {
         composable("start_screen") { StartScreen(navController) }
         // login con register
-        composable("auth_screen"){
-            val viewModel: AuthViewModel = viewModel()
-            AuthScreen(navController, viewModel)
-        }
+        //("auth_screen"){
+          //  val viewModel: AuthViewModel = viewModel()
+            //AuthScreen(navController, viewModel)
+        //}
         //No usar :c
         composable("register_screen") { RegisterScreen(navController) }
 
