@@ -32,6 +32,7 @@ import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 
 @Composable
@@ -112,7 +113,8 @@ fun MyApp() {
         }
 
         composable("scan_qr_access_view") {
-            ScanQRAccessView(navController)
+            val viewModelScanQR: ScanQRAccessViewModel = viewModel()
+            ScanQRAccessView(navController, viewModelScanQR)
         }
 
         composable("scan_qr_assist_view") {
