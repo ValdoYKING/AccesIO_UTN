@@ -55,11 +55,10 @@ fun MyApp() {
     val context = LocalContext.current
     val prefs = PreferenceHelper(context)
     val currentUser = FirebaseAuth.getInstance().currentUser
-    // Determinar la pantalla de inicio
     val startDestination = when {
-        currentUser?.email.isNullOrEmpty() && !prefs.hasSeenStartScreen -> "start_screen" // No autenticado y no ha visto la pantalla de inicio
-        currentUser?.email.isNullOrEmpty() -> "login_screen" // No autenticado pero ha visto la pantalla de inicio
-        else -> "home_user_view" // Autenticado
+        currentUser?.email.isNullOrEmpty() && !prefs.hasSeenStartScreen -> "start_screen"
+        currentUser?.email.isNullOrEmpty() -> "login_screen"
+        else -> "home_user_view"
     }
 
     NavHost(navController, startDestination = startDestination) {
