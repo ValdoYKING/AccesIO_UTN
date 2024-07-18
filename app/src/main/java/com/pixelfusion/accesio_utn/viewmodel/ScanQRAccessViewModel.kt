@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseException
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -39,7 +40,8 @@ class ScanQRAccessViewModel : ViewModel() {
     }
 
     fun updateQrCodeContent(qrContent: String) {
-        val regex = """(\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
+        //val regex = """(\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
+        val regex = """(\d{2}:\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
         val matchResult = regex.find(qrContent)
         if (matchResult != null) {
             val (hora, fecha, matricula, uid) = matchResult.destructured
@@ -67,15 +69,19 @@ class ScanQRAccessViewModel : ViewModel() {
         val userRef = database.child("users").child(id_user)
         userRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val usuarioData = dataSnapshot.getValue(UsuarioData::class.java)
-                if (usuarioData != null) {
-                    user = usuarioData
+                try {
+                    val usuarioData = dataSnapshot.getValue(UsuarioData::class.java)
+                    if (usuarioData != null) {
+                        user = usuarioData
+                        isUserDetailDialogVisible = true
+                        println("Datos del usuario obtenidos correctamente")
+                    } else {
+                        println("No se encontraron datos para el usuario con id: $id_user")
+                    }
+                } catch (e: DatabaseException) {
+                    println("Error al deserializar los datos del usuario: ${e.message}")
+                } finally {
                     isLoading = false
-                    isUserDetailDialogVisible = true
-                    println("Datos del usuario obtenidos correctamente")
-                } else {
-                    isLoading = false
-                    println("No se encontraron datos para el usuario con id: $id_user")
                 }
             }
 
