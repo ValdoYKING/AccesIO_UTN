@@ -34,6 +34,7 @@ import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
+import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
 
 @Composable
 fun AppNavigation() {
@@ -105,13 +106,13 @@ fun MyApp() {
         }
 
         composable("profile_view") {
-            PerfilView(navController)
+            val viewModelU: UserProfileViewModel = viewModel()
+            PerfilView(navController, viewModelU)
         }
 
         composable("about_view") {
             AboutView(navController)
         }
-
         composable("scan_qr_access_view") {
             val viewModelScanQR: ScanQRAccessViewModel = viewModel()
             ScanQRAccessView(navController, viewModelScanQR)

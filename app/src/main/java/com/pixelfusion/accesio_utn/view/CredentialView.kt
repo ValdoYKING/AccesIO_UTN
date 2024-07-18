@@ -57,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.CardTittle
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
@@ -66,6 +68,10 @@ import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode39
 import com.pixelfusion.accesio_utn.logicadependencias.generateQRCode
 import com.pixelfusion.accesio_utn.ui.theme.BackgroundCredential
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
+import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -337,6 +343,19 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
 @Composable
 fun ContenidoTraseroCard(dataC: CredentialViewModel) {
     val backgroundPainter = painterResource(id = R.drawable.edomex02)
+    val uid = Firebase.auth.currentUser?.uid.orEmpty()
+    // State para mantener la hora y la fecha actuales
+    var hora by remember { mutableStateOf(getCurrentTime()) }
+    var fecha by remember { mutableStateOf(getCurrentDate()) }
+
+    // Corutina para actualizar la hora y la fecha cada 3 segundos
+    LaunchedEffect(Unit) {
+        while (true) {
+            hora = getCurrentTime()
+            fecha = getCurrentDate()
+            delay(2000) // Espera 3 segundos
+        }
+    }
 
     OutlinedCard(
         colors = CardDefaults.cardColors(
@@ -386,19 +405,11 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                         fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
-                val hora = "13:58:33"
-                val fecha = "14-06-2024"
-                val matricula = "232271007"
 
-                val qrContent = "Hora: $hora\nFecha: $fecha\nMatrícula: $matricula"
-                QRCode(content = qrContent)
-                // Imagen de perfil
-                /*Image(
-                    painter = painterResource(id = R.drawable.qr_example),
-                    contentDescription = "QR profile",
-                    modifier = Modifier
-                        .size(150.dp)
-                )*/
+
+                val matricula = dataC.state.matricula
+
+                QRCode(hora, fecha, matricula, uid)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -435,6 +446,18 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
             }
         }
     }
+}
+
+// Función para obtener la hora actual en formato HH:mm:ss
+fun getCurrentTime(): String {
+    val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    return sdf.format(Date())
+}
+
+// Función para obtener la fecha actual en formato dd-MM-yyyy
+fun getCurrentDate(): String {
+    val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    return sdf.format(Date())
 }
 
 
@@ -478,13 +501,20 @@ fun QRCodeAndBarcode(contentQR: String, qrWidth: Int = 300, qrHeight: Int = 300,
 
 
 @Composable
-fun QRCode(content: String, qrWidth: Int = 300, qrHeight: Int = 300) {
+fun QRCode(
+    hora: String,
+    fecha: String,
+    matricula: String,
+    UIDUT: String,
+    qrWidth: Int = 300,
+    qrHeight: Int = 300
+) {
     //val qrCodeBitmap = generateQRCode(content, qrWidth.toString(), qrHeight.toString())
     val qrCodeBitmap = generateQRCode(
-        "14:36",
-        "17-07-2024",
-        "232271007",
-        "7wBtUVnfZmhlHIqcb6pPXwcafc53",
+        hora,
+        fecha,
+        matricula,
+        UIDUT,
         qrWidth,
         qrHeight
     )
