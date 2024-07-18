@@ -122,7 +122,7 @@ fun FormRegisterView(
 
     Scaffold(
         topBar = {
-            TopBarRegister()
+            TopBarRegister(text = "Registrate")
         }
     ) { innerPadding ->
         LazyColumn(
@@ -469,7 +469,7 @@ fun FormRegisterView(
 }
 
 @Composable
-fun TopBarRegister(){
+fun TopBarRegister(text: String) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -495,7 +495,7 @@ fun TopBarRegister(){
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Registrate",
+                text = text,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 fontSize = 30.sp,
