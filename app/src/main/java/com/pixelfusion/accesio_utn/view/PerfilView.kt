@@ -43,6 +43,7 @@ import coil.compose.rememberImagePainter
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
+import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.ui.theme.utnGreen
 import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
 import kotlinx.coroutines.launch
@@ -110,13 +111,7 @@ fun PerfilView(
                         )
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    Text(
-                        text = "Mi Perfil",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
-                        color = utnGreen,
-                        modifier = Modifier.padding(bottom = 16.dp), // Aquí puedes cambiar el margen inferior
-                    )
+                    TopBarUT("Mi Perfil")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
