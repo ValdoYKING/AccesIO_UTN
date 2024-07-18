@@ -41,11 +41,29 @@ fun generateBarcodeCode128(content: String, width: Int, height: Int): Bitmap? {
 }
 
 
-fun generateQRCode(hora: String, fecha: String, matricula: String, width: Int = 300, height: Int = 300): Bitmap? {
+fun generateQRCode(
+    hora: String,
+    fecha: String,
+    matricula: String,
+    UID: String,
+    width: Int = 300,
+    height: Int = 300
+): Bitmap? {
     return try {
-        val qrContent = "Hora: $hora\nFecha: $fecha\nMatrícula: $matricula"
+        //val qrContent = "Hora: $hora\nFecha: $fecha\nMatrícula: $matricula \nUID: $UID"
+
+        val qrContentArray = listOf(
+            "Hora: $hora",
+            "Fecha: $fecha",
+            "Matrícula:$matricula",
+            "UID: $UID"
+        )
+
+        val qrContent = "$hora,$fecha,$matricula,$UID"
+        //val qrContent = hora fecha matricula UID
 
         val bitMatrix: BitMatrix = MultiFormatWriter().encode(
+            //qrContent,
             qrContent,
             BarcodeFormat.QR_CODE,
             width,

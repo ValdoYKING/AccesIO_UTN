@@ -480,7 +480,14 @@ fun QRCodeAndBarcode(contentQR: String, qrWidth: Int = 300, qrHeight: Int = 300,
 @Composable
 fun QRCode(content: String, qrWidth: Int = 300, qrHeight: Int = 300) {
     //val qrCodeBitmap = generateQRCode(content, qrWidth.toString(), qrHeight.toString())
-    val qrCodeBitmap = generateQRCode("15:36","14-06-2024","232271007", qrWidth, qrHeight)
+    val qrCodeBitmap = generateQRCode(
+        "14:36",
+        "17-07-2024",
+        "232271007",
+        "7wBtUVnfZmhlHIqcb6pPXwcafc53",
+        qrWidth,
+        qrHeight
+    )
     //hora: String, fecha: String, matricula: String, width: Int, height: Int
 
     qrCodeBitmap?.let {
