@@ -46,6 +46,7 @@ fun generateQRCode(
     fecha: String,
     matricula: String,
     UID: String,
+    locationString: String,
     width: Int = 300,
     height: Int = 300
 ): Bitmap? {
@@ -59,7 +60,7 @@ fun generateQRCode(
             "UID: $UID"
         )
 
-        val qrContent = "$hora,$fecha,$matricula,$UID"
+        val qrContent = "$hora,$fecha,$matricula,$UID,$locationString"
         //val qrContent = hora fecha matricula UID
 
         val bitMatrix: BitMatrix = MultiFormatWriter().encode(

@@ -5,6 +5,8 @@ data class AccessUserModel(
     val fecha_access: String,
     val hora_access: String,
     val id_user: String,
+    val latitude: Double,
+    val longitude: Double
 ) {
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", 0.0, 0.0)
 }
