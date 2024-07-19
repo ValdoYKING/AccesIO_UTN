@@ -347,13 +347,13 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
     // State para mantener la hora y la fecha actuales
     var hora by remember { mutableStateOf(getCurrentTime()) }
     var fecha by remember { mutableStateOf(getCurrentDate()) }
-
+    val matricula = dataC.state.matricula
     // Corutina para actualizar la hora y la fecha cada 3 segundos
     LaunchedEffect(Unit) {
         while (true) {
             hora = getCurrentTime()
             fecha = getCurrentDate()
-            delay(2000) // Espera 3 segundos
+            delay(2000) // Espera 2 segundos
         }
     }
 
@@ -400,15 +400,12 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                 )
                 BarcodeImage(content = dataC.state.matricula, width = 220, height = 80)
                 Text(
-                        text = dataC.state.matricula,
+                    text = matricula,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         //color = Color.Black
                     )
-
-
-                val matricula = dataC.state.matricula
-
+                //Codigo QR
                 QRCode(hora, fecha, matricula, uid)
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -448,17 +445,31 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
     }
 }
 
-// Función para obtener la hora actual en formato HH:mm:ss
 fun getCurrentTime(): String {
     val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
     return sdf.format(Date())
 }
 
-// Función para obtener la fecha actual en formato dd-MM-yyyy
 fun getCurrentDate(): String {
     val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
     return sdf.format(Date())
 }
+
+// Función para obtener la hora actual en formato HH:mm:ss en la zona horaria UTC-6:00
+/*fun getCurrentTime(): String {
+    val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    val timezone = TimeZone.getTimeZone("America/Mexico_City")
+    sdf.timeZone = timezone
+    return sdf.format(Date())
+}*/
+
+// Función para obtener la fecha actual en formato dd-MM-yyyy en la zona horaria UTC-6:00
+/*fun getCurrentDate(): String {
+    val sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+    val timezone = TimeZone.getTimeZone("America/Mexico_City")
+    sdf.timeZone = timezone
+    return sdf.format(Date())
+}*/
 
 
 @Composable
@@ -509,7 +520,6 @@ fun QRCode(
     qrWidth: Int = 300,
     qrHeight: Int = 300
 ) {
-    //val qrCodeBitmap = generateQRCode(content, qrWidth.toString(), qrHeight.toString())
     val qrCodeBitmap = generateQRCode(
         hora,
         fecha,
@@ -518,8 +528,6 @@ fun QRCode(
         qrWidth,
         qrHeight
     )
-    //hora: String, fecha: String, matricula: String, width: Int, height: Int
-
     qrCodeBitmap?.let {
         Image(
             bitmap = it.asImageBitmap(),
