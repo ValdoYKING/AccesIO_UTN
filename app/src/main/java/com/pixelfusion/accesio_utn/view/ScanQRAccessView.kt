@@ -54,8 +54,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.draw.clip
@@ -181,7 +183,9 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(16.dp),
+                            .padding(paddingValues)
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
@@ -191,7 +195,7 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
                             factory = { previewView },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(300.dp)
+                                .height(320.dp)
                                 .clip(RoundedCornerShape(16.dp))
                                 .border(4.dp, Color.Green, RoundedCornerShape(16.dp))
                         )
@@ -287,22 +291,22 @@ fun UserDetailDialog(user: UsuarioData, onDismiss: () -> Unit) {
         title = {
             Text(
                 text = user.nombre + " " + user.apellido,
-                textAlign = TextAlign.Center, // Center title
+                textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
         },
         text = {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally, // Center column content
+                horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.padding(16.dp) // Add padding to the column
+                modifier = Modifier.padding(16.dp)
             ) {
                 Image(
                     painter = rememberAsyncImagePainter(user.image_path),
                     contentDescription = "Imagen usuario",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .size(180.dp * 1.15f) // Increase size by 15%
+                        .size(180.dp * 1.15f)
                         .border(
                             BorderStroke(borderWidth, rainbowColorsBrush),
                             CircleShape
@@ -314,15 +318,15 @@ fun UserDetailDialog(user: UsuarioData, onDismiss: () -> Unit) {
                 // Center the text "Rol:" and the id_rol
                 Row(
                     horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier.fillMaxWidth() // Fill the width for proper centering
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
+                    /*Text(
                         text = "Rol: ",
-                        fontSize = 18.sp * 1.15f // Increase text size by 15%
-                    )
+                        fontSize = 18.sp * 1.15f
+                    )*/
                     Text(
                         text = user.id_rol,
-                        fontSize = 18.sp * 1.15f // Increase text size by 15%
+                        fontSize = 18.sp * 1.15f
                     )
                 }
             }

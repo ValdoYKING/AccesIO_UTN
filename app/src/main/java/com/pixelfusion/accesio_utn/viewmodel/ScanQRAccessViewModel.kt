@@ -46,15 +46,19 @@ class ScanQRAccessViewModel : ViewModel() {
     }
 
     fun updateQrCodeContent(qrContent: String) {
-        val regex = """(\d{2}:\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
+        //val regex = """(\d{2}:\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
+        val regex =
+            """(\d{2}:\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+),(-?\d+\.\d+),(-?\d+\.\d+)""".toRegex()
         val matchResult = regex.find(qrContent)
         if (matchResult != null) {
-            val (hora, fecha, matricula, uid) = matchResult.destructured
+            val (hora, fecha, matricula, uid, latitude, longitude) = matchResult.destructured
             state = AccessUserModel(
                 matricula = matricula,
                 fecha_access = fecha,
                 hora_access = hora,
-                id_user = uid
+                id_user = uid,
+                latitude = latitude.toDouble(),
+                longitude = longitude.toDouble()
             )
             insertAccessUserData()
             fetchUsuarioData(uid)

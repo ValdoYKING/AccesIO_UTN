@@ -1,7 +1,12 @@
 package com.pixelfusion.accesio_utn.view
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Location
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -54,9 +59,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.R
@@ -85,10 +92,36 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
+    val context = LocalContext.current // Obtén el contexto aquí
+
+    var location by remember { mutableStateOf<Location?>(null) }
+    val locationPermissionRequest = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                getLocation(context) { loc ->
+                    location = loc
+                }
+            }
+        }
+    )
+
     LaunchedEffect(Unit) {
         viewModel.fetchData()
-    }
 
+        // Solicitar permisos de ubicación
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            getLocation(context) { loc ->
+                location = loc
+            }
+        }
+    }
 
     LaunchedEffect(isFront) {
         rotation.animateTo(
@@ -117,25 +150,18 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if(viewModel.isLoading){
+                    if (viewModel.isLoading) {
                         Spacer(modifier = Modifier.height(20.dp))
-                        /*Text(
-                            text = "Cargando...",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            //color = Color.Black
-                        )*/
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(40.dp)
                                 .align(alignment = Alignment.CenterHorizontally)
                         )
-                    }else{
+                    } else {
                         Text(
                             text = titleCard,
                             fontSize = 15.sp,
                             fontWeight = FontWeight.Bold,
-                            //color = Color.Black
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Box(
@@ -171,7 +197,7 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
                                         cameraDistance = 12f * density
                                     }
                             ) {
-                                ContenidoTraseroCard(viewModel)
+                                ContenidoTraseroCard(viewModel, location)
                             }
                         }
                         Spacer(modifier = Modifier.height(12.dp))
@@ -181,6 +207,7 @@ fun CredentialView(navController: NavController, viewModel: CredentialViewModel)
         }
     )
 }
+
 
 @Composable
 fun ContenidoFrontalCard(dataC:CredentialViewModel) {
@@ -341,13 +368,14 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
 
 
 @Composable
-fun ContenidoTraseroCard(dataC: CredentialViewModel) {
+fun ContenidoTraseroCard(dataC: CredentialViewModel, location: Location?) {
     val backgroundPainter = painterResource(id = R.drawable.edomex02)
     val uid = Firebase.auth.currentUser?.uid.orEmpty()
     // State para mantener la hora y la fecha actuales
     var hora by remember { mutableStateOf(getCurrentTime()) }
     var fecha by remember { mutableStateOf(getCurrentDate()) }
     val matricula = dataC.state.matricula
+
     // Corutina para actualizar la hora y la fecha cada 3 segundos
     LaunchedEffect(Unit) {
         while (true) {
@@ -375,15 +403,6 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                 .fillMaxSize()
                 .background(BackgroundCredential)
         ) {
-            /*Image(
-                painter = backgroundPainter,
-                contentDescription = "Fondo de la tarjeta",
-                //contentScale = ContentScale.Crop,
-                colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
-                    setToScale(0.5f, 0.5f, 0.5f, 1f)
-                }),
-                modifier = Modifier.fillMaxWidth()
-            )*/
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -401,12 +420,14 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                 BarcodeImage(content = dataC.state.matricula, width = 220, height = 80)
                 Text(
                     text = matricula,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        //color = Color.Black
-                    )
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Bold,
+                )
                 //Codigo QR
-                QRCode(hora, fecha, matricula, uid)
+                if (location != null) {
+                    val locationString = "${location.latitude},${location.longitude}"
+                    QRCode(hora, fecha, matricula, uid, locationString)
+                }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -415,12 +436,11 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                         text = "Vigencia:",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        //color = Color.Black
                     )
+                    var si = "${location?.latitude},${location?.longitude}"
                     Text(
-                        text = "2023-2025",
+                        text = si,
                         fontSize = 14.sp,
-                        //color = Color.Black
                     )
                 }
                 HorizontalDivider(
@@ -432,18 +452,39 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel) {
                     text = dataC.state.carrera,
                     fontSize = 16.sp,
                     textAlign = TextAlign.Center,
-                    //color = Color.Black
                 )
                 Text(
                     text = dataC.state.id_rol,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    //color = Color.Black,
                 )
             }
         }
     }
 }
+
+// Función para obtener la ubicación del usuario
+fun getLocation(context: android.content.Context, callback: (Location?) -> Unit) {
+    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+    if (ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                // La ubicación se obtuvo exitosamente
+                callback(location)
+            }
+            .addOnFailureListener { exception ->
+                // Error al obtener la ubicación
+                callback(null)
+            }
+    } else {
+        callback(null)
+    }
+}
+
 
 fun getCurrentTime(): String {
     val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -470,7 +511,6 @@ fun getCurrentDate(): String {
     sdf.timeZone = timezone
     return sdf.format(Date())
 }*/
-
 
 @Composable
 fun BarcodeImage(content: String, width: Int, height: Int) {
@@ -517,6 +557,7 @@ fun QRCode(
     fecha: String,
     matricula: String,
     UIDUT: String,
+    locationString: String,
     qrWidth: Int = 300,
     qrHeight: Int = 300
 ) {
@@ -525,6 +566,7 @@ fun QRCode(
         fecha,
         matricula,
         UIDUT,
+        locationString,
         qrWidth,
         qrHeight
     )
