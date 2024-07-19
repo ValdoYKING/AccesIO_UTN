@@ -2,10 +2,12 @@ package com.pixelfusion.accesio_utn.viewmodel
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -16,7 +18,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.pixelfusion.accesio_utn.model.AccessUserModel
 import com.pixelfusion.accesio_utn.model.UsuarioData
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ScanQRAccessViewModel : ViewModel() {
     var state by mutableStateOf(AccessUserModel())
@@ -26,21 +29,23 @@ class ScanQRAccessViewModel : ViewModel() {
     private val database = Firebase.database.reference
     private val storage = Firebase.storage
 
-    var isLoading by mutableStateOf(false)
-        private set
-
     var user by mutableStateOf(UsuarioData())
         private set
 
-    var isUserDetailDialogVisible by mutableStateOf(false)
+    var isLoading by mutableStateOf(false)
         private set
+
+    private var _isLoadingDialog by mutableStateOf(false)
+    val isLoadingDialog: Boolean get() = _isLoadingDialog
+
+    private var _isUserDetailDialogVisible by mutableStateOf(false)
+    val isUserDetailDialogVisible: Boolean get() = _isUserDetailDialogVisible
 
     init {
         auth = FirebaseAuth.getInstance()
     }
 
     fun updateQrCodeContent(qrContent: String) {
-        //val regex = """(\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
         val regex = """(\d{2}:\d{2}:\d{2}),(\d{2}-\d{2}-\d{4}),(\d{9}),([a-zA-Z0-9]+)""".toRegex()
         val matchResult = regex.find(qrContent)
         if (matchResult != null) {
@@ -52,7 +57,7 @@ class ScanQRAccessViewModel : ViewModel() {
                 id_user = uid
             )
             insertAccessUserData()
-            fetchUsuarioData(uid)  // Llamar para obtener datos del usuario
+            fetchUsuarioData(uid)
         } else {
             state = AccessUserModel()
             println("El formato del QR no coincide con el esperado")
@@ -73,8 +78,18 @@ class ScanQRAccessViewModel : ViewModel() {
                     val usuarioData = dataSnapshot.getValue(UsuarioData::class.java)
                     if (usuarioData != null) {
                         user = usuarioData
-                        isUserDetailDialogVisible = true
-                        println("Datos del usuario obtenidos correctamente")
+                        _isLoadingDialog = true
+
+                        // Iniciar una corrutina para cerrar el indicador de progreso después de 2 segundos
+                        viewModelScope.launch {
+                            delay(1000L)
+                            _isLoadingDialog = false
+                            _isUserDetailDialogVisible = true
+
+                            // Cerrar el AlertDialog después de otros 2 segundos
+                            delay(3000L)
+                            _isUserDetailDialogVisible = false
+                        }
                     } else {
                         println("No se encontraron datos para el usuario con id: $id_user")
                     }
@@ -85,18 +100,19 @@ class ScanQRAccessViewModel : ViewModel() {
                 }
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                isLoading = false
-                println("Error al obtener los datos del usuario: ${databaseError.message}")
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error
             }
         })
     }
 
     fun dismissUserDetailDialog() {
-        isUserDetailDialogVisible = false
+        _isUserDetailDialogVisible = false
     }
 
-    fun showToast(context: Context, message: String) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    fun showUserDetailDialog(visible: Boolean) {
+        _isUserDetailDialogVisible = visible
     }
 }
+
+

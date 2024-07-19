@@ -47,14 +47,23 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import android.Manifest
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
@@ -65,6 +74,7 @@ import com.pixelfusion.accesio_utn.model.UsuarioData
 import com.pixelfusion.accesio_utn.ui.theme.blackdark
 import com.pixelfusion.accesio_utn.ui.theme.utnGreen
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
+import kotlinx.coroutines.delay
 import java.util.concurrent.Executors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -96,18 +106,28 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
         hasCameraPermission = isGranted
     }
 
+    var isBackCamera by remember { mutableStateOf(true) }
+
     // Variables para controlar escaneos
     var lastScanTime by remember { mutableStateOf(0L) }
     var lastScannedQr by remember { mutableStateOf<String?>(null) }
 
-    LaunchedEffect(cameraProviderFuture, hasCameraPermission) {
+    fun flipCamera() {
+        isBackCamera = !isBackCamera
+    }
+
+    LaunchedEffect(cameraProviderFuture, hasCameraPermission, isBackCamera) {
         if (hasCameraPermission) {
             val cameraProvider = cameraProviderFuture.get()
             val preview = Preview.Builder().build().also {
                 it.setSurfaceProvider(previewView.surfaceProvider)
             }
 
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+            val cameraSelector = if (isBackCamera) {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            } else {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            }
 
             val imageAnalysis = ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -117,7 +137,9 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
 
             imageAnalysis.setAnalyzer(Executors.newSingleThreadExecutor()) { imageProxy ->
                 val currentTime = System.currentTimeMillis()
-                if (currentTime - lastScanTime > 2000) { // Espera 2 segundos entre escaneos
+
+                // Deshabilitar escaneo si el diálogo está abierto
+                if (!viewModel.isUserDetailDialogVisible && currentTime - lastScanTime > 1000) { // Espera 1 segundo entre escaneos
                     processImageProxy(barcodeScanner, imageProxy) { result ->
                         if (result != lastScannedQr) {
                             lastScannedQr = result
@@ -174,15 +196,12 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
                                 .border(4.dp, Color.Green, RoundedCornerShape(16.dp))
                         )
                         Spacer(modifier = Modifier.height(16.dp))
+                        Button(onClick = { flipCamera() }) {
+                            Text("Voltear Cámara")
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
                         if (viewModel.isLoading) {
                             CircularProgressIndicator()
-                        } else {
-                            Column {
-                                Text(text = "Matrícula: ${viewModel.state.matricula}")
-                                Text(text = "Fecha de acceso: ${viewModel.state.fecha_access}")
-                                Text(text = "Hora de acceso: ${viewModel.state.hora_access}")
-                                Text(text = "ID Usuario: ${viewModel.state.id_user}")
-                            }
                         }
                     }
                 } else {
@@ -204,6 +223,18 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
                         }
                     }
                 }
+
+                if (viewModel.isLoadingDialog) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.5f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
                 if (viewModel.isUserDetailDialogVisible) {
                     UserDetailDialog(
                         user = viewModel.user,
@@ -218,24 +249,88 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
 
 @Composable
 fun UserDetailDialog(user: UsuarioData, onDismiss: () -> Unit) {
+    val rainbowColorsBrush = remember {
+        Brush.sweepGradient(
+            listOf(
+                Color(0xFFFFFFFF),
+                Color(0xFFFCE4EC),
+                Color(0xFFF8BBD0),
+                Color(0xFFF48FB1),
+                Color(0xFFF06292),
+                Color(0xFFEC407A),
+                Color(0xFFE91E63),
+                Color(0xFFD81B60),
+                Color(0xFFC2185B),
+                Color(0xFFAD1457),
+                Color(0xFF880E4F),
+                Color(0xFF6D0A3B),
+                Color(0xFF6D0A3B),
+                Color(0xFF880E4F),
+                Color(0xFFAD1457),
+                Color(0xFFC2185B),
+                Color(0xFFD81B60),
+                Color(0xFFE91E63),
+                Color(0xFFEC407A),
+                Color(0xFFF06292),
+                Color(0xFFF48FB1),
+                Color(0xFFF8BBD0),
+                Color(0xFFFCE4EC),
+                Color(0xFFFFFFFF)
+            )
+
+        )
+    }
+    val borderWidth = 4.dp
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = user.nombre) },
+        title = {
+            Text(
+                text = user.nombre + " " + user.apellido,
+                textAlign = TextAlign.Center, // Center title
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
         text = {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally, // Center column content
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.padding(16.dp) // Add padding to the column
+            ) {
                 Image(
                     painter = rememberAsyncImagePainter(user.image_path),
-                    contentDescription = null,
-                    modifier = Modifier.size(100.dp)
+                    contentDescription = "Imagen usuario",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(180.dp * 1.15f) // Increase size by 15%
+                        .border(
+                            BorderStroke(borderWidth, rainbowColorsBrush),
+                            CircleShape
+                        )
+                        .padding(borderWidth)
+                        .clip(CircleShape)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = "Rol: ${user.id_rol}")
+                // Center the text "Rol:" and the id_rol
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth() // Fill the width for proper centering
+                ) {
+                    Text(
+                        text = "Rol: ",
+                        fontSize = 18.sp * 1.15f // Increase text size by 15%
+                    )
+                    Text(
+                        text = user.id_rol,
+                        fontSize = 18.sp * 1.15f // Increase text size by 15%
+                    )
+                }
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) {
+            /*Button(onClick = onDismiss) {
                 Text("OK")
-            }
+            }*/
         }
     )
 }
