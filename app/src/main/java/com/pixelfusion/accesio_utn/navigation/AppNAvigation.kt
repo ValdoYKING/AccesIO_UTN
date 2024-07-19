@@ -23,12 +23,14 @@ import com.pixelfusion.accesio_utn.view.HorarioView
 import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
+import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
+import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
@@ -122,11 +124,16 @@ fun MyApp() {
         }
 
         composable("generate_qr_view") {
-            GenerateQrView(navController)
+            val viewModelGenerateQr: GenerateQrCodeViewModel = viewModel()
+            GenerateQrView(navController, viewModelGenerateQr)
         }
 
         composable("history_user_view") {
             HistoryUserView(navController)
+        }
+
+        composable("lista_mi_qr") {
+            ListQrGenerateView(navController)
         }
     }
 }

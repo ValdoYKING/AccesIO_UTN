@@ -53,7 +53,8 @@ fun MainTemplate(navController: NavController) {
         content = {
             Scaffold(
                 topBar = {
-                    SuperiorData(drawerState, scope)
+                    //SuperiorData(drawerState, scope)
+                    ContenidoSuperior(drawerState, scope, navController)
                 },
             ) { paddingValues ->
                 Column(
