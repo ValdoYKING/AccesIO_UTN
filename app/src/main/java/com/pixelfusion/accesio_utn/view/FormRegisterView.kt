@@ -321,7 +321,7 @@ fun FormRegisterView(
                 }
             }
             item {
-                if (dataU.carrera.isNotEmpty() && dataU.carrera != "PERSONAL" && dataU.carrera != "ADMINISTRATIVO" && dataU.carrera != "DOCENTE" && dataU.carrera != "VISITA") {
+                if (dataU.carrera.isNotEmpty() && dataU.carrera != "PERSONAL" && dataU.carrera != "ADMINISTRATIVO" && dataU.carrera != "PROFESOR" && dataU.carrera != "VISITA") {
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = dataU.cuatrimestre,

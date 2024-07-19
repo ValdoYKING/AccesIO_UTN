@@ -20,8 +20,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
@@ -436,6 +438,94 @@ fun HomeUserView(
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Historial",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Button(
+                        onClick = {
+                            navController.navigate("lista_mi_qr")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            /*val imageGenerateQrResource = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_qr_dark
+                            } else {
+                                R.drawable.icons8_qr_code_100_l
+                            }*/
+                            /*Image(
+                                painter = painterResource(id = imageGenerateQrResource),
+                                contentDescription = "lista mi qr",
+                                modifier = Modifier.size(48.dp)
+                            )*/
+                            Icon(
+                                imageVector = Icons.Filled.CheckCircle,
+                                contentDescription = "mis qr",
+                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Mis QR's",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("about_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            /*val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                R.drawable.historial_dark
+                            } else {
+                                R.drawable.historial_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageHistorialResource),
+                                contentDescription = "Historial entradas y salidas",
+                                modifier = Modifier.size(48.dp)
+                            )*/
+                            Icon(
+                                imageVector = Icons.Filled.Info,
+                                contentDescription = "temporal",
+                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Temporal",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
