@@ -128,6 +128,6 @@ fun ButtonNext(navController: NavController, route: String){
             navController.navigate(route)
         }
     ) {
-        Text("Saltar ")
+        Text("Volver al menú principal ")
     }
 }
