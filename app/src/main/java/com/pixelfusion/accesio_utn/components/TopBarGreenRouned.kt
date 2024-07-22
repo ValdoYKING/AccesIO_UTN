@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.ui.theme.GreenUTN80
+import com.pixelfusion.accesio_utn.ui.theme.utnGreen
 
 @Composable
 fun TopBarUT(text: String) {
@@ -32,8 +34,8 @@ fun TopBarUT(text: String) {
             .padding(8.dp)
             .height(50.dp),
         shape = RoundedCornerShape(16.dp),
-        color = Color(0xFF0D9462),
-        border = BorderStroke(2.dp, Color(0xFF0D9462)),
+        color = utnGreen,
+        border = BorderStroke(2.dp, utnGreen),
     ) {
         Column(
             modifier = Modifier

@@ -1,7 +1,16 @@
+@file:Suppress("DEPRECATION")
+
 package com.pixelfusion.accesio_utn.view
 
+import android.Manifest
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
+import android.content.pm.PackageManager
+import android.location.Location
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,9 +18,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -19,13 +29,16 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,18 +51,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
+import com.pixelfusion.accesio_utn.helper.getLocation
+import com.pixelfusion.accesio_utn.ui.theme.utnGreen
+import com.pixelfusion.accesio_utn.ui.theme.utnGreenDark
+import com.pixelfusion.accesio_utn.ui.theme.utnGreenLightWhite
+import com.pixelfusion.accesio_utn.ui.theme.utnGreenSuperLight
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewModel) {
@@ -57,129 +77,59 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-
-    // ViewModel data
     val dataAsistencia = viewModel.qrAsistencia
     val dataLugar = viewModel.qrLugar
     var tipoQR by remember { mutableStateOf("") }
-    val isLoading by remember { mutableStateOf(viewModel.isLoading) }
-
-    // Expanded states and textfield sizes
-    val expandedStates = remember {
-        mutableStateMapOf<String, Boolean>().apply {
-            putAll(
-                mapOf(
-                    "tipoQR" to false,
-                    "duracion" to false,
-                    "division" to false,
-                    "materia" to false,
-                    "lugarAsistencia" to false,
-                    "tipoLugar" to false,
-                    "lugarEdificio" to false,
-                    "lugarSalon" to false,
-                    "lugarLaboratorio" to false
-                )
-            )
+    var location by remember { mutableStateOf<Location?>(null) }
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+    var selectedText by remember { mutableStateOf<String?>(null) }
+    var expandedDuracion by remember { mutableStateOf(false) }
+    var selectedDuracion by remember { mutableStateOf<String?>(null) }
+    var expandedDivision by remember { mutableStateOf(false) }
+    var selectedDivision by remember { mutableStateOf<String?>(null) }
+    var expandedMateria by remember { mutableStateOf(false) }
+    //var selectedMateria by remember { mutableStateOf<String?>(null) }
+    var expandedLugar by remember { mutableStateOf(false) }
+    var selectedLugar by remember { mutableStateOf<String?>(null) }
+    var expandedTipoLugar by remember { mutableStateOf(false) }
+    var selectedTipoLugar by remember { mutableStateOf<String?>(null) }
+    var expandedLugarEdificio by remember { mutableStateOf(false) }
+    var selectedLugarEdificio by remember { mutableStateOf<String?>(null) }
+    var expandedLugarSalon by remember { mutableStateOf(false) }
+    //var selectedLugarSalon by remember { mutableStateOf<String?>(null) }
+    var expandedLugarLaboratorio by remember { mutableStateOf(false) }
+    var selectedLugarLaboratorio by remember { mutableStateOf<String?>(null) }
+    val locationPermissionRequest = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                getLocation(context) { loc ->
+                    location = loc
+                    loc?.let {
+                        viewModel.updateLocation(it.latitude, it.longitude)
+                    }
+                }
+            }
+        }
+    )
+    LaunchedEffect(Unit) {
+        // Solicitar permisos de ubicación
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            locationPermissionRequest.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        } else {
+            getLocation(context) { loc ->
+                location = loc
+                loc?.let {
+                    viewModel.updateLocation(it.latitude, it.longitude)
+                }
+            }
         }
     }
-    val textfieldSizes = remember {
-        mutableStateMapOf<String, Size>().apply {
-            putAll(
-                mapOf(
-                    "tipoQR" to Size.Zero,
-                    "duracion" to Size.Zero,
-                    "division" to Size.Zero,
-                    "materia" to Size.Zero,
-                    "lugarAsistencia" to Size.Zero,
-                    "tipoLugar" to Size.Zero,
-                    "lugarEdificio" to Size.Zero,
-                    "lugarSalon" to Size.Zero,
-                    "lugarLaboratorio" to Size.Zero
-                )
-            )
-        }
-    }
-
-    // Suggestions lists
-    val suggestionsQR = listOf("Asistencia", "Lugar")
-    val suggestionsAsistenciaDivision = listOf(
-        "Telematica",
-        "Informatica",
-        "Comercializacion",
-        "Administracion",
-        "Avionatica",
-    )
-    val suggestionsAsistenciaDuracion = listOf("1", "2", "3", "4", "5")
-    val suggestionsAsistenciaMateria = listOf("MATERIA 1", "MATERIA 2", "MATERIA 3")
-    val suggestionsAsistenciaLugar = listOf("Laboratorio", "Salon")
-    val suggestionsLugar = listOf(
-        "Edificio",
-        "Salon",
-        "Laboratorio",
-        "Cubiculo",
-        "Otro"
-    )
-    val suggestionsLugarEdificio = listOf(
-        "Biblioteca",
-        "Servicios escolares",
-        "Gimnasio",
-        "Piscina",
-        "Estadio",
-    )
-    val suggestionsLugarSalon = listOf("101", "102", "103", "104", "105")
-    val suggestionsLugarLaboratorio = listOf(
-        "Laboratorio de informatica",
-        "Laboratorio de telematica",
-    )
-
-    // Icons
-    val icon = if (expandedStates["tipoQR"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconDuracion = if (expandedStates["duracion"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconDivision = if (expandedStates["division"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconMateria = if (expandedStates["materia"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconLugarAsistencia = if (expandedStates["lugarAsistencia"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconTipoLugar = if (expandedStates["tipoLugar"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconLugarEdificio = if (expandedStates["lugarEdificio"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconLugarSalon = if (expandedStates["lugarSalon"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val iconLugarLaboratorio = if (expandedStates["lugarLaboratorio"] == true)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    val focusManager = LocalFocusManager.current
-
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = { DrawerContent3(navController, currentRoute) },
@@ -199,53 +149,48 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                 ) {
                     TopBarUT("Generar QR")
                     Spacer(modifier = Modifier.height(16.dp))
-
                     // Tipo de QR
-                    OutlinedTextField(
-                        value = tipoQR,
-                        onValueChange = { tipoQR = it },
-                        modifier = Modifier
-                            //.padding(horizontal = 12.dp)
-                            .fillMaxWidth()
-                            .onGloballyPositioned { coordinates ->
-                                textfieldSizes["tipoQR"] = coordinates.size.toSize()
-                            },
-                        label = { Text("Tipo de QR") },
-                        trailingIcon = {
-                            Icon(
-                                icon,
-                                "contentDescription",
-                                Modifier.clickable {
-                                    expandedStates["tipoQR"] = !expandedStates["tipoQR"]!!
-                                }
-                            )
-                        },
-                        readOnly = true
-                    )
-                    DropdownMenu(
-                        expanded = expandedStates["tipoQR"]!!,
-                        onDismissRequest = { expandedStates["tipoQR"] = false },
-                        modifier = Modifier
-                            .width(
-                                with(LocalDensity.current) {
-                                    (textfieldSizes["tipoQR"]!!.width * 0.9f).toDp()
-                                }
-                            )
-                            //.align(Alignment.Top)
-                            //.align(Alignment.Top)
-                            .align(Alignment.Start)
+                    ExposedDropdownMenuBox(
+                        expanded = expanded,
+                        onExpandedChange = { expanded = !expanded }
                     ) {
-                        suggestionsQR.forEach { label ->
-                            DropdownMenuItem(
-                                text = { Text(text = label) },
-                                onClick = {
-                                    tipoQR = label
-                                    expandedStates["tipoQR"] = false
-                                }
+                        TextField(
+                            //value = selectedText,
+                            value = selectedText ?: "",
+                            //onValueChange = { selectedText = it },
+                            onValueChange = { },
+                            readOnly = true,
+                            label = { Text("Tipo de QR") },
+                            placeholder = { Text("Seleccione...") },
+                            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                            modifier = Modifier
+                                .menuAnchor()
+                                .fillMaxWidth(),
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                             )
+                        )
+                        ExposedDropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier
+                                .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                        ) {
+                            viewModel.suggestionsQR.forEach { item ->
+                                DropdownMenuItem(
+                                    text = { Text(text = item) },
+                                    onClick = {
+                                        selectedText = item
+                                        tipoQR = item
+                                        expanded = false
+                                    },
+                                )
+                            }
                         }
                     }
-
+                    if (tipoQR == "Asistencia") {
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
                     // Asistencia
                     if (tipoQR == "Asistencia") {
                         OutlinedTextField(
@@ -255,184 +200,168 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             maxLines = 1,
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                            )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Duracion
-                        OutlinedTextField(
-                            value = dataAsistencia.duracion,
-                            onValueChange = { viewModel.onValueAsistencia(it, "duracion") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onGloballyPositioned { coordinates ->
-                                    textfieldSizes["duracion"] = coordinates.size.toSize()
-                                },
-                            label = { Text("Duracion") },
-                            trailingIcon = {
-                                Icon(
-                                    iconDuracion,
-                                    "contentDescription",
-                                    Modifier.clickable {
-                                        expandedStates["duracion"] = !expandedStates["duracion"]!!
-                                    }
-                                )
-                            },
-                            readOnly = true
-                        )
-                        DropdownMenu(
-                            expanded = expandedStates["duracion"]!!,
-                            onDismissRequest = { expandedStates["duracion"] = false },
-                            modifier = Modifier
-                                .width(
-                                    with(LocalDensity.current) {
-                                        (textfieldSizes["duracion"]!!.width * 0.9f).toDp()
-                                    }
-                                )
-                                .align(Alignment.Start) // Agrega este modificador
+                        ExposedDropdownMenuBox(
+                            expanded = expandedDuracion,
+                            onExpandedChange = { expandedDuracion = !expandedDuracion }
                         ) {
-                            suggestionsAsistenciaDuracion.forEach { label ->
-                                DropdownMenuItem(
-                                    text = { Text(text = label + " horas") },
-                                    onClick = {
-                                        viewModel.onValueAsistencia(label, "duracion")
-                                        expandedStates["duracion"] = false
-                                    }
+                            TextField(
+                                //value = dataAsistencia.duracion,
+                                value = selectedDuracion ?: "",
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("Duración") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDuracion) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                 )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedDuracion,
+                                onDismissRequest = { expandedDuracion = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.suggestionsAsistenciaDuracion.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = "$item horas") },
+                                        onClick = {
+                                            selectedDuracion = item
+                                            viewModel.onValueAsistencia(item, "duracion")
+                                            expandedDuracion = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Division
-                        OutlinedTextField(
-                            value = dataAsistencia.division,
-                            onValueChange = { viewModel.onValueAsistencia(it, "division") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onGloballyPositioned { coordinates ->
-                                    textfieldSizes["division"] = coordinates.size.toSize()
-                                },
-                            label = { Text("Division") },
-                            trailingIcon = {
-                                Icon(
-                                    iconDivision,
-                                    "contentDescription",
-                                    Modifier.clickable {
-                                        expandedStates["division"] = !expandedStates["division"]!!
-                                    }
-                                )
-                            },
-                            readOnly = true
-                        )
-                        DropdownMenu(
-                            expanded = expandedStates["division"]!!,
-                            onDismissRequest = { expandedStates["division"] = false },
-                            modifier = Modifier
-                                .width(
-                                    with(LocalDensity.current) {
-                                        (textfieldSizes["division"]!!.width * 0.9f).toDp()
-                                    }
-                                )
-                                .align(Alignment.Start) // Agrega este modificador
+                        ExposedDropdownMenuBox(
+                            expanded = expandedDivision,
+                            onExpandedChange = { expandedDivision = !expandedDivision }
                         ) {
-                            suggestionsAsistenciaDivision.forEach { label ->
-                                DropdownMenuItem(
-                                    text = { Text(text = label) },
-                                    onClick = {
-                                        viewModel.onValueAsistencia(label, "division")
-                                        expandedStates["division"] = false
-                                    }
+                            TextField(
+                                value = selectedDivision ?: "",
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("División") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDivision) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                 )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedDivision,
+                                onDismissRequest = { expandedDivision = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.suggestionsAsistenciaDivision.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            selectedDivision = item
+                                            viewModel.onValueAsistencia(item, "division")
+                                            expandedDivision = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Materia
-                        OutlinedTextField(
-                            value = dataAsistencia.materia,
-                            onValueChange = { viewModel.onValueAsistencia(it, "materia") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onGloballyPositioned { coordinates ->
-                                    textfieldSizes["materia"] = coordinates.size.toSize()
-                                },
-                            label = { Text("Materia") },
-                            trailingIcon = {
-                                Icon(
-                                    iconMateria,
-                                    "contentDescription",
-                                    Modifier.clickable {
-                                        expandedStates["materia"] = !expandedStates["materia"]!!
-                                    }
-                                )
-                            }
-                        )
-                        DropdownMenu(
-                            expanded = expandedStates["materia"]!!,
-                            onDismissRequest = { expandedStates["materia"] = false },
-                            modifier = Modifier
-                                .width(
-                                    with(LocalDensity.current) {
-                                        (textfieldSizes["materia"]!!.width * 0.9f).toDp()
-                                    }
-                                )
-                                .align(Alignment.Start) // Agrega este modificador
+                        ExposedDropdownMenuBox(
+                            expanded = expandedMateria,
+                            onExpandedChange = { expandedMateria = !expandedMateria }
                         ) {
-                            suggestionsAsistenciaMateria.forEach { label ->
-                                DropdownMenuItem(
-                                    text = { Text(text = label) },
-                                    onClick = {
-                                        viewModel.onValueAsistencia(label, "materia")
-                                        expandedStates["materia"] = false
-                                    }
+                            TextField(
+                                //value = selectedMateria ?: "",
+                                value = dataAsistencia.materia,
+                                onValueChange = { viewModel.onValueAsistencia(it, "materia") },
+                                readOnly = false,
+                                label = { Text("Materia") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMateria) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                 )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedMateria,
+                                onDismissRequest = { expandedMateria = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.suggestionsAsistenciaMateria.forEach { item ->
+                                    var juan = dataAsistencia.materia
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            //selectedMateria = item
+                                            juan = item
+                                            viewModel.onValueAsistencia(item, "materia")
+                                            expandedMateria = false
+                                        }
+                                    )
+                                }
                             }
                         }
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Lugar
-                        OutlinedTextField(
-                            value = dataAsistencia.lugar,
-                            onValueChange = { viewModel.onValueAsistencia(it, "lugar") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onGloballyPositioned { coordinates ->
-                                    textfieldSizes["lugarAsistencia"] = coordinates.size.toSize()
-                                },
-                            label = { Text("Lugar") },
-                            trailingIcon = {
-                                Icon(
-                                    iconLugarAsistencia,
-                                    "contentDescription",
-                                    Modifier.clickable {
-                                        expandedStates["lugarAsistencia"] =
-                                            !expandedStates["lugarAsistencia"]!!
-                                    }
-                                )
-                            }
-                        )
-                        DropdownMenu(
-                            expanded = expandedStates["lugarAsistencia"]!!,
-                            onDismissRequest = { expandedStates["lugarAsistencia"] = false },
-                            modifier = Modifier
-                                .width(
-                                    with(LocalDensity.current) {
-                                        (textfieldSizes["lugarAsistencia"]!!.width * 0.9f).toDp()
-                                    }
-                                )
-                                .align(Alignment.Start) // Agrega este modificador
+                        ExposedDropdownMenuBox(
+                            expanded = expandedLugar,
+                            onExpandedChange = { expandedLugar = !expandedLugar }
                         ) {
-                            suggestionsAsistenciaLugar.forEach { label ->
-                                DropdownMenuItem(
-                                    text = { Text(text = label) },
-                                    onClick = {
-                                        viewModel.onValueAsistencia(label, "lugar")
-                                        expandedStates["lugarAsistencia"] = false
-                                    }
+                            TextField(
+                                value = selectedLugar ?: "",
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("Lugar") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedLugar) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                 )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedLugar,
+                                onDismissRequest = { expandedLugar = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.suggestionsAsistenciaLugar.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            selectedLugar = item
+                                            viewModel.onValueAsistencia(item, "lugar")
+                                            expandedLugar = false
+                                        }
+                                    )
+                                }
                             }
                         }
-                        Spacer(modifier = Modifier.height(8.dp))
 
+                        Spacer(modifier = Modifier.height(8.dp))
                         // Descripcion Lugar
                         if (dataAsistencia.lugar == "Laboratorio") {
                             OutlinedTextField(
@@ -447,6 +376,9 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
                                 maxLines = 1,
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
                             )
                         }
                         if (dataAsistencia.lugar == "Salon") {
@@ -462,13 +394,17 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
                                 maxLines = 1,
+
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
-                    // Lugar
+                    // LUGAR --------------------------------------------------------------->
                     if (tipoQR == "Lugar") {
-                        // Titulo
+                        // Titulo lugar
                         OutlinedTextField(
                             value = dataLugar.titulo,
                             onValueChange = { viewModel.onValueLugar(it, "titulo") },
@@ -476,183 +412,183 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true,
                             maxLines = 1,
+                            colors = TextFieldDefaults.textFieldColors(
+                                containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                            )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-
                         // Tipo
-                        OutlinedTextField(
-                            value = dataLugar.tipo,
-                            onValueChange = { viewModel.onValueLugar(it, "tipo") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .onGloballyPositioned { coordinates ->
-                                    textfieldSizes["tipoLugar"] = coordinates.size.toSize()
-                                },
-                            label = { Text("Tipo") },
-                            trailingIcon = {
-                                Icon(
-                                    iconTipoLugar,
-                                    "contentDescription",
-                                    Modifier.clickable {
-                                        expandedStates["tipoLugar"] = !expandedStates["tipoLugar"]!!
-                                    }
-                                )
-                            },
-                            readOnly = true
-                        )
-                        DropdownMenu(
-                            expanded = expandedStates["tipoLugar"]!!,
-                            onDismissRequest = { expandedStates["tipoLugar"] = false },
-                            modifier = Modifier
-                                .width(
-                                    with(LocalDensity.current) {
-                                        (textfieldSizes["tipoLugar"]!!.width * 0.9f).toDp()
-                                    }
-                                )
-                                .align(Alignment.Start) // Agrega este modificador
+                        ExposedDropdownMenuBox(
+                            expanded = expandedTipoLugar,
+                            onExpandedChange = { expandedTipoLugar = !expandedTipoLugar }
                         ) {
-                            suggestionsLugar.forEach { label ->
-                                DropdownMenuItem(
-                                    text = { Text(text = label) },
-                                    onClick = {
-                                        viewModel.onValueLugar(label, "tipo")
-                                        expandedStates["tipoLugar"] = false
-                                    }
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        // Lugar especifico
-                        if (dataLugar.tipo == "Edificio") {
-                            OutlinedTextField(
-                                value = dataLugar.lugar,
-                                onValueChange = { viewModel.onValueLugar(it, "lugar") },
+                            TextField(
+                                value = selectedTipoLugar ?: "",
+                                onValueChange = { },
+                                readOnly = true,
+                                label = { Text("Tipo") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTipoLugar) },
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .onGloballyPositioned { coordinates ->
-                                        textfieldSizes["lugarEdificio"] = coordinates.size.toSize()
-                                    },
-                                label = { Text("Lugar") },
-                                trailingIcon = {
-                                    Icon(
-                                        iconLugarEdificio,
-                                        "contentDescription",
-                                        Modifier.clickable {
-                                            expandedStates["lugarEdificio"] =
-                                                !expandedStates["lugarEdificio"]!!
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedTipoLugar,
+                                onDismissRequest = { expandedTipoLugar = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.suggestionsLugar.forEach { item ->
+                                    DropdownMenuItem(
+                                        text = { Text(text = item) },
+                                        onClick = {
+                                            selectedTipoLugar = item
+                                            viewModel.onValueLugar(item, "tipo")
+                                            expandedTipoLugar = false
                                         }
                                     )
                                 }
-                            )
-                            DropdownMenu(
-                                expanded = expandedStates["lugarEdificio"]!!,
-                                onDismissRequest = { expandedStates["lugarEdificio"] = false },
-                                modifier = Modifier
-                                    .width(
-                                        with(LocalDensity.current) {
-                                            (textfieldSizes["lugarEdificio"]!!.width * 0.9f).toDp()
-                                        }
-                                    )
-                                    .align(Alignment.Start) // Agrega este modificador
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // Lugar especifico
+                        if (dataLugar.tipo == "Edificio") {
+                            ExposedDropdownMenuBox(
+                                expanded = expandedLugarEdificio,
+                                onExpandedChange = {
+                                    expandedLugarEdificio = !expandedLugarEdificio
+                                }
                             ) {
-                                suggestionsLugarEdificio.forEach { label ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = label) },
-                                        onClick = {
-                                            viewModel.onValueLugar(label, "lugar")
-                                            expandedStates["lugarEdificio"] = false
-                                        }
+                                TextField(
+                                    value = selectedLugarEdificio ?: "",
+                                    onValueChange = { },
+                                    readOnly = true,
+                                    label = { Text("Lugar") },
+                                    placeholder = { Text("Seleccione...") },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expandedLugarEdificio
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth(),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                     )
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedLugarEdificio,
+                                    onDismissRequest = { expandedLugarEdificio = false },
+                                    modifier = Modifier
+                                        .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                                ) {
+                                    viewModel.suggestionsLugarEdificio.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                selectedLugarEdificio = item
+                                                viewModel.onValueLugar(item, "lugar")
+                                                expandedLugarEdificio = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                         if (dataLugar.tipo == "Salon") {
-                            OutlinedTextField(
-                                value = dataLugar.lugar,
-                                onValueChange = { viewModel.onValueLugar(it, "lugar") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .onGloballyPositioned { coordinates ->
-                                        textfieldSizes["lugarSalon"] = coordinates.size.toSize()
-                                    },
-                                label = { Text("Lugar") },
-                                trailingIcon = {
-                                    Icon(
-                                        iconLugarSalon,
-                                        "contentDescription",
-                                        Modifier.clickable {
-                                            expandedStates["lugarSalon"] =
-                                                !expandedStates["lugarSalon"]!!
-                                        }
-                                    )
-                                }
-                            )
-                            DropdownMenu(
-                                expanded = expandedStates["lugarSalon"]!!,
-                                onDismissRequest = { expandedStates["lugarSalon"] = false },
-                                modifier = Modifier
-                                    .width(
-                                        with(LocalDensity.current) {
-                                            (textfieldSizes["lugarSalon"]!!.width * 0.9f).toDp()
-                                        }
-                                    )
-                                    .align(Alignment.Start) // Agrega este modificador
+                            ExposedDropdownMenuBox(
+                                expanded = expandedLugarSalon,
+                                onExpandedChange = { expandedLugarSalon = !expandedLugarSalon }
                             ) {
-                                suggestionsLugarSalon.forEach { label ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = label) },
-                                        onClick = {
-                                            viewModel.onValueLugar(label, "lugar")
-                                            expandedStates["lugarSalon"] = false
-                                        }
+                                TextField(
+                                    //value = selectedLugarSalon ?: "",
+                                    value = dataLugar.lugar,
+                                    //onValueChange = { },
+                                    onValueChange = { viewModel.onValueLugar(it, "lugar") },
+                                    readOnly = false,
+                                    label = { Text("Lugar") },
+                                    placeholder = { Text("Seleccione...") },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expandedLugarSalon
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth(),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                     )
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedLugarSalon,
+                                    onDismissRequest = { expandedLugarSalon = false },
+                                    modifier = Modifier
+                                        .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                                ) {
+                                    viewModel.suggestionsLugarSalon.forEach { item ->
+                                        var itemLugarA = dataLugar.lugar
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                //selectedLugarSalon = item
+                                                itemLugarA = item
+                                                viewModel.onValueLugar(itemLugarA, "lugar")
+                                                expandedLugarSalon = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                         if (dataLugar.tipo == "Laboratorio") {
-                            OutlinedTextField(
-                                value = dataLugar.lugar,
-                                onValueChange = { viewModel.onValueLugar(it, "lugar") },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .onGloballyPositioned { coordinates ->
-                                        textfieldSizes["lugarLaboratorio"] =
-                                            coordinates.size.toSize()
-                                    },
-                                label = { Text("Lugar") },
-                                trailingIcon = {
-                                    Icon(
-                                        iconLugarLaboratorio,
-                                        "contentDescription",
-                                        Modifier.clickable {
-                                            expandedStates["lugarLaboratorio"] =
-                                                !expandedStates["lugarLaboratorio"]!!
-                                        }
-                                    )
+                            ExposedDropdownMenuBox(
+                                expanded = expandedLugarLaboratorio,
+                                onExpandedChange = {
+                                    expandedLugarLaboratorio = !expandedLugarLaboratorio
                                 }
-                            )
-                            DropdownMenu(
-                                expanded = expandedStates["lugarLaboratorio"]!!,
-                                onDismissRequest = { expandedStates["lugarLaboratorio"] = false },
-                                modifier = Modifier
-                                    .width(
-                                        with(LocalDensity.current) {
-                                            (textfieldSizes["lugarLaboratorio"]!!.width * 0.9f).toDp()
-                                        }
-                                    )
-                                    .align(Alignment.Start) // Agrega este modificador
                             ) {
-                                suggestionsLugarLaboratorio.forEach { label ->
-                                    DropdownMenuItem(
-                                        text = { Text(text = label) },
-                                        onClick = {
-                                            viewModel.onValueLugar(label, "lugar")
-                                            expandedStates["lugarLaboratorio"] = false
-                                        }
+                                TextField(
+                                    value = selectedLugarLaboratorio ?: "",
+                                    onValueChange = { },
+                                    readOnly = true,
+                                    label = { Text("Lugar") },
+                                    placeholder = { Text("Seleccione...") },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expandedLugarLaboratorio
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth(),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
                                     )
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedLugarLaboratorio,
+                                    onDismissRequest = { expandedLugarLaboratorio = false },
+                                    modifier = Modifier
+                                        .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                                ) {
+                                    viewModel.suggestionsLugarLaboratorio.forEach { item ->
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                selectedLugarLaboratorio = item
+                                                viewModel.onValueLugar(item, "lugar")
+                                                expandedLugarLaboratorio = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
@@ -665,6 +601,9 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
                                 maxLines = 1,
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
                             )
                         }
                         if (dataLugar.tipo == "Otro") {
@@ -675,55 +614,80 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true,
                                 maxLines = 1,
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
                             )
                         }
                         Spacer(modifier = Modifier.height(8.dp))
                     }
-
                     // Button
                     Spacer(modifier = Modifier.height(16.dp))
+                    // Botón para registrar QR
                     Button(
                         onClick = {
-                            navController.navigate("lista_mi_qr")
-                        }
+                            if (tipoQR.isEmpty()) {
+                                Toast.makeText(
+                                    context,
+                                    "Seleccione un tipo de QR",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                when (tipoQR) {
+                                    "Asistencia" ->
+                                        if (dataAsistencia.titulo.isNotEmpty()
+                                            && dataAsistencia.duracion.isNotEmpty()
+                                            && dataAsistencia.division.isNotEmpty()
+                                            && dataAsistencia.materia.isNotEmpty()
+                                            && dataAsistencia.lugar.isNotEmpty()
+                                            && dataAsistencia.descripcion_lugar.isNotEmpty()
+                                        ) {
+                                            viewModel.registrarQrAsistencia(navController)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Por favor, complete todos los campos",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+
+                                    "Lugar" ->
+                                        if (dataLugar.titulo.isNotEmpty()
+                                            && dataLugar.tipo.isNotEmpty()
+                                            && dataLugar.lugar.isNotEmpty()
+                                        ) {
+                                            viewModel.registrarQrLugar(navController)
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Por favor, complete todos los campos",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
+
+                                    else -> {}
+                                }
+                            }
+
+                        },
+                        enabled = !viewModel.isLoading
                     ) {
                         Text("Generar QR")
                     }
-
-
-                    // Botón para registrar QR
-                    Button(onClick = {
-                        when (tipoQR) {
-                            "Asistencia" -> viewModel.registrarQrAsistencia()
-                            "Lugar" -> viewModel.registrarQrLugar()
-                            else -> {
-                                // Manejo de error o acción alternativa
+                    if (viewModel.isLoadingDialog) {
+                        Dialog(onDismissRequest = { /*showLoadingDialog = false*/ }) {
+                            Box(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .background(Color.White, shape = RoundedCornerShape(8.dp))
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
                             }
                         }
-                    }) {
-                        Text("Registrar QR")
                     }
-
-                    // Mostrar CircularProgressIndicator si está cargando
-                    if (isLoading) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .wrapContentSize(Alignment.Center)
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-
-                    // Navegar a lista_mi_qr cuando se registre exitosamente
-                    /* LaunchedEffect(viewModel.isLoading) {
-                         if (!isLoading) {
-                             navController.navigate("lista_mi_qr") {
-                                 popUpTo("generate_qr_view") { inclusive = true }
-                             }
-                         }
-                     }*/
-
+                    //Termina boton para registrar
                 }
             }
         }

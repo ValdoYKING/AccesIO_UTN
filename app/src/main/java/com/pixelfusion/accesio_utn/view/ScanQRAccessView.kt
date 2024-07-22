@@ -63,11 +63,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SuperiorData
@@ -301,19 +304,29 @@ fun UserDetailDialog(user: UsuarioData, onDismiss: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(16.dp)
             ) {
-                Image(
-                    painter = rememberAsyncImagePainter(user.image_path),
-                    contentDescription = "Imagen usuario",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(180.dp * 1.15f)
-                        .border(
-                            BorderStroke(borderWidth, rainbowColorsBrush),
-                            CircleShape
-                        )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
+                val imagePath = user.image_path ?: ""
+                if (imagePath.isNotEmpty()) {
+                    val imagePainter: Painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(data = imagePath)
+                            .apply(block = fun ImageRequest.Builder.() {
+                                crossfade(true)
+                                placeholder(R.drawable.app_fondo)
+                            }).build()
+                    )
+                    Image(
+                        painter = imagePainter,
+                        contentDescription = "Imagen usuario",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(180.dp * 1.15f)
+                            .border(
+                                BorderStroke(borderWidth, rainbowColorsBrush),
+                                CircleShape
+                            )
+                            .padding(borderWidth)
+                            .clip(CircleShape)
+                    )
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 // Center the text "Rol:" and the id_rol
                 Row(

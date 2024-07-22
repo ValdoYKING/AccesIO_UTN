@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,6 +64,8 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -70,6 +73,7 @@ import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.CardTittle
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorCredentialView
 import com.pixelfusion.accesio_utn.components.DrawerContent3
+import com.pixelfusion.accesio_utn.helper.getLocation
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode128
 import com.pixelfusion.accesio_utn.logicadependencias.generateBarcodeCode39
 import com.pixelfusion.accesio_utn.logicadependencias.generateQRCode
@@ -296,22 +300,32 @@ fun ContenidoFrontalCard(dataC:CredentialViewModel) {
                     thickness = 1.dp
                 )
                 // Imagen de perfil
-                Image(
-                    //image_path
-                    painter = rememberAsyncImagePainter(dataC.state.image_path),
-                    //painter = painterResource(id = R.drawable.valdo_pixel),
-                    contentDescription = "Perfil usuario",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(200.dp)
-                        //.clip(SquashedOval())
-                        .border(
-                            BorderStroke(borderWidth, rainbowColorsBrush),
-                            CircleShape
-                        )
-                        .padding(borderWidth)
-                        .clip(CircleShape)
-                )
+                val imagePath = dataC.state.image_path ?: ""
+                if (imagePath.isNotEmpty()) {
+                    val imagePainter: Painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(data = imagePath)
+                            .apply(block = fun ImageRequest.Builder.() {
+                                crossfade(true)
+                                placeholder(R.drawable.app_fondo)
+                            }).build()
+                    )
+                    Image(
+                        //image_path
+                        painter = imagePainter,
+                        //painter = painterResource(id = R.drawable.valdo_pixel),
+                        contentDescription = "Perfil usuario",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(200.dp)
+                            //.clip(SquashedOval())
+                            .border(
+                                BorderStroke(borderWidth, rainbowColorsBrush),
+                                CircleShape
+                            )
+                            .padding(borderWidth)
+                            .clip(CircleShape)
+                    )
+                }
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -464,7 +478,7 @@ fun ContenidoTraseroCard(dataC: CredentialViewModel, location: Location?) {
 }
 
 // Función para obtener la ubicación del usuario
-fun getLocation(context: android.content.Context, callback: (Location?) -> Unit) {
+/*fun getLocation(context: android.content.Context, callback: (Location?) -> Unit) {
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     if (ContextCompat.checkSelfPermission(
             context,
@@ -483,7 +497,7 @@ fun getLocation(context: android.content.Context, callback: (Location?) -> Unit)
     } else {
         callback(null)
     }
-}
+}*/
 
 
 fun getCurrentTime(): String {
