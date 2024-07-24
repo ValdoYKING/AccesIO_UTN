@@ -33,6 +33,10 @@
                 />
         </provider>
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyApQj8ia6L0-4mKYh3ntbhdLahOr3wMvI0" />
+
         <!-- SplashActivity configurada como la actividad de entrada -->
         <activity
             android:name=".navigation.SplashActivity"

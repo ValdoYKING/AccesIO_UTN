@@ -115,6 +115,14 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     //implementation("androidx.camera:camera-view:1.3.4")
     implementation(libs.androidx.camera.view)
+    //maps
+    //implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation(libs.play.services.maps)
+    //implementation(libs.play.services.maps)
+    //implementation ("com.google.maps.android:maps-compose:6.1.0")
+    implementation(libs.maps.compose)
+    //implementation ("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.play.services.location)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
