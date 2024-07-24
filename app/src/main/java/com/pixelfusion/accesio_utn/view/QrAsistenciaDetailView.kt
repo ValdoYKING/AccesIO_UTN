@@ -2,6 +2,7 @@ package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -61,6 +63,7 @@ import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.FullScreenQRCodeDialog
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.helper.generateQRCodeAssist
+import com.pixelfusion.accesio_utn.helper.printQrCode
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 
 @SuppressLint("UnrememberedMutableState")
@@ -275,7 +278,14 @@ fun QrAsistenciaDetailView(
                                     horizontalArrangement = Arrangement.Center,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    QRCodeAsistencia(qrUidAsistencia ?: "")
+                                    //QRCodeAsistencia(qrUidAsistencia ?: "")
+                                    QRCodeAsistencia(
+                                        qrUidAsistencia ?: "",
+                                        300,
+                                        300,
+                                        context = LocalContext.current,
+                                        asistencia.titulo
+                                    )
                                 }
 
                                 Spacer(modifier = Modifier.height(16.dp))
@@ -313,7 +323,7 @@ fun QrAsistenciaDetailView(
                                         Marker(
                                             state = MarkerState(position = ubicacion),
                                             title = "Ubicación de QR",
-                                            snippet = "Ubicación del QR generado"
+                                            snippet = "QR ${asistencia.titulo} generado"
                                         )
                                     }
                                 }
@@ -333,20 +343,45 @@ fun QrAsistenciaDetailView(
 
 @Composable
 fun QRCodeAsistencia(
-    UidQrAsistencia: String, qrWidth: Int = 300, qrHeight: Int = 300
+    UidQrAsistencia: String,
+    qrWidth: Int = 300,
+    qrHeight: Int = 300,
+    context: Context,
+    titulo: String
 ) {
     var showFullscreenQr by remember { mutableStateOf(false) }
     val qrCodeBitmap = generateQRCodeAssist(UidQrAsistencia, qrWidth, qrHeight)
 
     qrCodeBitmap?.let {
-        Box(modifier = Modifier
-            .clickable { showFullscreenQr = true }
-            .size(300.dp)) {
-            Image(
-                bitmap = it.asImageBitmap(),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize()
-            )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(modifier = Modifier
+                .clickable { showFullscreenQr = true }
+                .size(300.dp)) {
+                Image(
+                    bitmap = it.asImageBitmap(),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(16.dp)
+            ) {
+
+                Button(onClick = { printQrCode(context, it, titulo) }) {
+                    Text(text = "Imprimir QR")
+                }
+                /*Comentado por errores :c*/
+                /*Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = {createPdfFromQrCode(it, "qrLugar $titulo")}) {
+                    Text(text = "Generate PDF")
+                }*/
+            }
         }
         if (showFullscreenQr) {
             FullScreenQRCodeDialog(qrCodeBitmap = it, onDismiss = { showFullscreenQr = false })

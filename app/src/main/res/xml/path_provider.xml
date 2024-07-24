@@ -1,9 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Rutas del primer archivo -->
     <external-path
         name="external_files"
         path="Android/data/com.pixelfusion.accesio_utn/files/Pictures" />
     <cache-path
         name="my_cache"
         path="." />
+
+    <!-- Rutas del segundo archivo -->
+    <files-path
+        path="."
+        name="internal_files" />
+    <external-path
+        name="external_files"
+        path="external_files" />
+    <external-path
+        name="documents"
+        path="documents" />
+    <external-path
+        name="files"
+        path="files" />
+    <external-path
+        name="downloads"
+        path="downloads" />
 </paths>

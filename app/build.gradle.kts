@@ -123,6 +123,9 @@ dependencies {
     implementation(libs.maps.compose)
     //implementation ("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.play.services.location)
+    //print
+    //implementation ("androidx.print:print:1.1.0-beta01")
+    implementation(libs.androidx.print)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

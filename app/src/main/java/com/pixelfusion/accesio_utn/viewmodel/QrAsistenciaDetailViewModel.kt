@@ -33,7 +33,7 @@ class QrAsistenciaDetailViewModel : ViewModel() {
     fun fetchData(qrUidAsistencia: String?) {
         viewModelScope.launch {
             _isLoading.value = true
-            delay(300)
+            delay(1000)
             try {
                 if (qrUidAsistencia != null) {
                     val snapshot = withContext(Dispatchers.IO) {
