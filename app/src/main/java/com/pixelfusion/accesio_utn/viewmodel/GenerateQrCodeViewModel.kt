@@ -23,7 +23,6 @@ import java.util.Locale
 class GenerateQrCodeViewModel : ViewModel() {
     private lateinit var auth: FirebaseAuth
     private val database = Firebase.database.reference
-    private val storage = Firebase.storage
 
     var qrAsistencia by mutableStateOf(QrAsistenciaModel())
         private set

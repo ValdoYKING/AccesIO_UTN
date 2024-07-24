@@ -26,6 +26,8 @@ import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.PerfilView
+import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
+import com.pixelfusion.accesio_utn.view.QrLugarDetailView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
@@ -33,7 +35,10 @@ import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
+import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
+import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
@@ -133,7 +138,21 @@ fun MyApp() {
         }
 
         composable("lista_mi_qr") {
-            ListQrGenerateView(navController)
+            val viewModelDataQr: ListQrGenerateViewModel = viewModel()
+            ListQrGenerateView(navController, viewModelDataQr)
         }
+
+        composable("qr_lugar_detail/{qrUidLugar}") { backStackEntry ->
+            val qrUid = backStackEntry.arguments?.getString("qrUidLugar")
+            val viewModelQrLugarDetail: QrLugarDetailViewModel = viewModel()
+            QrLugarDetailView(navController, qrUid, viewModelQrLugarDetail)
+        }
+
+        composable("qr_asistencia_detail/{qrUidAsistencia}") { backStackEntry ->
+            val qrUidAsistencia = backStackEntry.arguments?.getString("qrUidAsistencia")
+            val viewModelQrAsistenciaDetail: QrAsistenciaDetailViewModel = viewModel()
+            QrAsistenciaDetailView(navController, qrUidAsistencia, viewModelQrAsistenciaDetail)
+        }
+
     }
 }
