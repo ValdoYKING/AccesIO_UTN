@@ -39,17 +39,16 @@ fun ContenidoSuperior(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(modifier = Modifier.height(4.dp))
+                //Spacer(modifier = Modifier.height(4.dp))
                 Image(
                     painter = painterResource(id = R.drawable.utnfoto),
                     contentDescription = "Logo UTN",
                     modifier = Modifier
-                        .size(50.dp)
-                        .padding(4.dp)
+                        .size(40.dp)
+                        //.padding(4.dp)
                         .clickable {
                             navController.navigate("home_user_view")
                         }
-
                 )
             }
         },
