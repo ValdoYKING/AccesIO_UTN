@@ -19,6 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 import java.util.Locale
 
 class ListQrGenerateViewModel : ViewModel() {
@@ -76,6 +79,12 @@ class ListQrGenerateViewModel : ViewModel() {
                     qrAsistencia?.let {
                         Pair(data.key ?: "", it)
                     }
+                }.sortedByDescending { qrAsistenciaPair ->
+                    val (uid, qrAsistencia) = qrAsistenciaPair
+                    // Combinar fecha y hora en un solo LocalDateTime para ordenar
+                    val fechaHoraStr = "${qrAsistencia.fecha} ${qrAsistencia.hora}"
+                    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+                    LocalDateTime.parse(fechaHoraStr, formatter)
                 }
             }
 
@@ -102,6 +111,12 @@ class ListQrGenerateViewModel : ViewModel() {
                     qrLugar?.let {
                         Pair(data.key ?: "", it)
                     }
+                }.sortedByDescending { qrLugarPair ->
+                    val (uid, qrLugar) = qrLugarPair
+                    // Combinar fecha y hora en un solo LocalDateTime para ordenar
+                    val fechaHoraStr = "${qrLugar.fecha} ${qrLugar.hora}"
+                    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+                    LocalDateTime.parse(fechaHoraStr, formatter)
                 }
             }
 
@@ -110,5 +125,34 @@ class ListQrGenerateViewModel : ViewModel() {
         } ?: run {
             println("Usuario no autenticado")
         }
+    }
+
+
+    /*fun calcularNuevaFechaYHora(fecha: String, hora: String, duracion: String): String {
+        val duracionEnHoras = duracion.toIntOrNull() ?: throw IllegalArgumentException("Duración inválida")
+        val fechaHoraStr = "$fecha $hora"
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+        // Parsear la fecha y hora inicial
+        val fechaHoraInicial = LocalDateTime.parse(fechaHoraStr, formatter)
+
+        // Sumar la duración en horas
+        val nuevaFechaHora = fechaHoraInicial.plus(duracionEnHoras.toLong(), ChronoUnit.HOURS)
+
+        // Formatear la nueva fecha y hora
+        return nuevaFechaHora.format(formatter)
+    }*/
+
+    fun calcularNuevaFechaYHora(fecha: String, hora: String, duracion: String): LocalDateTime {
+        val duracionEnHoras =
+            duracion.toIntOrNull() ?: throw IllegalArgumentException("Duración inválida")
+        val fechaHoraStr = "$fecha $hora"
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+        // Parsear la fecha y hora inicial
+        val fechaHoraInicial = LocalDateTime.parse(fechaHoraStr, formatter)
+
+        // Sumar la duración en horas
+        return fechaHoraInicial.plus(duracionEnHoras.toLong(), ChronoUnit.HOURS)
     }
 }

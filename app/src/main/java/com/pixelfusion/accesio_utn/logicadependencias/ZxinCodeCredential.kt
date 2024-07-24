@@ -77,3 +77,27 @@ fun generateQRCode(
         null
     }
 }
+
+
+fun generateQRCodeAsistencia(
+    UID: String,
+    width: Int,
+    height: Int
+): Bitmap? {
+    return try {
+        val qrContent = UID
+        //val qrContent = hora fecha matricula UID
+
+        val bitMatrix: BitMatrix = MultiFormatWriter().encode(
+            qrContent,
+            BarcodeFormat.QR_CODE,
+            width,
+            height
+        )
+        val barcodeEncoder = BarcodeEncoder()
+        barcodeEncoder.createBitmap(bitMatrix)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
