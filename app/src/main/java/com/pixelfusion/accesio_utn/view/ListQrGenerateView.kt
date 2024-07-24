@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -31,6 +32,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -62,8 +64,15 @@ import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
 import com.pixelfusion.accesio_utn.model.QrLugarModel
 import com.pixelfusion.accesio_utn.ui.theme.BlueMarine
+import com.pixelfusion.accesio_utn.ui.theme.CyanBlue
+import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
+import com.pixelfusion.accesio_utn.ui.theme.OrangeWarning
+import com.pixelfusion.accesio_utn.ui.theme.utnGreen
+import com.pixelfusion.accesio_utn.ui.theme.utnGreenLightWhite
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import kotlinx.coroutines.delay
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -128,7 +137,8 @@ fun ListQrGenerateView(navController: NavController, viewModel: ListQrGenerateVi
                                             number = index + 1,
                                             qrUidAsistencia = uidAsistencia,
                                             qrAsistencia = qrAsistencia,
-                                            navController = navController
+                                            navController = navController,
+                                            viewModel = viewModel
                                         )
                                     }
                                 }
@@ -176,39 +186,57 @@ fun QrAsistenciaItem(
     number: Int,
     qrUidAsistencia: String,
     qrAsistencia: QrAsistenciaModel,
-    navController: NavController
+    navController: NavController,
+    viewModel: ListQrGenerateViewModel
 ) {
+    val fecha = qrAsistencia.fecha
+    val hora = qrAsistencia.hora
+    val duracion = qrAsistencia.duracion
+    val nuevaFechaHora = viewModel.calcularNuevaFechaYHora(fecha, hora, duracion)
+
+    val currentDateTime = LocalDateTime.now()
+    val isExpired = nuevaFechaHora.isBefore(currentDateTime)
+
+    val backgroundColor = if (isExpired) Color.Gray else MaterialTheme.colorScheme.surface
+
     Column(
-        modifier = Modifier.clickable {
-            navController.navigate("qr_asistencia_detail/$qrUidAsistencia")
-        }
+        modifier = Modifier
+            .clickable(enabled = !isExpired) {
+                navController.navigate("qr_asistencia_detail/$qrUidAsistencia")
+            }
+        //.background(backgroundColor)
+        //.padding(16.dp)
     ) {
         ListItem(
+            modifier = Modifier
+                .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite),
             headlineContent = {
                 Text(
                     text = "${number}. ${qrAsistencia.titulo}",
                     fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge,
+                    //color = if (isExpired) Color.DarkGray else MaterialTheme.colorScheme.onSurface
                 )
             },
             overlineContent = {
                 Text(
                     text = qrAsistencia.materia,
-                    //text = "Materia: ${qrAsistencia.materia}",
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    //color = if (isExpired) Color.DarkGray else MaterialTheme.colorScheme.onSurface
                 )
             },
             supportingContent = {
-                Text(
-                    text = qrAsistencia.lugar,
-                    //text = "Lugar: ${qrAsistencia.lugar}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                Column {
+                    Text(
+                        text = qrAsistencia.lugar,
+                        style = MaterialTheme.typography.bodyMedium,
+                        //color = if (isExpired) Color.DarkGray else MaterialTheme.colorScheme.onSurface
+                    )
+                }
             },
             leadingContent = {
                 Spacer(modifier = Modifier.height(4.dp))
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                    //R.drawable.icon_qr_dark
                     R.drawable.icons8_qr_code_100_l
                 } else {
                     R.drawable.icon_qr_dark
@@ -224,14 +252,31 @@ fun QrAsistenciaItem(
                     Text(
                         text = "${qrAsistencia.fecha} ${qrAsistencia.hora}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Green
+                        color = GreenSemiDark
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "${qrAsistencia.fecha} ${qrAsistencia.hora}",
+                        text = nuevaFechaHora.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")),
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.Red
+                        color = OrangeWarning
                     )
+                    if (isExpired) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "EXPIRADO",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Red,
+                            fontWeight = FontWeight.Bold
+                        )
+                    } else {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Ver QR",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = CyanBlue,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         )
@@ -264,10 +309,19 @@ fun QrLugarItem(
                 Text(text = "Lugar: ${qrLugar.lugar}", style = MaterialTheme.typography.bodyMedium)
             },
             trailingContent = {
-                Text(
-                    text = "${qrLugar.fecha} ${qrLugar.hora}",
-                    style = MaterialTheme.typography.bodySmall
-                )
+                Column {
+                    Text(
+                        text = "${qrLugar.fecha} ${qrLugar.hora}",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Ver QR",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = CyanBlue,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             },
             leadingContent = {
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
@@ -278,7 +332,7 @@ fun QrLugarItem(
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),
                     contentDescription = "Generar QR lugar",
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
         )
