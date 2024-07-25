@@ -207,7 +207,7 @@ fun ScanQRLugarView(navController: NavController, viewModel: ScanQRLugarViewMode
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        TopBarUT("Escanear QR de asistencia")
+                        TopBarUT("Escanear QR de lugar")
                         Spacer(modifier = Modifier.height(16.dp))
                         AndroidView(
                             factory = { previewView },

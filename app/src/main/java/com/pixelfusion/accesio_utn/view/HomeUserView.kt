@@ -542,6 +542,83 @@ fun HomeUserView(
                         }
                     }
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+
+                    Button(
+                        onClick = {
+                            navController.navigate("history_my_assist_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageHistorialAssist = if (isSystemInDarkTheme()) {
+                                R.drawable.historial_dark
+                            } else {
+                                R.drawable.historial_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageHistorialAssist),
+                                contentDescription = "Historial asistencias",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Mis asistencias",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.width(16.dp))
+
+                    Button(
+                        onClick = {
+                            navController.navigate("asistencia_list_alumnos_view")
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(16.dp),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            val imageChecklistHistoryAssist = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_checklist_dark
+                            } else {
+                                R.drawable.icon_checklist_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageChecklistHistoryAssist),
+                                contentDescription = "Lista asistencias",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Asistencias",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
             }
         }
     }

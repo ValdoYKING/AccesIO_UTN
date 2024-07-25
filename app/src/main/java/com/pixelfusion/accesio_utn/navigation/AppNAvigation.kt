@@ -11,9 +11,11 @@ import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
+import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
+import com.pixelfusion.accesio_utn.view.HistoryMyAssistView
 import com.pixelfusion.accesio_utn.view.HistoryUserView
 import com.pixelfusion.accesio_utn.view.HomeUserView
 import com.pixelfusion.accesio_utn.view.HorarioView
@@ -28,9 +30,11 @@ import com.pixelfusion.accesio_utn.view.QrLugarDetailView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.view.ScanQRLugarView
+import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
+import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
@@ -159,6 +163,16 @@ fun MyApp() {
             val qrUidAsistencia = backStackEntry.arguments?.getString("qrUidAsistencia")
             val viewModelQrAsistenciaDetail: QrAsistenciaDetailViewModel = viewModel()
             QrAsistenciaDetailView(navController, qrUidAsistencia, viewModelQrAsistenciaDetail)
+        }
+
+        composable("history_my_assist_view") {
+            val viewModelHistoryMyAssist: HistoryMyAssistViewModel = viewModel()
+            HistoryMyAssistView(navController, viewModelHistoryMyAssist)
+        }
+
+        composable("asistencia_list_alumnos_view") {
+            val viewModelAsistenciaListAlumnos: AsistenciaListAlumnosViewModel = viewModel()
+            AsistenciaListAlumnosView(navController, viewModelAsistenciaListAlumnos)
         }
 
     }
