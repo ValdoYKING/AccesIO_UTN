@@ -27,6 +27,7 @@ import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
+import com.pixelfusion.accesio_utn.view.ScanQRLugarView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
@@ -37,6 +38,8 @@ import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ScanQRAssistViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ScanQRLugarViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
 import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
 
@@ -122,7 +125,13 @@ fun MyApp() {
         }
 
         composable("scan_qr_assist_view") {
-            ScanQRAssistView(navController)
+            val viewModelScanQRAssist: ScanQRAssistViewModel = viewModel()
+            ScanQRAssistView(navController, viewModelScanQRAssist)
+        }
+
+        composable("scan_qr_lugar_view") {
+            val viewModelScanQRLugar: ScanQRLugarViewModel = viewModel()
+            ScanQRLugarView(navController, viewModelScanQRLugar)
         }
 
         composable("generate_qr_view") {

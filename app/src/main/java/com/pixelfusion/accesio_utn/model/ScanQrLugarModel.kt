@@ -1,9 +1,6 @@
 package com.pixelfusion.accesio_utn.model
 
 data class ScanQrLugarModel(
-    val titulo: String,
-    val tipo: String,
-    val lugar: String,
     val uid_qr_lugar: String,
     val uid_user: String,
     val fecha: String,
@@ -11,5 +8,5 @@ data class ScanQrLugarModel(
     val latitude: Double,
     val longitude: Double
 ) {
-    constructor() : this("", "", "", "", "", "", "", 0.0, 0.0)
+    constructor() : this("", "", "", "", 0.0, 0.0)
 }
