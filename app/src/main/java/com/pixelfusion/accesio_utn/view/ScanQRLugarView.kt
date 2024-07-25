@@ -13,8 +13,6 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -26,10 +24,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
@@ -50,10 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.style.TextAlign
@@ -63,28 +55,25 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 import com.google.android.gms.location.LocationServices
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
-import com.pixelfusion.accesio_utn.components.SuperiorData
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
-import com.pixelfusion.accesio_utn.model.UsuarioData
+import com.pixelfusion.accesio_utn.model.QrLugarModel
+import com.pixelfusion.accesio_utn.ui.theme.ColorLugar
 import com.pixelfusion.accesio_utn.ui.theme.CyanBlue
-import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAssistViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ScanQRLugarViewModel
 import java.util.concurrent.Executors
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "MissingPermission")
 @Composable
-fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewModel) {
+fun ScanQRLugarView(navController: NavController, viewModel: ScanQRLugarViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -226,7 +215,7 @@ fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewMo
                                 .fillMaxWidth()
                                 .height(320.dp)
                                 .clip(RoundedCornerShape(16.dp))
-                                .border(4.dp, CyanBlue, RoundedCornerShape(16.dp))
+                                .border(4.dp, ColorLugar, RoundedCornerShape(16.dp))
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { flipCamera() }) {
@@ -269,8 +258,8 @@ fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewMo
                 }
 
                 if (viewModel.isUserDetailDialogVisible) {
-                    UserDetailDialogAssist(
-                        asistencia = viewModel.asistencia,
+                    UserDetailDialogLugar(
+                        lugar = viewModel.lugar,
                         onDismiss = { viewModel.dismissUserDetailDialog() }
                     )
                 }
@@ -280,12 +269,12 @@ fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewMo
 }
 
 @Composable
-fun UserDetailDialogAssist(asistencia: QrAsistenciaModel, onDismiss: () -> Unit) {
+fun UserDetailDialogLugar(lugar: QrLugarModel, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = "¡Te haz registrado exitosamente!",
+                text = "¡Lugar escaneado!",
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -304,7 +293,7 @@ fun UserDetailDialogAssist(asistencia: QrAsistenciaModel, onDismiss: () -> Unit)
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = asistencia.titulo,
+                        text = lugar.titulo,
                         fontSize = 18.sp * 1.15f,
                         //modifier = Modifier.padding(end = 8.dp)
                     )
@@ -315,7 +304,7 @@ fun UserDetailDialogAssist(asistencia: QrAsistenciaModel, onDismiss: () -> Unit)
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = asistencia.materia,
+                        text = lugar.lugar,
                         fontSize = 18.sp
                     )
                 }

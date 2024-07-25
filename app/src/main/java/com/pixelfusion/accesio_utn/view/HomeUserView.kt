@@ -314,14 +314,14 @@ fun HomeUserView(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            val imageChecklistResource = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_checklist_dark
+                            val imageScanAssist = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_qr_scan_dark
                             } else {
-                                R.drawable.icon_checklist_light
+                                R.drawable.icon_qr_scan_light
                             }
                             Image(
-                                painter = painterResource(id = imageChecklistResource),
-                                contentDescription = "Mi asistencia",
+                                painter = painterResource(id = imageScanAssist),
+                                contentDescription = "Escanear asistencia",
                                 modifier = Modifier.size(48.dp)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
@@ -476,12 +476,22 @@ fun HomeUserView(
                                 contentDescription = "lista mi qr",
                                 modifier = Modifier.size(48.dp)
                             )*/
-                            Icon(
+                            val imageChecklistResource = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_checklist_dark
+                            } else {
+                                R.drawable.icon_checklist_light
+                            }
+                            Image(
+                                painter = painterResource(id = imageChecklistResource),
+                                contentDescription = "Lista QR's",
+                                modifier = Modifier.size(48.dp)
+                            )
+                            /*Icon(
                                 imageVector = Icons.Filled.CheckCircle,
                                 contentDescription = "mis qr",
                                 tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
                                 modifier = Modifier.size(48.dp)
-                            )
+                            )*/
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = "Mis QR's",
@@ -495,7 +505,7 @@ fun HomeUserView(
 
                     Button(
                         onClick = {
-                            navController.navigate("about_view")
+                            navController.navigate("scan_qr_lugar_view")
                         },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(16.dp),
@@ -507,33 +517,31 @@ fun HomeUserView(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            /*val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                R.drawable.historial_dark
+                            val imageQRPlace = if (isSystemInDarkTheme()) {
+                                R.drawable.icon_qr_scan_dark
                             } else {
-                                R.drawable.historial_light
+                                R.drawable.icon_qr_scan_light
                             }
                             Image(
-                                painter = painterResource(id = imageHistorialResource),
-                                contentDescription = "Historial entradas y salidas",
-                                modifier = Modifier.size(48.dp)
-                            )*/
-                            Icon(
-                                imageVector = Icons.Filled.Info,
-                                contentDescription = "temporal",
-                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                painter = painterResource(id = imageQRPlace),
+                                contentDescription = "Escanear QR lugar",
                                 modifier = Modifier.size(48.dp)
                             )
+                            /*Icon(
+                                imageVector = Icons.Filled.Info,
+                                contentDescription = "escanear QR lugar",
+                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+                                modifier = Modifier.size(48.dp)
+                            )*/
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "Temporal",
+                                text = "QR Lugar",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     }
                 }
-
-
             }
         }
     }

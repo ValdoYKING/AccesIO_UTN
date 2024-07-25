@@ -1,5 +1,6 @@
 package com.pixelfusion.accesio_utn.model
 
+/*Para registrar un qr_lugar*/
 data class QrLugarModel(
     val titulo: String,
     val tipo: String,
