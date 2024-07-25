@@ -182,7 +182,7 @@ fun ListQrGenerateView(navController: NavController, viewModel: ListQrGenerateVi
 
 
 @Composable
-fun QrAsistenciaItem(
+private fun QrAsistenciaItem(
     number: Int,
     qrUidAsistencia: String,
     qrAsistencia: QrAsistenciaModel,

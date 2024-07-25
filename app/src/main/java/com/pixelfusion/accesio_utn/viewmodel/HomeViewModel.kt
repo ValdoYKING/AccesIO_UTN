@@ -102,6 +102,11 @@ class HomeViewModel: ViewModel() {
         navController.navigate("login_view")
     }*/
 
+    fun logout(navController: NavController) {
+        auth.signOut()
+        navController.navigate("login_screen") // Ajusta el destino de navegación según sea necesario
+    }
+
     fun salirApp() {
         // Cerrar la aplicación
         System.exit(0)

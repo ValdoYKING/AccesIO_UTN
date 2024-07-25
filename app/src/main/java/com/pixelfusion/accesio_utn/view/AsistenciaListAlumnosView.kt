@@ -42,7 +42,6 @@ fun AsistenciaListAlumnosView(
         content = {
             Scaffold(
                 topBar = {
-                    //SuperiorData(drawerState, scope)
                     ContenidoSuperior(drawerState, scope, navController)
                 },
             ) { paddingValues ->

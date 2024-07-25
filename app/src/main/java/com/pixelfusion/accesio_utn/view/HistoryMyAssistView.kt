@@ -40,7 +40,6 @@ fun HistoryMyAssistView(navController: NavController, viewModel: HistoryMyAssist
         content = {
             Scaffold(
                 topBar = {
-                    //SuperiorData(drawerState, scope)
                     ContenidoSuperior(drawerState, scope, navController)
                 },
             ) { paddingValues ->
