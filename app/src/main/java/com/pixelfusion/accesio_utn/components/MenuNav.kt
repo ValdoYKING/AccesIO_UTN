@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
@@ -38,6 +41,10 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.ui.theme.WhiteColor2
 import com.pixelfusion.accesio_utn.ui.theme.blackdark
@@ -145,6 +152,77 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                     }
                 }
             )
+            //exit
+            /*-----------------------------------------------------------------------------------*/
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            NavigationRailItem(
+                icon = {},
+                label = {},
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(),
+                onClick = {}
+            )
+            /*-----------------------------------------------------------------------------------*/
+            //Spacer(modifier = Modifier.height(300.dp))
+            NavigationRailItem(
+                /*modifier = Modifier
+                    .height(300.dp),*/
+                icon = {
+                    Icon(Icons.AutoMirrored.Filled.ExitToApp, contentDescription = "Cerrar Sesión")
+                },
+                label = { Text("Cerrar Sesión") },
+                selected = false,
+                colors = NavigationRailItemDefaults.colors(
+                    selectedIconColor = if (isSystemInDarkTheme()) utnGreenLight else utnGreen,
+                    selectedTextColor = if (isSystemInDarkTheme()) WhiteColor2 else blackdark,
+                    indicatorColor = if (isSystemInDarkTheme()) utnGreen else utnGreenLight
+                ),
+                onClick = {
+                    logout(navController)
+                }
+            )
+
         }
     }
+}
+
+private lateinit var auth: FirebaseAuth
+fun logout(navController: NavController) {
+    auth = Firebase.auth
+    auth.signOut()
+    navController.navigate("login_screen")
 }

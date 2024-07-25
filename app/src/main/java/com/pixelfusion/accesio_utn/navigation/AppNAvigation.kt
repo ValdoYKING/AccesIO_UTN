@@ -24,6 +24,7 @@ import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
+import com.pixelfusion.accesio_utn.view.MyAccessDetailView
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
@@ -35,10 +36,12 @@ import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
+import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
+import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
@@ -144,7 +147,8 @@ fun MyApp() {
         }
 
         composable("history_user_view") {
-            HistoryUserView(navController)
+            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
+            HistoryUserView(navController, viewModelHistoryUser)
         }
 
         composable("lista_mi_qr") {
@@ -173,6 +177,18 @@ fun MyApp() {
         composable("asistencia_list_alumnos_view") {
             val viewModelAsistenciaListAlumnos: AsistenciaListAlumnosViewModel = viewModel()
             AsistenciaListAlumnosView(navController, viewModelAsistenciaListAlumnos)
+        }
+
+        composable("my_access_detail/{UidMyAccess}") { backStackEntry ->
+            val UidMyAccess = backStackEntry.arguments?.getString("UidMyAccess")
+            val viewModelHistoryUserDetail: MyAccessDetailViewModel = viewModel()
+            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
+            MyAccessDetailView(
+                navController,
+                UidMyAccess,
+                viewModelHistoryUserDetail,
+                viewModelHistoryUser
+            )
         }
 
     }
