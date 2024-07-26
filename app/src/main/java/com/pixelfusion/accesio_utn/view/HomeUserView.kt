@@ -187,10 +187,7 @@ fun HomeUserView(
                                 "MiAsistenciaMenuItem",
                                 navController
                             ),
-                            ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
-                            ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
                             ButtonData("history_user_view", "HistorialMenuItem", navController),
-                            ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
                             ButtonData(
                                 "scan_qr_lugar_view", "EscanearQRLugarMenuItem",
                                 navController
@@ -198,11 +195,6 @@ fun HomeUserView(
                             ButtonData(
                                 "history_my_assist_view",
                                 "MiHistorialAsistencia",
-                                navController
-                            ),
-                            ButtonData(
-                                "asistencia_list_alumnos_view",
-                                "ListaAsistenciaAlumnos",
                                 navController
                             ),
                             ButtonData(
