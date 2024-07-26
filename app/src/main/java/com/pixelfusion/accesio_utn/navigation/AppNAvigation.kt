@@ -20,6 +20,7 @@ import com.pixelfusion.accesio_utn.view.HistoryMyAssistView
 import com.pixelfusion.accesio_utn.view.HistoryPlaceView
 import com.pixelfusion.accesio_utn.view.HistoryUserView
 import com.pixelfusion.accesio_utn.view.HomeUserView
+import com.pixelfusion.accesio_utn.view.HorarioProfesorView
 import com.pixelfusion.accesio_utn.view.HorarioView
 import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
@@ -43,6 +44,7 @@ import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryPlaceViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
+import com.pixelfusion.accesio_utn.viewmodel.HorarioProfesorViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
@@ -217,6 +219,11 @@ fun MyApp() {
         composable("accesos_list_users_view") {
             val viewModelAccessListUsers: AccesosListUsersViewModel = viewModel()
             AccesosListUsersView(navController, viewModelAccessListUsers)
+        }
+
+        composable("horario_profesor_view") {
+            val viewModelHorarioProfesor: HorarioProfesorViewModel = viewModel()
+            HorarioProfesorView(navController, viewModelHorarioProfesor)
         }
 
         /*
