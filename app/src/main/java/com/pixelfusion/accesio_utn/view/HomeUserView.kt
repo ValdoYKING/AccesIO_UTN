@@ -6,17 +6,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Menu
@@ -41,7 +37,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -56,8 +51,10 @@ import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.EscanearQRLugarMenuItem
 import com.pixelfusion.accesio_utn.components.EscanearQRMenuItem
 import com.pixelfusion.accesio_utn.components.GenerarQRMenuItem
+import com.pixelfusion.accesio_utn.components.HistorialLugar
 import com.pixelfusion.accesio_utn.components.HistorialMenuItem
 import com.pixelfusion.accesio_utn.components.HorarioMenuItem
+import com.pixelfusion.accesio_utn.components.ListaAccesosUsers
 import com.pixelfusion.accesio_utn.components.ListaAsistenciaAlumnos
 import com.pixelfusion.accesio_utn.components.ListaQRMenuItem
 import com.pixelfusion.accesio_utn.components.MiAsistenciaMenuItem
@@ -116,6 +113,16 @@ fun HomeUserView(
                                 "asistencia_list_alumnos_view",
                                 "ListaAsistenciaAlumnos",
                                 navController
+                            ),
+                            ButtonData(
+                                "historial_qr_lugar_view",
+                                "HistorialLugares",
+                                navController
+                            ),
+                            ButtonData(
+                                "accesos_list_users_view",
+                                "ListaAccesosUsuarios",
+                                navController
                             )
                         )
                     )
@@ -137,7 +144,12 @@ fun HomeUserView(
                                 "asistencia_list_alumnos_view",
                                 "ListaAsistenciaAlumnos",
                                 navController
-                            )
+                            ),
+                            ButtonData(
+                                "historial_qr_lugar_view",
+                                "HistorialLugares",
+                                navController
+                            ),
                         )
                     )
                 }
@@ -155,7 +167,12 @@ fun HomeUserView(
                         listOf(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
                             ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
-                            ButtonData("history_user_view", "HistorialMenuItem", navController)
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData(
+                                "historial_qr_lugar_view",
+                                "HistorialLugares",
+                                navController
+                            ),
                         )
                     )
                 }
@@ -175,8 +192,7 @@ fun HomeUserView(
                             ButtonData("history_user_view", "HistorialMenuItem", navController),
                             ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
                             ButtonData(
-                                "scan_qr_lugar_view",
-                                "EscanearQRLugarMenuItem",
+                                "scan_qr_lugar_view", "EscanearQRLugarMenuItem",
                                 navController
                             ),
                             ButtonData(
@@ -188,7 +204,12 @@ fun HomeUserView(
                                 "asistencia_list_alumnos_view",
                                 "ListaAsistenciaAlumnos",
                                 navController
-                            )
+                            ),
+                            ButtonData(
+                                "historial_qr_lugar_view",
+                                "HistorialLugares",
+                                navController
+                            ),
                         )
                     )
                 }
@@ -275,7 +296,7 @@ fun HomeUserView(
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .padding(16.dp)
+                    .padding(5.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -361,6 +382,8 @@ fun HomeUserView(
                                             "EscanearQRLugarMenuItem" -> EscanearQRLugarMenuItem()
                                             "MiHistorialAsistencia" -> MiHistorialAsistencia()
                                             "ListaAsistenciaAlumnos" -> ListaAsistenciaAlumnos()
+                                            "HistorialLugares" -> HistorialLugar()
+                                            "ListaAccesosUsuarios" -> ListaAccesosUsers()
 
                                             else -> Text(text = button.text)
                                         }

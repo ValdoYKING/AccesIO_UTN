@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -202,7 +201,7 @@ fun MyAccessDetailView(
 
                         } ?: run {
                             Text(
-                                "No se encontraron detalles para este QR.",
+                                "No se encontraron detalles para este acceso.",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }

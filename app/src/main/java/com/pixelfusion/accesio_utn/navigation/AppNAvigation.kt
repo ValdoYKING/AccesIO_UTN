@@ -11,11 +11,13 @@ import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
+import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
 import com.pixelfusion.accesio_utn.view.HistoryMyAssistView
+import com.pixelfusion.accesio_utn.view.HistoryPlaceView
 import com.pixelfusion.accesio_utn.view.HistoryUserView
 import com.pixelfusion.accesio_utn.view.HomeUserView
 import com.pixelfusion.accesio_utn.view.HorarioView
@@ -25,23 +27,27 @@ import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
+import com.pixelfusion.accesio_utn.view.MyAssistDetailView
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.view.ScanQRLugarView
+import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
+import com.pixelfusion.accesio_utn.viewmodel.HistoryPlaceViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
+import com.pixelfusion.accesio_utn.viewmodel.MyAssistDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
@@ -190,6 +196,32 @@ fun MyApp() {
                 viewModelHistoryUser
             )
         }
+
+        composable("my_assist_detail/{UidMyAssist}") { backStackEntry ->
+            val UidMyAssist = backStackEntry.arguments?.getString("UidMyAssist")
+            val viewModelHistoryMyAssistDetail: MyAssistDetailViewModel = viewModel()
+            val viewModelHistoryMyAssist: HistoryMyAssistViewModel = viewModel()
+            MyAssistDetailView(
+                navController,
+                UidMyAssist,
+                viewModelHistoryMyAssistDetail,
+                viewModelHistoryMyAssist
+            )
+        }
+
+        composable("historial_qr_lugar_view") {
+            val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
+            HistoryPlaceView(navController, viewModelHistoryPlace)
+        }
+
+        composable("accesos_list_users_view") {
+            val viewModelAccessListUsers: AccesosListUsersViewModel = viewModel()
+            AccesosListUsersView(navController, viewModelAccessListUsers)
+        }
+
+        /*
+        REPORTES: PARA LOS EMPLEADOS
+        * */
 
     }
 }

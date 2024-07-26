@@ -298,3 +298,59 @@ fun ListaAsistenciaAlumnos() {
         )
     }
 }
+
+@Composable
+fun HistorialLugar() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        val imageHistorialAssist = if (isSystemInDarkTheme()) {
+            R.drawable.historial_dark
+        } else {
+            R.drawable.historial_light
+        }
+        Image(
+            painter = painterResource(id = imageHistorialAssist),
+            contentDescription = "Historial lugares",
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Lugares",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun ListaAccesosUsers() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        val imageChecklistHistoryAssist = if (isSystemInDarkTheme()) {
+            R.drawable.icon_checklist_dark
+        } else {
+            R.drawable.icon_checklist_light
+        }
+        Image(
+            painter = painterResource(id = imageChecklistHistoryAssist),
+            contentDescription = "Lista accesos",
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Accesos",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
