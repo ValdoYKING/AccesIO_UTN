@@ -2,7 +2,6 @@ package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,18 +12,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -42,13 +36,14 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -56,10 +51,18 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
+import com.pixelfusion.accesio_utn.components.CredencialMenuItem
 import com.pixelfusion.accesio_utn.components.DrawerContent3
-import com.pixelfusion.accesio_utn.ui.theme.BlueColor
-import com.pixelfusion.accesio_utn.ui.theme.BlueMarine
-import com.pixelfusion.accesio_utn.ui.theme.WhiteColor2
+import com.pixelfusion.accesio_utn.components.EscanearQRLugarMenuItem
+import com.pixelfusion.accesio_utn.components.EscanearQRMenuItem
+import com.pixelfusion.accesio_utn.components.GenerarQRMenuItem
+import com.pixelfusion.accesio_utn.components.HistorialMenuItem
+import com.pixelfusion.accesio_utn.components.HorarioMenuItem
+import com.pixelfusion.accesio_utn.components.ListaAsistenciaAlumnos
+import com.pixelfusion.accesio_utn.components.ListaQRMenuItem
+import com.pixelfusion.accesio_utn.components.MiAsistenciaMenuItem
+import com.pixelfusion.accesio_utn.components.MiHistorialAsistencia
+import com.pixelfusion.accesio_utn.model.ButtonData
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
@@ -76,9 +79,130 @@ fun HomeUserView(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
     var showDialog by remember { mutableStateOf(false) }
-
+    val buttonData = remember { mutableStateListOf<ButtonData>() }
     LaunchedEffect(Unit) {
         viewModelUser.fetchData()
+    }
+
+    LaunchedEffect(dataH.id_rol) {
+        buttonData.clear()
+        if (buttonData.isEmpty()) {
+            when (dataH.id_rol) {
+                "ADMINISTRATIVO" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("horario_view", "HorarioMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_assist_view",
+                                "MiAsistenciaMenuItem",
+                                navController
+                            ),
+                            ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
+                            ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_lugar_view",
+                                "EscanearQRLugarMenuItem",
+                                navController
+                            ),
+                            ButtonData(
+                                "history_my_assist_view",
+                                "MiHistorialAsistencia",
+                                navController
+                            ),
+                            ButtonData(
+                                "asistencia_list_alumnos_view",
+                                "ListaAsistenciaAlumnos",
+                                navController
+                            )
+                        )
+                    )
+                }
+
+                "PROFESOR" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_lugar_view",
+                                "EscanearQRLugarMenuItem",
+                                navController
+                            ),
+                            ButtonData(
+                                "asistencia_list_alumnos_view",
+                                "ListaAsistenciaAlumnos",
+                                navController
+                            )
+                        )
+                    )
+                }
+
+                "VISITA" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController)
+                        )
+                    )
+                }
+
+                "PERSONAL" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController)
+                        )
+                    )
+                }
+
+                "ESTUDIANTE" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("horario_view", "HorarioMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_assist_view",
+                                "MiAsistenciaMenuItem",
+                                navController
+                            ),
+                            ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
+                            ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_lugar_view",
+                                "EscanearQRLugarMenuItem",
+                                navController
+                            ),
+                            ButtonData(
+                                "history_my_assist_view",
+                                "MiHistorialAsistencia",
+                                navController
+                            ),
+                            ButtonData(
+                                "asistencia_list_alumnos_view",
+                                "ListaAsistenciaAlumnos",
+                                navController
+                            )
+                        )
+                    )
+                }
+
+                else -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                        )
+                    )
+                }
+            }
+        }
+
     }
 
     ModalNavigationDrawer(
@@ -152,10 +276,8 @@ fun HomeUserView(
                 modifier = Modifier
                     .padding(paddingValues)
                     .padding(16.dp)
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState()),
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
@@ -163,19 +285,12 @@ fun HomeUserView(
                 ) {
                     if (viewModelUser.isLoading) {
                         Spacer(modifier = Modifier.height(20.dp))
-                        /*Text(
-                            text = "Cargando...",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            //color = Color.Black
-                        )*/
                         CircularProgressIndicator(
                             modifier = Modifier
                                 .size(40.dp)
                                 .align(alignment = Alignment.CenterHorizontally)
                         )
                     } else {
-
                         Text(
                             text = "Mi cuenta",
                             fontSize = 24.sp,
@@ -209,418 +324,53 @@ fun HomeUserView(
                                 fontWeight = FontWeight.Normal
                             )
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
-                        var dateString = ""
-                        /*if(dataH.fecha_actualizacion != null){
-                             dateString = viewModelUser.longToDateString(dataH.fecha_actualizacion.toLong())
-                        }else{
-                             dateString = ""
-                        }*/
-
-
-
-                        Text(
-                            text = dataH.fecha_actualizacion,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal
-                        )
-                        Spacer(modifier = Modifier.height(32.dp))
+                        Spacer(modifier = Modifier.height(14.dp))
                     }
                 }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        onClick = {
-                            navController.navigate("credential_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
+                if (viewModelUser.isLoading) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .align(alignment = Alignment.CenterHorizontally)
+                    )
+                } else {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(20.dp),
+                        modifier = Modifier.fillMaxWidth()
                     ) {
+                        items(buttonData.chunked(2)) { rowButtons ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+                                rowButtons.forEach { button ->
+                                    Button(
+                                        onClick = { button.onClick() },
+                                        modifier = Modifier.weight(1f),
+                                        shape = RoundedCornerShape(16.dp)
+                                    ) {
+                                        when (button.text) {
+                                            "CredencialMenuItem" -> CredencialMenuItem()
+                                            "HorarioMenuItem" -> HorarioMenuItem()
+                                            "MiAsistenciaMenuItem" -> MiAsistenciaMenuItem()
+                                            "EscanearQRMenuItem" -> EscanearQRMenuItem()
+                                            "GenerarQRMenuItem" -> GenerarQRMenuItem()
+                                            "HistorialMenuItem" -> HistorialMenuItem()
+                                            "ListaQRMenuItem" -> ListaQRMenuItem()
+                                            "EscanearQRLugarMenuItem" -> EscanearQRLugarMenuItem()
+                                            "MiHistorialAsistencia" -> MiHistorialAsistencia()
+                                            "ListaAsistenciaAlumnos" -> ListaAsistenciaAlumnos()
 
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.AccountBox,
-                                contentDescription = "Credencial",
-                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
-                            Text(
-                                text = "Credencial",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("horario_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.DateRange,
-                                contentDescription = "Horarios",
-                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Horarios",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                                            else -> Text(text = button.text)
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Button(
-                        onClick = {
-                            navController.navigate("scan_qr_assist_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageScanAssist = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_qr_scan_dark
-                            } else {
-                                R.drawable.icon_qr_scan_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageScanAssist),
-                                contentDescription = "Escanear asistencia",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Mi asistencia",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("scan_qr_access_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageQRResource = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_qr_scan_dark
-                            } else {
-                                R.drawable.icon_qr_scan_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageQRResource),
-                                contentDescription = "Escanear QR seguridad ",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
-                            Text(
-                                text = "Escanear QR",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Button(
-                        onClick = {
-                            navController.navigate("generate_qr_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_qr_dark
-                            } else {
-                                R.drawable.icons8_qr_code_100_l
-                            }
-                            Image(
-                                painter = painterResource(id = imageGenerateQrResource),
-                                contentDescription = "Generar QR lugar",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Generar QR",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("history_user_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                R.drawable.historial_dark
-                            } else {
-                                R.drawable.historial_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageHistorialResource),
-                                contentDescription = "Historial entradas y salidas",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Historial",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Button(
-                        onClick = {
-                            navController.navigate("lista_mi_qr")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            /*val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_qr_dark
-                            } else {
-                                R.drawable.icons8_qr_code_100_l
-                            }*/
-                            /*Image(
-                                painter = painterResource(id = imageGenerateQrResource),
-                                contentDescription = "lista mi qr",
-                                modifier = Modifier.size(48.dp)
-                            )*/
-                            val imageChecklistResource = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_checklist_dark
-                            } else {
-                                R.drawable.icon_checklist_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageChecklistResource),
-                                contentDescription = "Lista QR's",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            /*Icon(
-                                imageVector = Icons.Filled.CheckCircle,
-                                contentDescription = "mis qr",
-                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-                                modifier = Modifier.size(48.dp)
-                            )*/
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Mis QR's",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("scan_qr_lugar_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageQRPlace = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_qr_scan_dark
-                            } else {
-                                R.drawable.icon_qr_scan_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageQRPlace),
-                                contentDescription = "Escanear QR lugar",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            /*Icon(
-                                imageVector = Icons.Filled.Info,
-                                contentDescription = "escanear QR lugar",
-                                tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-                                modifier = Modifier.size(48.dp)
-                            )*/
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "QR Lugar",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-
-                    Button(
-                        onClick = {
-                            navController.navigate("history_my_assist_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageHistorialAssist = if (isSystemInDarkTheme()) {
-                                R.drawable.historial_dark
-                            } else {
-                                R.drawable.historial_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageHistorialAssist),
-                                contentDescription = "Historial asistencias",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Mis asistencias",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(16.dp))
-
-                    Button(
-                        onClick = {
-                            navController.navigate("asistencia_list_alumnos_view")
-                        },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(16.dp),
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(80.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            val imageChecklistHistoryAssist = if (isSystemInDarkTheme()) {
-                                R.drawable.icon_checklist_dark
-                            } else {
-                                R.drawable.icon_checklist_light
-                            }
-                            Image(
-                                painter = painterResource(id = imageChecklistHistoryAssist),
-                                contentDescription = "Lista asistencias",
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "Asistencias",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-
             }
         }
     }
 }
-
