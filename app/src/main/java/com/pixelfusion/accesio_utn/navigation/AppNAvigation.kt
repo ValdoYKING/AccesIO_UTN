@@ -30,6 +30,7 @@ import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
 import com.pixelfusion.accesio_utn.view.MyAssistDetailView
+import com.pixelfusion.accesio_utn.view.MyPlaceDetailView
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
@@ -52,6 +53,7 @@ import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAssistDetailViewModel
+import com.pixelfusion.accesio_utn.viewmodel.MyPlaceDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
@@ -210,6 +212,18 @@ fun MyApp() {
                 UidMyAssist,
                 viewModelHistoryMyAssistDetail,
                 viewModelHistoryMyAssist
+            )
+        }
+
+        composable("my_place_detail/{UidMyPlace}") { backStackEntry ->
+            val UidMyPlace = backStackEntry.arguments?.getString("UidMyPlace")
+            val viewModelHistoryPlaceDetail: MyPlaceDetailViewModel = viewModel()
+            val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
+            MyPlaceDetailView(
+                navController,
+                UidMyPlace,
+                viewModelHistoryPlaceDetail,
+                viewModelHistoryPlace
             )
         }
 
