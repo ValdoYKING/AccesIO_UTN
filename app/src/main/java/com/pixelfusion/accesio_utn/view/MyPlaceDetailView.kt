@@ -1,6 +1,5 @@
 package com.pixelfusion.accesio_utn.view
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -47,27 +47,26 @@ import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
-import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
-import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
-import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
+import com.pixelfusion.accesio_utn.components.TopBarUTMedium
+import com.pixelfusion.accesio_utn.viewmodel.HistoryPlaceViewModel
+import com.pixelfusion.accesio_utn.viewmodel.MyPlaceDetailViewModel
 
-@SuppressLint("UnrememberedMutableState")
 @Composable
-fun MyAccessDetailView(
+fun MyPlaceDetailView(
     navController: NavController,
-    UidMyAccess: String?,
-    viewModel: MyAccessDetailViewModel,
-    viewModelMyAccess: HistoryUserViewModel
+    UidMyPlace: String?,
+    viewModel: MyPlaceDetailViewModel,
+    viewModelHistoryPlace: HistoryPlaceViewModel
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
-    LaunchedEffect(UidMyAccess) {
-        viewModel.fetchData(UidMyAccess)
+    LaunchedEffect(UidMyPlace) {
+        viewModel.fetchData(UidMyPlace)
     }
-    val MyHistoryList by viewModel.MyHistoryList.collectAsState()
+    val MyPlaceList by viewModel.MyPlaceList.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
     ModalNavigationDrawer(
@@ -78,7 +77,6 @@ fun MyAccessDetailView(
         content = {
             Scaffold(
                 topBar = {
-                    //SuperiorData(drawerState, scope)
                     ContenidoSuperior(drawerState, scope, navController)
                 },
             ) { paddingValues ->
@@ -91,18 +89,16 @@ fun MyAccessDetailView(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp))
                     if (isLoading) {
                         CircularProgressIndicator()
                     } else {
-                        MyHistoryList.firstOrNull()?.let { myAccess ->
-                            val tipoDeRegistro = viewModelMyAccess.determinarTipoDeRegistro(
-                                myAccess.fecha_access,
-                                myAccess.hora_access
-                            )
+                        MyPlaceList.firstOrNull()?.let { myPlace ->
+                            val qrPlaceData = viewModelHistoryPlace.qrLugarList.find {
+                                it.first == myPlace.uid_qr_lugar
+                            }
                             val fechaText =
-                                viewModelMyAccess.convertirFechaATexto(myAccess.fecha_access)
-                            TopBarUT(fechaText)
+                                viewModelHistoryPlace.convertirFechaATexto(myPlace.fecha)
+                            TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
                                     R.drawable.historial_light
@@ -117,7 +113,7 @@ fun MyAccessDetailView(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Tipo",
+                                    text = "Materia",
                                     //fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp
                                 )
@@ -125,12 +121,48 @@ fun MyAccessDetailView(
                             Spacer(modifier = Modifier.height(4.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Spacer(modifier = Modifier.width(16.dp))
-                                Text(
-                                    text = tipoDeRegistro,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 22.sp,
-                                    color = if (tipoDeRegistro == "Entrada") GreenSemiDark else Color.Red
-                                )
+                                qrPlaceData?.let {
+                                    Text(
+                                        text = it.second.tipo,
+                                        fontSize = 20.sp,
+                                        //style = MaterialTheme.typography.bodyMedium,
+                                        //color = Color.Gray
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                qrPlaceData?.let {
+                                    val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                        R.drawable.historial_light
+                                    } else {
+                                        R.drawable.historial_black
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Image(
+                                        painter = painterResource(id = imageHistorialResource),
+                                        contentDescription = "Historial entradas y salidas",
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text(
+                                        text = "Salón",
+                                        fontSize = 20.sp,
+                                        //style = MaterialTheme.typography.bodyMedium,
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Spacer(modifier = Modifier.width(16.dp))
+                                qrPlaceData?.let {
+                                    Text(
+                                        text = it.second.lugar,
+                                        fontSize = 20.sp,
+                                        //style = MaterialTheme.typography.bodyMedium,
+                                        //color = Color.Gray
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -156,7 +188,7 @@ fun MyAccessDetailView(
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Spacer(modifier = Modifier.width(16.dp))
                                 Text(
-                                    text = "${myAccess.fecha_access} ${myAccess.hora_access} hrs",
+                                    text = "${myPlace.fecha} ${myPlace.hora} hrs",
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp
                                 )
@@ -168,13 +200,22 @@ fun MyAccessDetailView(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                TopBarUT("Ubicacion de acceso")
+                                TopBarUTMedium("Ubicacion de asistencia")
                             }
                             Spacer(modifier = Modifier.height(8.dp))
-                            val ubicacion = LatLng(myAccess.latitude, myAccess.longitude)
+                            val ubicacion = LatLng(myPlace.latitude, myPlace.longitude)
                             val cameraPositionUbicacion = rememberCameraPositionState {
-                                position = CameraPosition.fromLatLngZoom(ubicacion, 20f)
+                                position = CameraPosition.fromLatLngZoom(ubicacion, 30f)
                             }
+                            val latitudQRGenerado = qrPlaceData?.second?.latitude
+                            val longitudQRGenerado = qrPlaceData?.second?.longitude
+                            val ubicacionQRGenerado =
+                                LatLng(latitudQRGenerado ?: 0.0, longitudQRGenerado ?: 0.0)
+                            val cameraPositionQR = rememberCameraPositionState {
+                                position = CameraPosition.fromLatLngZoom(ubicacionQRGenerado, 30f)
+                            }
+                            val horaQr = qrPlaceData?.second?.hora
+                            val fechaQr = qrPlaceData?.second?.fecha
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center,
@@ -196,23 +237,27 @@ fun MyAccessDetailView(
                                 ) {
                                     Marker(
                                         state = MarkerState(position = ubicacion),
-                                        title = "Ubicación",
-                                        snippet = "$tipoDeRegistro - ${myAccess.hora_access}"
+                                        title = "Mi ubicación",
+                                        snippet = "${myPlace.hora} hrs",
+                                    )
+                                    Marker(
+                                        state = MarkerState(position = ubicacionQRGenerado),
+                                        title = "QR generado",
+                                        snippet = fechaQr
                                     )
                                 }
                             }
 
                         } ?: run {
                             Text(
-                                "No se encontraron detalles para este acceso.",
+                                "No se encontraron detalles para el lugar.",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
                     }
-
-
                 }
             }
         }
     )
+
 }

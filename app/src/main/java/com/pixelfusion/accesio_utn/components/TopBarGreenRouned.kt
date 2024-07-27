@@ -56,3 +56,34 @@ fun TopBarUT(text: String) {
         }
     }
 }
+
+@Composable
+fun TopBarUTMedium(text: String) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        //.height(50.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = utnGreen,
+        border = BorderStroke(2.dp, utnGreen),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = text,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    }
+}
