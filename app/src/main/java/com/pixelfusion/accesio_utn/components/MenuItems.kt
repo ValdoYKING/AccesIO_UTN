@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -349,6 +350,54 @@ fun ListaAccesosUsers() {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Accesos",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun HorarioProfesor() {
+    Column(
+        modifier = Modifier
+            //.fillMaxWidth()
+            .height(80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.DateRange,
+            contentDescription = "Horario profesor",
+            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Horario profesor",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun FormularioHorarios() {
+    Column(
+        modifier = Modifier
+            //.fillMaxWidth()
+            .height(80.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = Icons.Filled.Warning,
+            contentDescription = "Form horarios",
+            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Form horarios",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )

@@ -50,10 +50,12 @@ import com.pixelfusion.accesio_utn.components.CredencialMenuItem
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.EscanearQRLugarMenuItem
 import com.pixelfusion.accesio_utn.components.EscanearQRMenuItem
+import com.pixelfusion.accesio_utn.components.FormularioHorarios
 import com.pixelfusion.accesio_utn.components.GenerarQRMenuItem
 import com.pixelfusion.accesio_utn.components.HistorialLugar
 import com.pixelfusion.accesio_utn.components.HistorialMenuItem
 import com.pixelfusion.accesio_utn.components.HorarioMenuItem
+import com.pixelfusion.accesio_utn.components.HorarioProfesor
 import com.pixelfusion.accesio_utn.components.ListaAccesosUsers
 import com.pixelfusion.accesio_utn.components.ListaAsistenciaAlumnos
 import com.pixelfusion.accesio_utn.components.ListaQRMenuItem
@@ -123,7 +125,13 @@ fun HomeUserView(
                                 "accesos_list_users_view",
                                 "ListaAccesosUsuarios",
                                 navController
-                            )
+                            ),
+                            ButtonData(
+                                "horario_profesor_view",
+                                "HorarioProfesorMenuItem",
+                                navController
+                            ),
+                            ButtonData("form_horarios_view", "FormHorariosMenuItem", navController),
                         )
                     )
                 }
@@ -132,6 +140,11 @@ fun HomeUserView(
                     buttonData.addAll(
                         listOf(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData(
+                                "horario_profesor_view",
+                                "HorarioProfesorMenuItem",
+                                navController
+                            ),
                             ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
                             ButtonData("history_user_view", "HistorialMenuItem", navController),
                             ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
@@ -365,6 +378,7 @@ fun HomeUserView(
                                     ) {
                                         when (button.text) {
                                             "CredencialMenuItem" -> CredencialMenuItem()
+                                            "HorarioProfesorMenuItem" -> HorarioProfesor()
                                             "HorarioMenuItem" -> HorarioMenuItem()
                                             "MiAsistenciaMenuItem" -> MiAsistenciaMenuItem()
                                             "EscanearQRMenuItem" -> EscanearQRMenuItem()
@@ -376,6 +390,7 @@ fun HomeUserView(
                                             "ListaAsistenciaAlumnos" -> ListaAsistenciaAlumnos()
                                             "HistorialLugares" -> HistorialLugar()
                                             "ListaAccesosUsuarios" -> ListaAccesosUsers()
+                                            "FormHorariosMenuItem" -> FormularioHorarios()
 
                                             else -> Text(text = button.text)
                                         }
