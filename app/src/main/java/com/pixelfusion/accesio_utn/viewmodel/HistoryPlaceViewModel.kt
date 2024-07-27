@@ -9,6 +9,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
 import com.pixelfusion.accesio_utn.model.QrEstudianteAsisteModel
+import com.pixelfusion.accesio_utn.model.QrLugarModel
+import com.pixelfusion.accesio_utn.model.ScanQrLugarModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -23,18 +25,18 @@ class HistoryPlaceViewModel : ViewModel() {
     private lateinit var auth: FirebaseAuth
     private val database = Firebase.database.reference
 
-    private val _MyHistoryAssistList =
-        mutableStateOf<List<Pair<String, QrEstudianteAsisteModel>>>(emptyList())
-    val MyHistoryAssistList: List<Pair<String, QrEstudianteAsisteModel>> get() = _MyHistoryAssistList.value
+    private val _MyHistoryPlaceList =
+        mutableStateOf<List<Pair<String, ScanQrLugarModel>>>(emptyList())
+    val MyHistoryPlaceList: List<Pair<String, ScanQrLugarModel>> get() = _MyHistoryPlaceList.value
 
-    private val _qrAsistenciaList = mutableStateListOf<Pair<String, QrAsistenciaModel>>()
-    val qrAsistenciaList: List<Pair<String, QrAsistenciaModel>> get() = _qrAsistenciaList
+    private val _qrLugarList = mutableStateListOf<Pair<String, QrLugarModel>>()
+    val qrLugarList: List<Pair<String, QrLugarModel>> get() = _qrLugarList
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: Boolean get() = _isLoading.value
 
-    val _isLoadingMyHistoryAssist = mutableStateOf(true)
-    val isLoadingMyHistoryAssist: Boolean get() = _isLoadingMyHistoryAssist.value
+    val _isLoadingMyHistoryPlace = mutableStateOf(true)
+    val isLoadingMyHistoryPlace: Boolean get() = _isLoadingMyHistoryPlace.value
 
     init {
         auth = FirebaseAuth.getInstance()
@@ -45,7 +47,7 @@ class HistoryPlaceViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
-                llamarDatosHistorialMyAssist()
+                llamarDatosHistorialMyPlace()
             } catch (e: Exception) {
                 println("Error ${e.message}")
             } finally {
@@ -54,46 +56,46 @@ class HistoryPlaceViewModel : ViewModel() {
         }
     }
 
-    private suspend fun llamarDatosHistorialMyAssist() {
+    private suspend fun llamarDatosHistorialMyPlace() {
         val user = auth.currentUser
         user?.let {
             val userId = it.uid
             val result = withContext(Dispatchers.IO) {
-                val snapshot = database.child("qr_estudiante_asist")
+                val snapshot = database.child("qr_lugar_asist")
                     .orderByChild("uid_user")
                     .equalTo(userId)
                     .get()
                     .await()
 
                 snapshot.children.mapNotNull { data ->
-                    val MyAssist = data.getValue(QrEstudianteAsisteModel::class.java)
-                    MyAssist?.let {
+                    val MyPlace = data.getValue(ScanQrLugarModel::class.java)
+                    MyPlace?.let {
                         Pair(data.key ?: "", it)
                     }
-                }.sortedByDescending { MyAssistPair ->
-                    val (uid, MyAssist) = MyAssistPair
-                    val fechaHoraStr = "${MyAssist.fecha} ${MyAssist.hora}"
+                }.sortedByDescending { MyPlacePair ->
+                    val (uid, MyPlace) = MyPlacePair
+                    val fechaHoraStr = "${MyPlace.fecha} ${MyPlace.hora}"
                     val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
                     LocalDateTime.parse(fechaHoraStr, formatter)
                 }
             }
-            _MyHistoryAssistList.value = result
-            _isLoadingMyHistoryAssist.value = false
-            fetchQrAsistenciaData(result.map { it.second.uid_qr_asistencia })
+            _MyHistoryPlaceList.value = result
+            _isLoadingMyHistoryPlace.value = false
+            fetchQrLugarData(result.map { it.second.uid_qr_lugar })
         } ?: run {
             println("Usuario no autenticado")
         }
     }
 
-    private suspend fun fetchQrAsistenciaData(uidList: List<String>) {
+    private suspend fun fetchQrLugarData(uidList: List<String>) {
         uidList.forEach { uid ->
-            val qrAsistenciaSnapshot = database.child("qr_asistencia")
+            val qrLugarSnapshot = database.child("qr_lugar")
                 .child(uid)
                 .get()
                 .await()
-            val qrAsistencia = qrAsistenciaSnapshot.getValue(QrAsistenciaModel::class.java)
-            qrAsistencia?.let {
-                _qrAsistenciaList.add(Pair(qrAsistenciaSnapshot.key ?: "", it))
+            val qrLugar = qrLugarSnapshot.getValue(QrLugarModel::class.java)
+            qrLugar?.let {
+                _qrLugarList.add(Pair(qrLugarSnapshot.key ?: "", it))
             }
         }
     }

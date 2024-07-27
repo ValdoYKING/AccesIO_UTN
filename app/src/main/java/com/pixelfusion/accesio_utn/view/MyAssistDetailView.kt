@@ -282,6 +282,4 @@ fun MyAssistDetailView(
             }
         }
     )
-
-
 }
