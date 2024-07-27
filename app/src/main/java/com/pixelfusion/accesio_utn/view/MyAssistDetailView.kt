@@ -25,16 +25,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -112,7 +115,7 @@ fun MyAssistDetailView(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "Tipo",
+                                    text = "Materia",
                                     //fontWeight = FontWeight.Bold,
                                     fontSize = 20.sp
                                 )
@@ -123,6 +126,60 @@ fun MyAssistDetailView(
                                 qrAsistenciaData?.let {
                                     Text(
                                         text = it.second.materia,
+                                        fontSize = 20.sp,
+                                        //style = MaterialTheme.typography.bodyMedium,
+                                        //color = Color.Gray
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                qrAsistenciaData?.let {
+                                    if (it.second.lugar == "Salon") {
+                                        val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                            R.drawable.historial_light
+                                        } else {
+                                            R.drawable.historial_black
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Image(
+                                            painter = painterResource(id = imageHistorialResource),
+                                            contentDescription = "Historial entradas y salidas",
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "Salón",
+                                            fontSize = 20.sp,
+                                            //style = MaterialTheme.typography.bodyMedium,
+                                        )
+                                    } else if (it.second.lugar == "Laboratorio") {
+                                        val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                            R.drawable.historial_light
+                                        } else {
+                                            R.drawable.historial_black
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Image(
+                                            painter = painterResource(id = imageHistorialResource),
+                                            contentDescription = "Historial entradas y salidas",
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "Laboratorio",
+                                            fontSize = 20.sp,
+                                            //style = MaterialTheme.typography.bodyMedium,
+                                        )
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Spacer(modifier = Modifier.width(16.dp))
+                                qrAsistenciaData?.let {
+                                    Text(
+                                        text = it.second.descripcion_lugar,
                                         fontSize = 20.sp,
                                         //style = MaterialTheme.typography.bodyMedium,
                                         //color = Color.Gray
@@ -170,8 +227,16 @@ fun MyAssistDetailView(
                             Spacer(modifier = Modifier.height(8.dp))
                             val ubicacion = LatLng(myAssist.latitude, myAssist.longitude)
                             val cameraPositionUbicacion = rememberCameraPositionState {
-                                position = CameraPosition.fromLatLngZoom(ubicacion, 20f)
+                                position = CameraPosition.fromLatLngZoom(ubicacion, 30f)
                             }
+                            val latitudQRGenerado = qrAsistenciaData?.second?.latitude
+                            val longitudQRGenerado = qrAsistenciaData?.second?.longitude
+                            val ubicacionQRGenerado =
+                                LatLng(latitudQRGenerado ?: 0.0, longitudQRGenerado ?: 0.0)
+                            val cameraPositionQR = rememberCameraPositionState {
+                                position = CameraPosition.fromLatLngZoom(ubicacionQRGenerado, 30f)
+                            }
+                            val horaQr = qrAsistenciaData?.second?.hora
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.Center,
@@ -193,8 +258,13 @@ fun MyAssistDetailView(
                                 ) {
                                     Marker(
                                         state = MarkerState(position = ubicacion),
-                                        title = "Ubicación",
-                                        snippet = "${myAssist.hora} hrs"
+                                        title = "Mi ubicación",
+                                        snippet = "${myAssist.hora} hrs",
+                                    )
+                                    Marker(
+                                        state = MarkerState(position = ubicacionQRGenerado),
+                                        title = "QR generado",
+                                        snippet = "$horaQr hrs"
                                     )
                                 }
                             }
