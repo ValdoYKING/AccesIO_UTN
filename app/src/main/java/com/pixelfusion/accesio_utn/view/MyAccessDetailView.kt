@@ -47,6 +47,7 @@ import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
+import com.pixelfusion.accesio_utn.components.TopBarUTMedium
 import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
 import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
@@ -102,7 +103,7 @@ fun MyAccessDetailView(
                             )
                             val fechaText =
                                 viewModelMyAccess.convertirFechaATexto(myAccess.fecha_access)
-                            TopBarUT(fechaText)
+                            TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
                                     R.drawable.historial_light
@@ -168,7 +169,7 @@ fun MyAccessDetailView(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                TopBarUT("Ubicacion de acceso")
+                                TopBarUTMedium("Ubicacion de acceso")
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             val ubicacion = LatLng(myAccess.latitude, myAccess.longitude)
