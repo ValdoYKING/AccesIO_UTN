@@ -14,6 +14,7 @@ import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
 import com.pixelfusion.accesio_utn.view.HistoryMyAssistView
@@ -38,6 +39,7 @@ import com.pixelfusion.accesio_utn.view.ScanQRLugarView
 import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
+import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
@@ -224,6 +226,11 @@ fun MyApp() {
         composable("horario_profesor_view") {
             val viewModelHorarioProfesor: HorarioProfesorViewModel = viewModel()
             HorarioProfesorView(navController, viewModelHorarioProfesor)
+        }
+
+        composable("form_horarios_view") {
+            val viewModelFormHorarios: FormHorariosViewModel = viewModel()
+            FormHorariosView(navController, viewModelFormHorarios)
         }
 
         /*
