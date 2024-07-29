@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +50,7 @@ import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
+import com.pixelfusion.accesio_utn.components.TopBarUTMedium
 import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
 import com.pixelfusion.accesio_utn.viewmodel.HistoryMyAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAssistDetailViewModel
@@ -86,11 +89,12 @@ fun MyAssistDetailView(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(paddingValues)
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                    //Spacer(modifier = Modifier.height(16.dp))
                     if (isLoading) {
                         CircularProgressIndicator()
                     } else {
@@ -100,7 +104,7 @@ fun MyAssistDetailView(
                             }
                             val fechaText =
                                 viewModelMyAssist.convertirFechaATexto(myAssist.fecha)
-                            TopBarUT(fechaText)
+                            TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
                                     R.drawable.historial_light
@@ -222,7 +226,7 @@ fun MyAssistDetailView(
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                TopBarUT("Ubicacion de asistencia")
+                                TopBarUTMedium("Ubicacion de asistencia")
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                             val ubicacion = LatLng(myAssist.latitude, myAssist.longitude)
@@ -282,6 +286,4 @@ fun MyAssistDetailView(
             }
         }
     )
-
-
 }
