@@ -14,6 +14,7 @@ import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.FormHoraCalView
 import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
@@ -39,6 +40,7 @@ import com.pixelfusion.accesio_utn.view.ScanQRLugarView
 import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
+import com.pixelfusion.accesio_utn.viewmodel.FormHoraCalViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
@@ -233,6 +235,10 @@ fun MyApp() {
             FormHorariosView(navController, viewModelFormHorarios)
         }
 
+        composable("crear_horario_cal_form"){
+            val viewModelHoraCal: FormHoraCalViewModel = viewModel()
+            FormHoraCalView(navController,viewModelHoraCal)
+        }
         /*
         REPORTES: PARA LOS EMPLEADOS
         * */
