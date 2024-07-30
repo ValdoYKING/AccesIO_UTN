@@ -12,7 +12,6 @@ import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.AccesosListUsersView
-import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormHorariosView
@@ -31,7 +30,6 @@ import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
 import com.pixelfusion.accesio_utn.view.MyAssistDetailView
-import com.pixelfusion.accesio_utn.view.MyPlaceDetailView
 import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
@@ -39,7 +37,6 @@ import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.view.ScanQRLugarView
 import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
-import com.pixelfusion.accesio_utn.viewmodel.AccessDetailUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
@@ -55,7 +52,6 @@ import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAssistDetailViewModel
-import com.pixelfusion.accesio_utn.viewmodel.MyPlaceDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrAsistenciaDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.QrLugarDetailViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
@@ -217,18 +213,6 @@ fun MyApp() {
             )
         }
 
-        composable("my_place_detail/{UidMyPlace}") { backStackEntry ->
-            val UidMyPlace = backStackEntry.arguments?.getString("UidMyPlace")
-            val viewModelHistoryPlaceDetail: MyPlaceDetailViewModel = viewModel()
-            val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
-            MyPlaceDetailView(
-                navController,
-                UidMyPlace,
-                viewModelHistoryPlaceDetail,
-                viewModelHistoryPlace
-            )
-        }
-
         composable("historial_qr_lugar_view") {
             val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
             HistoryPlaceView(navController, viewModelHistoryPlace)
@@ -247,18 +231,6 @@ fun MyApp() {
         composable("form_horarios_view") {
             val viewModelFormHorarios: FormHorariosViewModel = viewModel()
             FormHorariosView(navController, viewModelFormHorarios)
-        }
-
-        composable("details_access_user/{UidAccessUser}") { backStackEntry ->
-            val UidAccessUser = backStackEntry.arguments?.getString("UidAccessUser")
-            val viewModelHistoryAccessUserDetail: AccessDetailUserViewModel = viewModel()
-            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
-            AccessDetailUserView(
-                navController,
-                UidAccessUser,
-                viewModelHistoryAccessUserDetail,
-                viewModelHistoryUser
-            )
         }
 
         /*
