@@ -45,6 +45,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.components.TopBarUTMedium
@@ -77,7 +78,7 @@ fun MyPlaceDetailView(
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Historial")
                 },
             ) { paddingValues ->
                 Column(
@@ -112,41 +113,9 @@ fun MyPlaceDetailView(
                                     modifier = Modifier.size(20.dp)
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
-                                Text(
-                                    text = "Materia",
-                                    //fontWeight = FontWeight.Bold,
-                                    fontSize = 20.sp
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(4.dp))
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Spacer(modifier = Modifier.width(16.dp))
                                 qrPlaceData?.let {
                                     Text(
                                         text = it.second.tipo,
-                                        fontSize = 20.sp,
-                                        //style = MaterialTheme.typography.bodyMedium,
-                                        //color = Color.Gray
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                qrPlaceData?.let {
-                                    val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                        R.drawable.historial_light
-                                    } else {
-                                        R.drawable.historial_black
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Image(
-                                        painter = painterResource(id = imageHistorialResource),
-                                        contentDescription = "Historial entradas y salidas",
-                                        modifier = Modifier.size(20.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(6.dp))
-                                    Text(
-                                        text = "Salón",
                                         fontSize = 20.sp,
                                         //style = MaterialTheme.typography.bodyMedium,
                                     )

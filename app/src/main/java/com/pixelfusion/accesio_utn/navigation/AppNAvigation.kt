@@ -12,6 +12,7 @@ import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.AccesosListUsersView
+import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.FormHorariosView
@@ -38,6 +39,7 @@ import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.view.ScanQRLugarView
 import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
+import com.pixelfusion.accesio_utn.viewmodel.AccessDetailUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
@@ -245,6 +247,18 @@ fun MyApp() {
         composable("form_horarios_view") {
             val viewModelFormHorarios: FormHorariosViewModel = viewModel()
             FormHorariosView(navController, viewModelFormHorarios)
+        }
+
+        composable("details_access_user/{UidAccessUser}") { backStackEntry ->
+            val UidAccessUser = backStackEntry.arguments?.getString("UidAccessUser")
+            val viewModelHistoryAccessUserDetail: AccessDetailUserViewModel = viewModel()
+            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
+            AccessDetailUserView(
+                navController,
+                UidAccessUser,
+                viewModelHistoryAccessUserDetail,
+                viewModelHistoryUser
+            )
         }
 
         /*
