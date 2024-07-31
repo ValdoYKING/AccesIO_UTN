@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.AccountBox
@@ -38,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -53,7 +57,7 @@ import com.pixelfusion.accesio_utn.ui.theme.utnGreenLight
 
 @Composable
 fun DrawerContent3(navController: NavController, currentRoute: String?) {
-    Column {
+    Column{
         NavigationRail {
             NavigationRailItem(
                 icon = { Icon(Icons.Filled.Home, contentDescription = "Inicio") },
@@ -153,51 +157,8 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
                 }
             )
             //exit
-            /*-----------------------------------------------------------------------------------*/
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            NavigationRailItem(
-                icon = {},
-                label = {},
-                selected = false,
-                colors = NavigationRailItemDefaults.colors(),
-                onClick = {}
-            )
-            /*-----------------------------------------------------------------------------------*/
-            //Spacer(modifier = Modifier.height(300.dp))
+            //Spacer(modifier = Modifier.height())
+            Spacer(modifier = Modifier.weight(1f))
             NavigationRailItem(
                 /*modifier = Modifier
                     .height(300.dp),*/
