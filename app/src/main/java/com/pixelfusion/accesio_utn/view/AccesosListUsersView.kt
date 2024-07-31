@@ -48,6 +48,7 @@ import com.pixelfusion.accesio_utn.ui.theme.utnGreenLightWhite
 import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import kotlinx.coroutines.delay
 
+/*Lista de accesos de usuarios*/
 @Composable
 fun AccesosListUsersView(navController: NavController, viewModel: AccesosListUsersViewModel) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
