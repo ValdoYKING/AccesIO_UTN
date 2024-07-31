@@ -7,12 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -47,7 +52,36 @@ class MainActivity : ComponentActivity() {
             AccesIOUTNTheme {
                 AppNavigation()
                 DynamicStatusBarColor()
+                //FilterChipWithLeadingIconSample()
             }
         }
     }
+}
+
+@Composable
+fun FilterChipWithLeadingIconSample() {
+    var selected by remember { mutableStateOf(false) }
+    FilterChip(
+        selected = selected,
+        onClick = { selected = !selected },
+        label = { Text("Filter chip") },
+        leadingIcon =
+        if (selected) {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Done,
+                    contentDescription = "Localized Description",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            }
+        } else {
+            {
+                Icon(
+                    imageVector = Icons.Filled.Home,
+                    contentDescription = "Localized description",
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            }
+        }
+    )
 }

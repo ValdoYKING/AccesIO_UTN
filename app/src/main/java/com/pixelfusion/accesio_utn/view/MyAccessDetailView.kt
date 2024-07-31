@@ -46,7 +46,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
-import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.components.TopBarUTMedium
 import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
 import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
@@ -106,9 +105,9 @@ fun MyAccessDetailView(
                             TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.iconodoor_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_door_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(
@@ -136,9 +135,9 @@ fun MyAccessDetailView(
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.icono_horafecha_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_horafecha_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(

@@ -37,10 +37,20 @@ fun CredencialMenuItem() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = Icons.Filled.AccountBox,
+//        Icon(
+//            imageVector = Icons.Filled.AccountBox,
+//            contentDescription = "Credencial",
+//            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+//            modifier = Modifier.size(48.dp)
+//        )
+        val imageScanAssist = if (isSystemInDarkTheme()) {
+            R.drawable.id_credential
+        } else {
+            R.drawable.id_credential
+        }
+        Image(
+            painter = painterResource(id = imageScanAssist),
             contentDescription = "Credencial",
-            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
             modifier = Modifier.size(48.dp)
         )
         Spacer(modifier = Modifier.height(8.dp)) // Added vertical spacing
@@ -61,10 +71,14 @@ fun HorarioMenuItem() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Icon(
-            imageVector = Icons.Filled.DateRange,
-            contentDescription = "Horarios",
-            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
+        val imageMyHistorialAssist = if (isSystemInDarkTheme()) {
+            R.drawable.agenda1
+        } else {
+            R.drawable.agenda1
+        }
+        Image(
+            painter = painterResource(id = imageMyHistorialAssist),
+            contentDescription = "Agenda",
             modifier = Modifier.size(48.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -83,15 +97,16 @@ fun MiAsistenciaMenuItem() {
             .fillMaxWidth()
             .height(80.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
+
     ) {
-        val imageScanAssist = if (isSystemInDarkTheme()) {
-            R.drawable.icon_qr_scan_dark
+        val imageMyAssist = if (isSystemInDarkTheme()) {
+            R.drawable.checkbox2
         } else {
-            R.drawable.icon_qr_scan_light
+            R.drawable.checkbox2
         }
         Image(
-            painter = painterResource(id = imageScanAssist),
+            painter = painterResource(id = imageMyAssist),
             contentDescription = "Escanear asistencia",
             modifier = Modifier.size(48.dp)
         )
@@ -113,13 +128,13 @@ fun EscanearQRMenuItem() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val imageQRResource = if (isSystemInDarkTheme()) {
-            R.drawable.icon_qr_scan_dark
+        val imageEscQRResource = if (isSystemInDarkTheme()) {
+            R.drawable.icon_scanqr
         } else {
-            R.drawable.icon_qr_scan_light
+            R.drawable.icon_scanqr
         }
         Image(
-            painter = painterResource(id = imageQRResource),
+            painter = painterResource(id = imageEscQRResource),
             contentDescription = "Escanear QR seguridad ",
             modifier = Modifier.size(48.dp)
         )
@@ -142,9 +157,11 @@ fun GenerarQRMenuItem() {
         verticalArrangement = Arrangement.Center
     ) {
         val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-            R.drawable.icon_qr_dark
+            //R.drawable.icon_qr_dark
+            R.drawable.qr_code
         } else {
-            R.drawable.icons8_qr_code_100_l
+            R.drawable.qr_code
+            //R.drawable.icons8_qr_code_100_l
         }
         Image(
             painter = painterResource(id = imageGenerateQrResource),
@@ -170,9 +187,9 @@ fun HistorialMenuItem() {
         verticalArrangement = Arrangement.Center
     ) {
         val imageHistorialResource = if (isSystemInDarkTheme()) {
-            R.drawable.historial_dark
+            R.drawable.historial
         } else {
-            R.drawable.historial_light
+            R.drawable.historial
         }
         Image(
             painter = painterResource(id = imageHistorialResource),
@@ -197,13 +214,13 @@ fun ListaQRMenuItem() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val imageChecklistResource = if (isSystemInDarkTheme()) {
-            R.drawable.icon_checklist_dark
+        val imageListQrsResource = if (isSystemInDarkTheme()) {
+            R.drawable.group
         } else {
-            R.drawable.icon_checklist_light
+            R.drawable.group
         }
         Image(
-            painter = painterResource(id = imageChecklistResource),
+            painter = painterResource(id = imageListQrsResource),
             contentDescription = "Lista QR's",
             modifier = Modifier.size(48.dp)
         )
@@ -226,9 +243,9 @@ fun EscanearQRLugarMenuItem() {
         verticalArrangement = Arrangement.Center
     ) {
         val imageQRPlace = if (isSystemInDarkTheme()) {
-            R.drawable.icon_qr_scan_dark
+            R.drawable.qrubic
         } else {
-            R.drawable.icon_qr_scan_light
+            R.drawable.qrubic
         }
         Image(
             painter = painterResource(id = imageQRPlace),
@@ -254,9 +271,9 @@ fun MiHistorialAsistencia() {
         verticalArrangement = Arrangement.Center
     ) {
         val imageHistorialAssist = if (isSystemInDarkTheme()) {
-            R.drawable.historial_dark
+            R.drawable.list_check
         } else {
-            R.drawable.historial_light
+            R.drawable.list_check
         }
         Image(
             painter = painterResource(id = imageHistorialAssist),
@@ -282,9 +299,9 @@ fun ListaAsistenciaAlumnos() {
         verticalArrangement = Arrangement.Center
     ) {
         val imageChecklistHistoryAssist = if (isSystemInDarkTheme()) {
-            R.drawable.icon_checklist_dark
+            R.drawable.check_list
         } else {
-            R.drawable.icon_checklist_light
+            R.drawable.check_list
         }
         Image(
             painter = painterResource(id = imageChecklistHistoryAssist),
@@ -309,13 +326,13 @@ fun HistorialLugar() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val imageHistorialAssist = if (isSystemInDarkTheme()) {
-            R.drawable.historial_dark
+        val imageUbicacionAssist = if (isSystemInDarkTheme()) {
+            R.drawable.ubicacion
         } else {
-            R.drawable.historial_light
+            R.drawable.ubicacion
         }
         Image(
-            painter = painterResource(id = imageHistorialAssist),
+            painter = painterResource(id = imageUbicacionAssist),
             contentDescription = "Historial lugares",
             modifier = Modifier.size(48.dp)
         )
@@ -337,15 +354,15 @@ fun ListaAccesosUsers() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        val imageChecklistHistoryAssist = if (isSystemInDarkTheme()) {
-            R.drawable.icon_checklist_dark
+        val imageChecklistAccessAssist = if (isSystemInDarkTheme()) {
+            R.drawable.list_ass
         } else {
-            R.drawable.icon_checklist_light
+            R.drawable.list_ass
         }
         Image(
-            painter = painterResource(id = imageChecklistHistoryAssist),
-            contentDescription = "Lista accesos",
-            modifier = Modifier.size(48.dp)
+            painter = painterResource(id = imageChecklistAccessAssist),
+        contentDescription = "Lista accesos",
+        modifier = Modifier.size(48.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -356,50 +373,3 @@ fun ListaAccesosUsers() {
     }
 }
 
-@Composable
-fun HorarioProfesor() {
-    Column(
-        modifier = Modifier
-            //.fillMaxWidth()
-            .height(80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.DateRange,
-            contentDescription = "Horario profesor",
-            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-            modifier = Modifier.size(48.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Horario profesor",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-fun FormularioHorarios() {
-    Column(
-        modifier = Modifier
-            //.fillMaxWidth()
-            .height(80.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Warning,
-            contentDescription = "Form horarios",
-            tint = if (isSystemInDarkTheme()) BlueMarine else WhiteColor2,
-            modifier = Modifier.size(48.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "Form horarios",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}

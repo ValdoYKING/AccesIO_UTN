@@ -217,18 +217,6 @@ fun MyApp() {
             )
         }
 
-        composable("my_place_detail/{UidMyPlace}") { backStackEntry ->
-            val UidMyPlace = backStackEntry.arguments?.getString("UidMyPlace")
-            val viewModelHistoryPlaceDetail: MyPlaceDetailViewModel = viewModel()
-            val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
-            MyPlaceDetailView(
-                navController,
-                UidMyPlace,
-                viewModelHistoryPlaceDetail,
-                viewModelHistoryPlace
-            )
-        }
-
         composable("historial_qr_lugar_view") {
             val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
             HistoryPlaceView(navController, viewModelHistoryPlace)
@@ -261,18 +249,17 @@ fun MyApp() {
             )
         }
 
-        composable("details_access_user/{UidAccessUser}") { backStackEntry ->
-            val UidAccessUser = backStackEntry.arguments?.getString("UidAccessUser")
-            val viewModelHistoryAccessUserDetail: AccessDetailUserViewModel = viewModel()
-            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
-            AccessDetailUserView(
+        composable("my_place_detail/{UidMyPlace}") { backStackEntry ->
+            val UidMyPlace = backStackEntry.arguments?.getString("UidMyPlace")
+            val MyPlaceDetailViewModel: MyPlaceDetailViewModel = viewModel()
+            val viewModelHistoryPlace: HistoryPlaceViewModel = viewModel()
+            MyPlaceDetailView(
                 navController,
-                UidAccessUser,
-                viewModelHistoryAccessUserDetail,
-                viewModelHistoryUser
+                UidMyPlace,
+                MyPlaceDetailViewModel,
+                viewModelHistoryPlace
             )
         }
-
         /*
         REPORTES: PARA LOS EMPLEADOS
         * */
