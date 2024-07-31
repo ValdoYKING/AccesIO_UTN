@@ -120,9 +120,9 @@ fun QrLugarDetailView(
 
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icon_school_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icon_school_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -149,9 +149,9 @@ fun QrLugarDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_place_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_place_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -178,9 +178,9 @@ fun QrLugarDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_reloj_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_reloj_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
