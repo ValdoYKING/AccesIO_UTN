@@ -167,13 +167,7 @@ private fun ListAccessItemUser(
                         style = MaterialTheme.typography.bodySmall,
                         color = GreenSemiDark
                     )
-                    /*AÑADIIR TIPO DE REGISTRO AQUI*/
                     Spacer(modifier = Modifier.height(8.dp))
-                    /*Text(
-                        text = tipoDeRegistro,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (tipoDeRegistro == "Entrada") GreenSemiDark else Color.Red
-                    )*/
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "Ver asistentes",
