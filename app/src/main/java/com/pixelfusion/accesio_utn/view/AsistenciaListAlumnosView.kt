@@ -29,7 +29,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
-import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.helper.FechaATexto
@@ -151,9 +149,9 @@ private fun ListAccessItemUser(
             },
             leadingContent = {
                 val imageListAsistUser = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
-                } else {
                     R.drawable.icon_qr_dark
+                } else {
+                    R.drawable.icons8_qr_code_100_l
                 }
                 Image(
                     painter = painterResource(imageListAsistUser),
