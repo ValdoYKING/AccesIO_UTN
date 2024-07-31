@@ -159,7 +159,7 @@ fun InfoScheduleStudent() {
                     Text(
                         text = schedule,
                         modifier = Modifier.padding(8.dp),
-                        color = Color.Black // Opcional: cambiar el color del texto
+                        //color = Color.Black // Opcional: cambiar el color del texto
                     )
 
             }
