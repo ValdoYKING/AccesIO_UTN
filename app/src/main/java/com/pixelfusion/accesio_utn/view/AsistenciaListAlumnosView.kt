@@ -150,9 +150,6 @@ private fun ListAccessItemUser(
                 }
             },
             leadingContent = {
-                //Spacer(modifier = Modifier.height(14.dp))
-                /*val imageGenerateQrResource =
-                    if (tipoDeRegistro == "Entrada") R.drawable.login_icon else R.drawable.exit_icon*/
                 val imageListAsistUser = if (isSystemInDarkTheme()) {
                     R.drawable.icons8_qr_code_100_l
                 } else {
