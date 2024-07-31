@@ -15,7 +15,7 @@ import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
-import com.pixelfusion.accesio_utn.view.FormHorariosView
+//import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
 import com.pixelfusion.accesio_utn.view.HistoryMyAssistView
@@ -246,7 +246,19 @@ fun MyApp() {
 
         composable("form_horarios_view") {
             val viewModelFormHorarios: FormHorariosViewModel = viewModel()
-            FormHorariosView(navController, viewModelFormHorarios)
+            //FormHorariosView(navController, viewModelFormHorarios)
+        }
+
+        composable("details_access_user/{UidMyAccess}") { backStackEntry ->
+            val UidMyAccess = backStackEntry.arguments?.getString("UidMyAccess")
+            val AccessDetailUserViewModel: AccessDetailUserViewModel = viewModel()
+            val viewModelHistoryUser: HistoryUserViewModel = viewModel()
+            AccessDetailUserView(
+                navController,
+                UidMyAccess,
+                AccessDetailUserViewModel,
+                viewModelHistoryUser
+            )
         }
 
         composable("details_access_user/{UidAccessUser}") { backStackEntry ->
