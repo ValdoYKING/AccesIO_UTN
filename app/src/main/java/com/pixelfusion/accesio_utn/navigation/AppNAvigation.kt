@@ -15,6 +15,7 @@ import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.DetailStudentAssistView
 //import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
@@ -27,6 +28,7 @@ import com.pixelfusion.accesio_utn.view.HorarioView
 import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
+import com.pixelfusion.accesio_utn.view.ListAssistUsersQrView
 import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
@@ -42,6 +44,7 @@ import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AccessDetailUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
+import com.pixelfusion.accesio_utn.viewmodel.DetailStudentAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
@@ -51,6 +54,7 @@ import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HorarioProfesorViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ListAssistUsersQrViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
@@ -259,6 +263,28 @@ fun MyApp() {
                 MyPlaceDetailViewModel,
                 viewModelHistoryPlace
             )
+        }
+
+        composable("list_access_users_by_qr/{UidQRAccessUser}") { backStackEntry ->
+            val UidQRAccessUser = backStackEntry.arguments?.getString("UidQRAccessUser")
+            val ListAssistUsersQrViewModel: ListAssistUsersQrViewModel = viewModel()
+            if (UidQRAccessUser != null) {
+                ListAssistUsersQrView(navController, UidQRAccessUser, ListAssistUsersQrViewModel)
+            } else {
+                ListAssistUsersQrView(navController, "", ListAssistUsersQrViewModel)
+            }
+        }
+
+        composable("detail_student_assist/{UidQrAsistencia}") { backStackEntry ->
+            val uidStudentAsistencia = backStackEntry.arguments?.getString("UidQrAsistencia")
+            val DetailStudentAssistViewModel: DetailStudentAssistViewModel = viewModel()
+            if (uidStudentAsistencia != null) {
+                DetailStudentAssistView(
+                    navController,
+                    uidStudentAsistencia,
+                    DetailStudentAssistViewModel
+                )
+            }
         }
         /*
         REPORTES: PARA LOS EMPLEADOS

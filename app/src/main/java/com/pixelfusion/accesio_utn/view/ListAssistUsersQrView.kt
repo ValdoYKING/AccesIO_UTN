@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,8 +23,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,23 +38,26 @@ import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.helper.FechaATexto
-import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
+import com.pixelfusion.accesio_utn.model.QrEstudianteAsisteModel
 import com.pixelfusion.accesio_utn.ui.theme.CyanBlue
-import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
 import com.pixelfusion.accesio_utn.ui.theme.utnGreen
 import com.pixelfusion.accesio_utn.ui.theme.utnGreenLightWhite
-import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ListAssistUsersQrViewModel
 
 @Composable
-fun AsistenciaListAlumnosView(
+fun ListAssistUsersQrView(
     navController: NavController,
-    viewModel: AsistenciaListAlumnosViewModel
+    UidQRAccessUser: String,
+    viewModel: ListAssistUsersQrViewModel
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    val isLoadingAsistencia by remember { viewModel._isLoadingAsistencia }
+
+    LaunchedEffect(UidQRAccessUser) {
+        viewModel.fetchData(UidQRAccessUser)
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -69,7 +71,7 @@ fun AsistenciaListAlumnosView(
                         drawerState,
                         scope,
                         navController,
-                        "Lista de QR's de asistencias"
+                        "Alumnos que asistieron"
                     )
                 },
             ) { paddingValues ->
@@ -79,21 +81,19 @@ fun AsistenciaListAlumnosView(
                         .padding(paddingValues)
                         .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    //verticalArrangement = Arrangement.Center
                 ) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        if (isLoadingAsistencia) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(Alignment.Center)
-                            )
-                        } else {
+                    if (viewModel.isLoading) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                    } else {
+                        Column {
                             LazyColumn {
-                                itemsIndexed(viewModel.AsistenciaUserList) { index, AsistenciaUserPair ->
-                                    val (uidAccessUser, AccessUser) = AsistenciaUserPair
-                                    ListAccessItemUser(
+                                itemsIndexed(viewModel.AsistenciaUserList) { index, studentAssistPair ->
+                                    val (uidQrAsistencia, studentAssist) = studentAssistPair
+                                    ListStudentAssistItem(
                                         number = index + 1,
-                                        UidQRAccessUser = uidAccessUser,
-                                        DataAccess = AccessUser,
+                                        uidQrAsistencia = uidQrAsistencia,
+                                        studentAssist = studentAssist,
                                         navController = navController,
                                         viewModel = viewModel
                                     )
@@ -107,34 +107,38 @@ fun AsistenciaListAlumnosView(
     )
 }
 
+
 @Composable
-private fun ListAccessItemUser(
+private fun ListStudentAssistItem(
     number: Int,
-    UidQRAccessUser: String,
-    DataAccess: QrAsistenciaModel,
+    uidQrAsistencia: String,
+    studentAssist: QrEstudianteAsisteModel,
     navController: NavController,
-    viewModel: AsistenciaListAlumnosViewModel
+    viewModel: ListAssistUsersQrViewModel
 ) {
+    val userDetails = viewModel.UserDetailsMap[studentAssist.uid_user]
+    val userName = userDetails?.let { "${it.nombre} ${it.apellido}" } ?: "Desconocido"
+    val matricula = userDetails?.matricula ?: "Desconocido"
+    val fechaText = FechaATexto(studentAssist.fecha)
     Column(
         modifier = Modifier
-            .clickable() {
-                navController.navigate("list_access_users_by_qr/$UidQRAccessUser")
+            .clickable {
+                navController.navigate("detail_student_assist/$uidQrAsistencia")
             }
     ) {
-        val fechaText = FechaATexto(DataAccess.fecha)
         ListItem(
             modifier = Modifier
                 .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite),
             headlineContent = {
                 Text(
-                    text = "${number}. ${DataAccess.titulo}",
+                    text = userName,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
+                    fontSize = 18.sp,
                 )
             },
             overlineContent = {
                 Text(
-                    text = fechaText,
+                    text = matricula,
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                 )
@@ -142,40 +146,25 @@ private fun ListAccessItemUser(
             supportingContent = {
                 Column {
                     Text(
-                        text = DataAccess.lugar,
+                        text = "$fechaText a las ${studentAssist.hora} hrs",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
             },
             leadingContent = {
-                val imageListAsistUser = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
-                } else {
-                    R.drawable.icon_qr_dark
-                }
                 Image(
-                    painter = painterResource(imageListAsistUser),
+                    painter = painterResource(if (isSystemInDarkTheme()) R.drawable.icons8_qr_code_100_l else R.drawable.icon_qr_dark),
                     contentDescription = "Generar QR lugar",
                     modifier = Modifier.size(20.dp)
-                    //.padding(end = 8.dp)
                 )
             },
             trailingContent = {
-                Column {
-                    Text(
-                        text = "${DataAccess.fecha} ${DataAccess.hora}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = GreenSemiDark
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Ver asistentes",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = CyanBlue,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = "Ver detalles",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = CyanBlue,
+                    fontWeight = FontWeight.Bold
+                )
             }
         )
         HorizontalDivider()
