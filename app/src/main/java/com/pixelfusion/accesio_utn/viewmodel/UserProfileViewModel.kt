@@ -10,22 +10,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.storage.FirebaseStorage
+import com.pixelfusion.accesio_utn.model.UsuarioData
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.*
-
-data class UsuarioData(
-    val nombre: String = "",
-    val apellido: String = "",
-    val correo_electronico: String = "",
-    val telefono: String = "",
-    val carrera: String = "",
-    val id_rol: String = "",
-    val fecha_nacimiento: String = "",
-    val num_seguro_social: String = "",
-    val image_path: String = "",
-    val matricula: String = ""
-)
 
 class UserProfileViewModel : ViewModel() {
     var stateHome by mutableStateOf(UsuarioData())
@@ -62,12 +50,13 @@ class UserProfileViewModel : ViewModel() {
             }
         }
     }
+
     fun onValueChange(value: String, key: String) {
         stateHome = when (key) {
             "nombre" -> stateHome.copy(nombre = value)
             "apellido" -> stateHome.copy(apellido = value)
             "correo_electronico" -> stateHome.copy(correo_electronico = value)
-            "matricula " -> stateHome.copy(matricula = value)
+            "matricula" -> stateHome.copy(matricula = value)
             "fecha_nacimiento" -> stateHome.copy(fecha_nacimiento = value)
             "num_seguro_social" -> stateHome.copy(num_seguro_social = value)
             "telefono" -> stateHome.copy(telefono = value)
@@ -102,6 +91,7 @@ class UserProfileViewModel : ViewModel() {
             navController.navigate("perfil_view")
         }
     }
+
     private fun getUserFieldValue(key: String): String? {
         return when (key) {
             "nombre" -> stateHome.nombre
@@ -110,7 +100,7 @@ class UserProfileViewModel : ViewModel() {
             "fecha_nacimiento" -> stateHome.fecha_nacimiento
             "num_seguro_social" -> stateHome.num_seguro_social
             "telefono" -> stateHome.telefono
-            "matricula"-> stateHome.matricula
+            "matricula" -> stateHome.matricula
             "image_path" -> stateHome.image_path
             else -> null
         }
@@ -142,7 +132,6 @@ class UserProfileViewModel : ViewModel() {
         }
     }
 
-
     fun logout(navController: NavController) {
         auth = FirebaseAuth.getInstance()
         auth.signOut()
@@ -153,3 +142,4 @@ class UserProfileViewModel : ViewModel() {
         private const val TAG = "ProfileViewModel"
     }
 }
+

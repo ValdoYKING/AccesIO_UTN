@@ -56,17 +56,16 @@ fun PerfilView(
                     title = "Perfil"
                 )
             }
-        ) {
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .padding(20.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
-
             ) {
-                // Imagen de perfil
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
@@ -80,6 +79,8 @@ fun PerfilView(
                         }
                     )
 
+                    Spacer(modifier = Modifier.height(50.dp))
+
                     Image(
                         painter = painter,
                         contentDescription = null,
@@ -87,8 +88,7 @@ fun PerfilView(
                             .size(150.dp)
                             .clip(CircleShape)
                             .clickable {
-                                // Accion para seleccionar una nueva imagen
-                                // Llamar al ImagePicker cuando se haga clic en la imagen
+                                // Seleccionar imagen cuando se hace clic
                                 imageUri?.let { uri ->
                                     viewModelU.updateProfileImage(uri, navController)
                                 }
@@ -105,18 +105,17 @@ fun PerfilView(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                ProfileDetailItem(label = "NOMBRE", value = "${viewModelU.stateHome.nombre} ${viewModelU.stateHome.apellido}")
-                ProfileDetailItem(label = "MATRÍCULA", value = viewModelU.stateHome.matricula)
-                ProfileDetailItem(label = "CORREO ELECTRÓNICO", value = viewModelU.stateHome.correo_electronico)
-                ProfileDetailItem(label = "TELÉFONO", value = viewModelU.stateHome.telefono)
-                ProfileDetailItem(label = "CARRERA", value = viewModelU.stateHome.carrera)
-                ProfileDetailItem(label = "ROL", value = viewModelU.stateHome.id_rol)
-                ProfileDetailItem(label = "FECHA DE NACIMIENTO", value = viewModelU.stateHome.fecha_nacimiento)
-                ProfileDetailItem(label = "NÚMERO DE SEGURO SOCIAL", value = viewModelU.stateHome.num_seguro_social)
+                ProfileDetailItem(label = "Nombre", value = viewModelU.stateHome.nombre + " " + viewModelU.stateHome.apellido)
+                ProfileDetailItem(label = "Matrícula", value = viewModelU.stateHome.matricula)
+                ProfileDetailItem(label = "Correo Electrónico", value = viewModelU.stateHome.correo_electronico)
+                ProfileDetailItem(label = "Teléfono", value = viewModelU.stateHome.telefono)
+                ProfileDetailItem(label = "Carrera", value = viewModelU.stateHome.carrera)
+                ProfileDetailItem(label = "Rol", value = viewModelU.stateHome.id_rol)
+                ProfileDetailItem(label = "Fecha de Nacimiento", value = viewModelU.stateHome.fecha_nacimiento)
+                ProfileDetailItem(label = "Número de Seguro Social", value = viewModelU.stateHome.num_seguro_social)
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Botón para editar
                 Button(
                     onClick = {
                         navController.navigate("editar_datos_view")
@@ -126,6 +125,26 @@ fun PerfilView(
                 }
             }
         }
+    }
+}
+@Composable
+fun ProfileDetailItem(label: String, value: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+    ) {
+        Text(
+            text = "$label:",
+            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            color = Color.Black
+        )
+        Text(
+            text = value,
+            fontSize = 16.sp,
+            color = Color.Black
+        )
     }
 }
 
@@ -162,24 +181,4 @@ fun ContenidoSuperiorWithTitle(
             }
         }
     )
-}
-@Composable
-fun ProfileDetailItem(label: String, value: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Text(
-            text = "$label:",
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Text(
-            text = value,
-            fontSize = 16.sp,
-            color = Color.Black
-        )
-    }
 }
