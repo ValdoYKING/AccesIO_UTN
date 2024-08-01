@@ -140,3 +140,26 @@ fun ButtonNext(navController: NavController, route: String){
         Text("Volver al menú principal ")
     }
 }
+
+@Composable
+fun ButtonEdit(navController: NavController, route: String){
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            navController.navigate(route)
+        }
+    ) {
+        Text("Editar horario ")
+    }
+}
+@Composable
+fun ButtonCreateSchedule(navController: NavController, route: String){
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            navController.navigate(route)
+        }
+    ) {
+        Text("Crear horario ")
+    }
+}
