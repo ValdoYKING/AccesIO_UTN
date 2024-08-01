@@ -123,7 +123,7 @@ private fun ListStudentAssistItem(
     Column(
         modifier = Modifier
             .clickable {
-                navController.navigate("detail_student_assist/$uidQrAsistencia")
+                navController.navigate("detail_student_assist/${studentAssist.uid_qr_asistencia}/${studentAssist.uid_user}")
             }
     ) {
         ListItem(
