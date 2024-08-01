@@ -115,6 +115,10 @@ dependencies {
     //implementation("androidx.camera:camera-view:1.3.4")
     implementation(libs.androidx.camera.view)
 
+    implementation(libs.firebase.bom.v3271)
+
+    implementation(libs.google.firebase.firestore)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,5 +1,7 @@
 package com.pixelfusion.accesio_utn.navigation
 
+import CreateScheduleView
+import EditScheduleView
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -127,6 +129,13 @@ fun MyApp() {
 
         composable("history_user_view") {
             HistoryUserView(navController)
+        }
+        composable("edit_schedule_view") {
+            EditScheduleView(navController)
+        }
+
+        composable("create_schedule_view") {
+            CreateScheduleView(navController)
         }
     }
 }
