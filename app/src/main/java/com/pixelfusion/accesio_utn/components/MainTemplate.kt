@@ -53,8 +53,15 @@ fun MainTemplate(navController: NavController) {
         content = {
             Scaffold(
                 topBar = {
-                    //SuperiorData(drawerState, scope)
-                    ContenidoSuperior(drawerState, scope, navController)
+                    /*Barra de navegacion con icono UTN*/
+                    //ContenidoSuperior(drawerState, scope, navController)
+                    /*Barra de navegacion con titulo*/
+                    ContenidoSuperiorWithTitle(
+                        drawerState,
+                        scope,
+                        navController,
+                        "Agregar titulo superior"
+                    )
                 },
             ) { paddingValues ->
                 Column(
