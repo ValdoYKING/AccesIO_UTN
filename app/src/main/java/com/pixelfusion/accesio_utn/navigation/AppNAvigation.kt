@@ -1,5 +1,7 @@
 package com.pixelfusion.accesio_utn.navigation
 
+import PerfilView
+import UserProfileViewModel
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -15,6 +17,7 @@ import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
 import com.pixelfusion.accesio_utn.view.AboutView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.EditarDatosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
 import com.pixelfusion.accesio_utn.view.HistoryUserView
@@ -24,7 +27,6 @@ import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
 import com.pixelfusion.accesio_utn.view.LoginScreen
-import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView
 import com.pixelfusion.accesio_utn.view.ScanQRAssistView
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
@@ -34,7 +36,6 @@ import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
-import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
 
 @Composable
 fun AppNavigation() {
@@ -108,6 +109,10 @@ fun MyApp() {
         composable("profile_view") {
             val viewModelU: UserProfileViewModel = viewModel()
             PerfilView(navController, viewModelU)
+        }
+
+        composable("editar_datos_view") {
+            EditarDatosView(navController = navController, viewModelU = UserProfileViewModel())
         }
 
         composable("about_view") {

@@ -56,6 +56,7 @@ dependencies {
     //Dagger Hilt
     //implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.hilt.android)
+    implementation(libs.firebase.firestore.ktx)
     //kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     kapt(libs.hilt.android.compiler)
     //Retrofit
