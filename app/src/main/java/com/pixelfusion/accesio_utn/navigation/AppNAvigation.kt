@@ -1,5 +1,7 @@
 package com.pixelfusion.accesio_utn.navigation
 
+import CreateScheduleView
+import EditScheduleView
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext

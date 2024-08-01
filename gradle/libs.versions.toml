@@ -32,6 +32,7 @@ googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.0.0"
 playServicesLocation = "21.3.0"
 firebaseFirestore = "24.0.0"
+firebaseFirestoreKtx = "25.0.0"
 
 [libraries]
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
@@ -80,6 +81,7 @@ zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", ve
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
