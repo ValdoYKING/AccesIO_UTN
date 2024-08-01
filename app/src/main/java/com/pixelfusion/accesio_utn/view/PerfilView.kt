@@ -21,6 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.DrawerContent3
@@ -37,6 +38,8 @@ fun PerfilView(
     val scope = rememberCoroutineScope()
     val state by viewModelU.stateHome.collectAsState() // Asegúrate de usar StateFlow para observar cambios
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
     LaunchedEffect(Unit) {
         viewModelU.fetchData()
@@ -45,87 +48,104 @@ fun PerfilView(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent3(navController, "perfil_view")
-        }
-    ) {
-        Scaffold(
-            topBar = {
-                ContenidoSuperiorWithTitle(
-                    drawerState = drawerState,
-                    scope = scope,
-                    navController = navController,
-                    title = "Perfil"
-                )
-            }
-        ) { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+            DrawerContent3(navController, currentRoute)
+        },
+        content = {
+            Scaffold(
+                topBar = {
+                    com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle(
+                        drawerState,
+                        scope,
+                        navController,
+                        "Mi Perfil"
+                    )
+                },
+            ) { paddingValues ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(20.dp)
+                        .verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    val painter = rememberImagePainter(
-                        data = state.image_path,
-                        builder = {
-                            crossfade(true)
-                            placeholder(R.drawable.placeholder)
-                            error(R.drawable.error)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        val painter = rememberImagePainter(
+                            data = state.image_path,
+                            builder = {
+                                crossfade(true)
+                                placeholder(R.drawable.placeholder)
+                                error(R.drawable.error)
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(50.dp))
+
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(150.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    imageUri?.let { uri ->
+                                        viewModelU.updateProfileImage(uri, navController)
+                                    }
+                                },
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Button(onClick = { navController.navigate("edit_image_user_view") }) {
+                            Text("Tomar Imagen")
                         }
+
+                        // Componente para seleccionar una nueva imagen
+                        ImagePicker { uri ->
+                            imageUri = uri
+                            viewModelU.updateProfileImage(uri, navController)
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    ProfileDetailItem(
+                        label = "Nombre",
+                        value = "${state.nombre} ${state.apellido}"
+                    )
+                    ProfileDetailItem(label = "Matrícula", value = state.matricula)
+                    ProfileDetailItem(
+                        label = "Correo Electrónico",
+                        value = state.correo_electronico
+                    )
+                    ProfileDetailItem(label = "Teléfono", value = state.telefono)
+                    ProfileDetailItem(label = "Carrera", value = state.carrera)
+                    ProfileDetailItem(label = "Rol", value = state.id_rol)
+                    ProfileDetailItem(
+                        label = "Fecha de Nacimiento",
+                        value = state.fecha_nacimiento
+                    )
+                    ProfileDetailItem(
+                        label = "Número de Seguro Social",
+                        value = state.num_seguro_social
                     )
 
-                    Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    Image(
-                        painter = painter,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(150.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                imageUri?.let { uri ->
-                                    viewModelU.updateProfileImage(uri, navController)
-                                }
-                            },
-                        contentScale = ContentScale.Crop
-                    )
-
-                    // Componente para seleccionar una nueva imagen
-                    ImagePicker { uri ->
-                        imageUri = uri
-                        viewModelU.updateProfileImage(uri, navController)
+                    Button(
+                        onClick = {
+                            navController.navigate("editar_datos_view")
+                        }
+                    ) {
+                        Text("Editar")
                     }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                ProfileDetailItem(label = "Nombre", value = "${state.nombre} ${state.apellido}")
-                ProfileDetailItem(label = "Matrícula", value = state.matricula)
-                ProfileDetailItem(label = "Correo Electrónico", value = state.correo_electronico)
-                ProfileDetailItem(label = "Teléfono", value = state.telefono)
-                ProfileDetailItem(label = "Carrera", value = state.carrera)
-                ProfileDetailItem(label = "Rol", value = state.id_rol)
-                ProfileDetailItem(label = "Fecha de Nacimiento", value = state.fecha_nacimiento)
-                ProfileDetailItem(label = "Número de Seguro Social", value = state.num_seguro_social)
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Button(
-                    onClick = {
-                        navController.navigate("editar_datos_view")
-                    }
-                ) {
-                    Text("Editar")
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
@@ -160,6 +180,8 @@ fun ImagePicker(
     Button(onClick = { launcher.launch("image/*") }) {
         Text("Seleccionar Imagen")
     }
+
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

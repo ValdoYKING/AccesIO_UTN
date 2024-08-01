@@ -25,6 +25,7 @@ import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
 import com.pixelfusion.accesio_utn.view.EditarDatosView
 import com.pixelfusion.accesio_utn.view.DetailStudentAssistView
+import com.pixelfusion.accesio_utn.view.EditImageUserView
 //import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
@@ -127,6 +128,11 @@ fun MyApp() {
         composable("image_user_view") {
             val viewModel: ImageUserViewModel = viewModel()
             ImageUserView(navController, viewModel)
+        }
+
+        composable("edit_image_user_view") {
+            val viewModel: ImageUserViewModel = viewModel()
+            EditImageUserView(navController, viewModel)
         }
 
         composable("home_user_view") {
