@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
+import com.itextpdf.layout.element.Text
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
@@ -280,17 +281,24 @@ fun MyApp() {
             }
         }
 
-        composable("detail_student_assist/{UidQrAsistencia}") { backStackEntry ->
+        composable("detail_student_assist/{UidQrAsistencia}/{UidUser}") { backStackEntry ->
             val uidStudentAsistencia = backStackEntry.arguments?.getString("UidQrAsistencia")
+            val uidUserStudent = backStackEntry.arguments?.getString("UidUser")
             val DetailStudentAssistViewModel: DetailStudentAssistViewModel = viewModel()
-            if (uidStudentAsistencia != null) {
+
+            if (uidStudentAsistencia != null && uidUserStudent != null) {
                 DetailStudentAssistView(
                     navController,
                     uidStudentAsistencia,
+                    uidUserStudent,
                     DetailStudentAssistViewModel
                 )
+            } else {
+                // Manejar el caso donde los argumentos son nulos
+                Text("Error: No se encontraron detalles de la asistencia.")
             }
         }
+
         /*
         REPORTES: PARA LOS EMPLEADOS
         * */
