@@ -76,7 +76,7 @@ fun MainTemplate(navController: NavController) {
 
                     Button(
                         onClick = {
-                            navController.navigate("home_user_view")
+                            navController.navigate("image_user_view")
                         }
                     ) {
                         Text("Enviar ")
