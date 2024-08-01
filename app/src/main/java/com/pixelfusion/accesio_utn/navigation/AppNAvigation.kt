@@ -2,6 +2,8 @@ package com.pixelfusion.accesio_utn.navigation
 
 import CreateScheduleView
 import EditScheduleView
+import PerfilView
+import UserProfileViewModel
 import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -21,6 +23,7 @@ import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.EditarDatosView
 import com.pixelfusion.accesio_utn.view.DetailStudentAssistView
 //import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
@@ -72,7 +75,6 @@ import com.pixelfusion.accesio_utn.viewmodel.ScanQRAccessViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScanQRLugarViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ScannerViewModel
-import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
 
 @Composable
 fun AppNavigation() {
@@ -145,6 +147,11 @@ fun MyApp() {
         composable("profile_view") {
             val viewModelU: UserProfileViewModel = viewModel()
             PerfilView(navController, viewModelU)
+        }
+
+        composable("editar_datos_view") {
+            val viewModelU: UserProfileViewModel = viewModel()
+            EditarDatosView (navController, viewModelU)
         }
 
         composable("about_view") {

@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.play.services.location)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.room.ktx)
     //kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     kapt(libs.hilt.android.compiler)
     //Retrofit

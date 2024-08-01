@@ -1,54 +1,32 @@
-package com.pixelfusion.accesio_utn.view
-
 import android.annotation.SuppressLint
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
 import com.pixelfusion.accesio_utn.R
-import com.pixelfusion.accesio_utn.components.ContenidoSuperior
 import com.pixelfusion.accesio_utn.components.DrawerContent3
-import com.pixelfusion.accesio_utn.components.TopBarUT
-import com.pixelfusion.accesio_utn.ui.theme.utnGreen
-import com.pixelfusion.accesio_utn.viewmodel.UserProfileViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PerfilView(
@@ -57,9 +35,8 @@ fun PerfilView(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
-    var showDialog by remember { mutableStateOf(false) }
+    val state by viewModelU.stateHome.collectAsState() // Asegúrate de usar StateFlow para observar cambios
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(Unit) {
         viewModelU.fetchData()
@@ -68,94 +45,86 @@ fun PerfilView(
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent3(navController, currentRoute)
+            DrawerContent3(navController, "perfil_view")
         }
     ) {
         Scaffold(
             topBar = {
-                ContenidoSuperior(drawerState, scope, navController)
-            },
-        ) {
+                ContenidoSuperiorWithTitle(
+                    drawerState = drawerState,
+                    scope = scope,
+                    navController = navController,
+                    title = "Perfil"
+                )
+            }
+        ) { paddingValues ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .padding(paddingValues)
                     .padding(20.dp)
-                    .verticalScroll(rememberScrollState()), // Habilitar scroll vertical
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 50.dp), // Aquí puedes cambiar el margen superior
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    val imagePath = viewModelU.stateHome.image_path ?: ""
-                    if (imagePath.isNotEmpty()) {
-                        val imagePainter: Painter = rememberImagePainter(
-                            data = imagePath,
-                            builder = {
-                                crossfade(true)
-                                placeholder(R.drawable.app_fondo)
-                            }
-                        )
+                    val painter = rememberImagePainter(
+                        data = state.image_path,
+                        builder = {
+                            crossfade(true)
+                            placeholder(R.drawable.placeholder)
+                            error(R.drawable.error)
+                        }
+                    )
 
-                        Image(
-                            painter = imagePainter,
-                            contentDescription = "Foto de perfil",
-                            modifier = Modifier
-                                .size(150.dp)
-                                .padding(8.dp), // Aquí puedes cambiar el margen alrededor de la imagen
-                            contentScale = ContentScale.Crop,
-                            alignment = Alignment.Center,
-                        )
+                    Spacer(modifier = Modifier.height(50.dp))
+
+                    Image(
+                        painter = painter,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                imageUri?.let { uri ->
+                                    viewModelU.updateProfileImage(uri, navController)
+                                }
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+
+                    // Componente para seleccionar una nueva imagen
+                    ImagePicker { uri ->
+                        imageUri = uri
+                        viewModelU.updateProfileImage(uri, navController)
                     }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    TopBarUT("Mi Perfil")
                 }
-                Spacer(modifier = Modifier.height(16.dp))
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.Top,
-                    horizontalAlignment = Alignment.Start
-                ) {
-                    ProfileDetailsView(viewModelU)
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
+
+                ProfileDetailItem(label = "Nombre", value = "${state.nombre} ${state.apellido}")
+                ProfileDetailItem(label = "Matrícula", value = state.matricula)
+                ProfileDetailItem(label = "Correo Electrónico", value = state.correo_electronico)
+                ProfileDetailItem(label = "Teléfono", value = state.telefono)
+                ProfileDetailItem(label = "Carrera", value = state.carrera)
+                ProfileDetailItem(label = "Rol", value = state.id_rol)
+                ProfileDetailItem(label = "Fecha de Nacimiento", value = state.fecha_nacimiento)
+                ProfileDetailItem(label = "Número de Seguro Social", value = state.num_seguro_social)
+
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
                     onClick = {
-                        // Acción para cerrar sesión
-                        viewModelU.logout(navController)
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
+                        navController.navigate("editar_datos_view")
+                    }
                 ) {
-                    Text(text = "Cerrar Sesión")
+                    Text("Editar")
                 }
             }
         }
-    }
-}
-
-@Composable
-fun ProfileDetailsView(profileData: UserProfileViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
-        ProfileDetailItem(label = "Nombre", value = "${profileData.stateHome.nombre} ${profileData.stateHome.apellido}")
-        ProfileDetailItem(label = "Matrícula", value = profileData.stateHome.matricula)
-        ProfileDetailItem(label = "Correo Electrónico", value = profileData.stateHome.correo_electronico)
-        ProfileDetailItem(label = "Teléfono", value = profileData.stateHome.telefono)
-        ProfileDetailItem(label = "Carrera", value = profileData.stateHome.carrera)
-        ProfileDetailItem(label = "Rol", value = profileData.stateHome.id_rol)
     }
 }
 
@@ -164,7 +133,7 @@ fun ProfileDetailItem(label: String, value: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp) // Puedes ajustar el padding para separar los elementos
+            .padding(vertical = 8.dp)
     ) {
         Text(
             text = "$label:",
@@ -175,8 +144,42 @@ fun ProfileDetailItem(label: String, value: String) {
         Text(
             text = value,
             fontSize = 16.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold
+            color = Color.Black
         )
     }
+}
+
+@Composable
+fun ImagePicker(
+    onImageSelected: (Uri) -> Unit
+) {
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        uri?.let { onImageSelected(it) }
+    }
+
+    Button(onClick = { launcher.launch("image/*") }) {
+        Text("Seleccionar Imagen")
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ContenidoSuperiorWithTitle(
+    drawerState: DrawerState,
+    scope: CoroutineScope,
+    navController: NavController,
+    title: String
+) {
+    TopAppBar(
+        title = { Text(title) },
+        navigationIcon = {
+            IconButton(onClick = {
+                scope.launch {
+                    drawerState.open()
+                }
+            }) {
+                Icon(Icons.Filled.Menu, contentDescription = null)
+            }
+        }
+    )
 }
