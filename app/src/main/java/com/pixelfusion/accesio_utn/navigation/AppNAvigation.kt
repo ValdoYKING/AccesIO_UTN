@@ -112,7 +112,8 @@ fun MyApp() {
         }
 
         composable("editar_datos_view") {
-            EditarDatosView(navController = navController, viewModelU = UserProfileViewModel())
+            val viewModelU: UserProfileViewModel = viewModel()
+            EditarDatosView (navController, viewModelU)
         }
 
         composable("about_view") {

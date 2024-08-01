@@ -35,6 +35,7 @@ fun PerfilView(
 ) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val state by viewModelU.stateHome.collectAsState() // Asegúrate de usar StateFlow para observar cambios
     var imageUri by remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(Unit) {
@@ -71,7 +72,7 @@ fun PerfilView(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     val painter = rememberImagePainter(
-                        data = viewModelU.stateHome.image_path,
+                        data = state.image_path,
                         builder = {
                             crossfade(true)
                             placeholder(R.drawable.placeholder)
@@ -88,7 +89,6 @@ fun PerfilView(
                             .size(150.dp)
                             .clip(CircleShape)
                             .clickable {
-                                // Seleccionar imagen cuando se hace clic
                                 imageUri?.let { uri ->
                                     viewModelU.updateProfileImage(uri, navController)
                                 }
@@ -105,14 +105,14 @@ fun PerfilView(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                ProfileDetailItem(label = "Nombre", value = viewModelU.stateHome.nombre + " " + viewModelU.stateHome.apellido)
-                ProfileDetailItem(label = "Matrícula", value = viewModelU.stateHome.matricula)
-                ProfileDetailItem(label = "Correo Electrónico", value = viewModelU.stateHome.correo_electronico)
-                ProfileDetailItem(label = "Teléfono", value = viewModelU.stateHome.telefono)
-                ProfileDetailItem(label = "Carrera", value = viewModelU.stateHome.carrera)
-                ProfileDetailItem(label = "Rol", value = viewModelU.stateHome.id_rol)
-                ProfileDetailItem(label = "Fecha de Nacimiento", value = viewModelU.stateHome.fecha_nacimiento)
-                ProfileDetailItem(label = "Número de Seguro Social", value = viewModelU.stateHome.num_seguro_social)
+                ProfileDetailItem(label = "Nombre", value = "${state.nombre} ${state.apellido}")
+                ProfileDetailItem(label = "Matrícula", value = state.matricula)
+                ProfileDetailItem(label = "Correo Electrónico", value = state.correo_electronico)
+                ProfileDetailItem(label = "Teléfono", value = state.telefono)
+                ProfileDetailItem(label = "Carrera", value = state.carrera)
+                ProfileDetailItem(label = "Rol", value = state.id_rol)
+                ProfileDetailItem(label = "Fecha de Nacimiento", value = state.fecha_nacimiento)
+                ProfileDetailItem(label = "Número de Seguro Social", value = state.num_seguro_social)
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -127,6 +127,7 @@ fun PerfilView(
         }
     }
 }
+
 @Composable
 fun ProfileDetailItem(label: String, value: String) {
     Column(
