@@ -43,7 +43,6 @@ import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
 import com.pixelfusion.accesio_utn.view.MyAssistDetailView
 import com.pixelfusion.accesio_utn.view.MyPlaceDetailView
-import com.pixelfusion.accesio_utn.view.PerfilView
 import com.pixelfusion.accesio_utn.view.QrAsistenciaDetailView
 import com.pixelfusion.accesio_utn.view.QrLugarDetailView
 import com.pixelfusion.accesio_utn.view.ScanQRAccessView

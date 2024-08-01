@@ -51,7 +51,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 isLoading = true
-                updateUserInDatabase(navController, updatedData)
+                //updateUserInDatabase(navController, updatedData)
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating user data: ${e.message}")
             } finally {
@@ -65,7 +65,7 @@ class UserProfileViewModel : ViewModel() {
             try {
                 val imageUrl = uploadImageAndGetUrl(uri)
                 Log.d(TAG, "Imagen subida con éxito. URL: $imageUrl")
-                updateUserData(navController, mapOf("image_path" to imageUrl))
+                //updateUserData(navController, mapOf("image_path" to imageUrl))
             } catch (e: Exception) {
                 Log.e(TAG, "Error updating profile image: ${e.message}")
             }
