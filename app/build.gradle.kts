@@ -129,6 +129,10 @@ dependencies {
     //implementation("com.itextpdf:itext7-core:7.2.5")
     implementation(libs.itext7.core)
 
+    implementation(libs.firebase.bom.v3271)
+
+    implementation(libs.google.firebase.firestore)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
