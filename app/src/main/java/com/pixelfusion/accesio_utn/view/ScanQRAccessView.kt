@@ -72,6 +72,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SuperiorData
 import com.pixelfusion.accesio_utn.components.TopBarUT
@@ -179,7 +180,7 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Escanear QR de acceso")
                 },
             ) { paddingValues ->
                 if (hasCameraPermission) {
@@ -192,7 +193,7 @@ fun ScanQRAccessView(navController: NavController, viewModel: ScanQRAccessViewMo
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        TopBarUT("Escanear QR de acceso")
+                        //TopBarUT("Escanear QR de acceso")
                         Spacer(modifier = Modifier.height(16.dp))
                         AndroidView(
                             factory = { previewView },

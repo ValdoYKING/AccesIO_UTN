@@ -47,14 +47,82 @@ class GenerateQrCodeViewModel : ViewModel() {
     // Suggestions lists
     val suggestionsQR = listOf("Asistencia", "Lugar")
     val suggestionsAsistenciaDivision = listOf(
-        "Telematica",
-        "Informatica",
-        "Comercializacion",
-        "Administracion",
-        "Avionatica",
+        "División de Informática y Computación",
+        "División de Gestión de la Producción",
+        "División de Comercialización",
+        "División de Administración",
+        "División de Tecnología Ambiental",
+        "División de Telemática",
+        "División de Aviónica" ,
+        "División de Chimalhuacán"
     )
+    val suggestioncarreras = listOf(
+        "TSU en TI Infraestructura de Redes Digitales",
+        "TSU en TI Desarrollo de Software Multiplataforma",
+        "TSU en Mecatrónica Área Sistemas de Manufactura Flexible",
+        "TSU en Desarrollo de Negocios Área Mercadotecnia",
+        "TSU en Química Área Ambiental",
+        "TSU en TI Entornos Virtuales y Negocios Digitales",
+        "TSU en Administración Área Capital Humano",
+        "TSU en Procesos Industriales Área Manufactura",
+        "TSU en Mantenimiento Aeronáutico Área Aviónica",
+        "ING. EN MECATRÓNICA",
+        "ING. EN TECNOLOGIÁS DE LA PRODUCCIÓN",
+        "ING. EN DESARROLLO Y GESTIÓN DE SOFTWARE",
+        "ING. EN REDES INTELIGENTES Y CIBERSEGURIDAD",
+        "ING. EN ENTORNOS VIRTUALES Y NEGOCIOS",
+        "ING. EN TECNOLOGÍA AMBIENTAL",
+        "LIC. EN GESTIÓN DEL CAPITAL HUMANO",
+        "LIC EN INNOVACIÓN DE NEGOCIOS Y MERCADOTECNIA",
+        "MAESTRÍA EN GESTIÓN E INNOVACIÓN DE LAS ORGANIZACIONES",
+        "MAESTRÍA EN SISTEMAS DE GESTIÓN AMBIENTAL",
+        "MAESTRÍA EN INNOVACIÓN Y NEGOCIOS"
+    )
+
+    val cuatrimestre = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+    val suggestionMateria = mapOf(
+
+        "1" to listOf(
+        "Álgebra Lineal",
+        "Desarrollo de habilidades del pensamiento lógico",
+        "Fundamentos de TI",
+        "Fundamentos de Redes",
+        "Metodología de la Programación",
+        "Inglés I",
+        "Expresión Oral y Escrita I",
+        "Formación Sociocultural I"
+    ),
+
+    "2" to  listOf(
+        "Funciones Matemáticas",
+        "Metodologías y modelado de desarrollo de software",
+        "Interconexión de Redes",
+        "Introducción al diseño digital",
+        "Programación Orientada a Objetos",
+        "Base de datos",
+        "Inglés II",
+        "Formación Sociocultural II"
+    ),
+
+    "3" to  listOf(
+        "Cálculo diferencial",
+        "Sistemas operativos",
+        "Conmutación en redes de datos",
+        "Infraestructura de redesde datos",
+        "Aplicaciones web",
+        "Integradora I",
+        "Inglés III",
+        "Formación Sociocultural III"
+    ),
+    "4" to  listOf("MATERIA 1", "MATERIA 2", "MATERIA 3")
+    )
+
+    fun getMateriasPorCuatrimestre(cuatrimestre: String?): List<String> {
+        return suggestionMateria[cuatrimestre] ?: emptyList()
+    }
+
     val suggestionsAsistenciaDuracion = listOf("1", "2", "3", "4", "5")
-    val suggestionsAsistenciaMateria = listOf("MATERIA 1", "MATERIA 2", "MATERIA 3")
     val suggestionsAsistenciaLugar = listOf("Laboratorio", "Salon")
     val suggestionsLugar = listOf(
         "Edificio",
@@ -63,6 +131,7 @@ class GenerateQrCodeViewModel : ViewModel() {
         "Cubiculo",
         "Otro"
     )
+
     val suggestionsLugarEdificio = listOf(
         "Biblioteca",
         "Servicios escolares",
@@ -75,7 +144,6 @@ class GenerateQrCodeViewModel : ViewModel() {
         "Laboratorio de informatica",
         "Laboratorio de telematica",
     )
-
 
     init {
         auth = FirebaseAuth.getInstance()
@@ -95,13 +163,16 @@ class GenerateQrCodeViewModel : ViewModel() {
         }
     }
 
+
     fun onValueAsistencia(value: String, key: String) {
         when (key) {
             "titulo" -> qrAsistencia = qrAsistencia.copy(titulo = value)
             "duracion" -> qrAsistencia = qrAsistencia.copy(duracion = value)
             "division" -> qrAsistencia = qrAsistencia.copy(division = value)
+            "carrera" -> qrAsistencia = qrAsistencia.copy(carrera = value)
             "materia" -> qrAsistencia = qrAsistencia.copy(materia = value)
             "lugar" -> qrAsistencia = qrAsistencia.copy(lugar = value)
+            "cuatrimestre" -> qrAsistencia = qrAsistencia.copy(cuatrimestre = value)
             "descripcion_lugar" -> qrAsistencia = qrAsistencia.copy(descripcion_lugar = value)
             "fecha" -> qrAsistencia = qrAsistencia.copy(fecha = value)
             "hora" -> qrAsistencia = qrAsistencia.copy(hora = value)

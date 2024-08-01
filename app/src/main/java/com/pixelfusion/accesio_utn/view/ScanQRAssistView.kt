@@ -72,6 +72,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SuperiorData
 import com.pixelfusion.accesio_utn.components.TopBarUT
@@ -205,7 +206,7 @@ fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewMo
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Escanear QR de asistencia")
                 },
             ) { paddingValues ->
                 if (hasCameraPermission) {
@@ -218,7 +219,7 @@ fun ScanQRAssistView(navController: NavController, viewModel: ScanQRAssistViewMo
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        TopBarUT("Escanear QR de asistencia")
+                        //TopBarUT("Escanear QR de asistencia")
                         Spacer(modifier = Modifier.height(16.dp))
                         AndroidView(
                             factory = { previewView },

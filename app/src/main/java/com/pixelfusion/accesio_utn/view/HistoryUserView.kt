@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.AccessUserModel
@@ -72,7 +73,7 @@ fun HistoryUserView(navController: NavController, viewModel: HistoryUserViewMode
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Historial de acceso")
                 },
             ) { paddingValues ->
                 Column(
@@ -83,7 +84,7 @@ fun HistoryUserView(navController: NavController, viewModel: HistoryUserViewMode
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    TopBarUT("Historial de acceso")
+                    //TopBarUT("Historial de acceso")
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         if (isLoadingMyHistory) {
@@ -162,7 +163,7 @@ private fun MyAccessItem(
             leadingContent = {
                 //Spacer(modifier = Modifier.height(14.dp))
                 val imageGenerateQrResource =
-                    if (tipoDeRegistro == "Entrada") R.drawable.login_icon else R.drawable.exit_icon
+                    if (tipoDeRegistro == "Entrada") R.drawable.icono_entrada_green else R.drawable.icono_salida_red
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),
                     contentDescription = "Generar QR lugar",

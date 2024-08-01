@@ -45,6 +45,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUTMedium
 import com.pixelfusion.accesio_utn.ui.theme.GreenSemiDark
@@ -79,7 +80,7 @@ fun MyAccessDetailView(
             Scaffold(
                 topBar = {
                     //SuperiorData(drawerState, scope)
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Detalles de acceso ")
                 },
             ) { paddingValues ->
                 Column(

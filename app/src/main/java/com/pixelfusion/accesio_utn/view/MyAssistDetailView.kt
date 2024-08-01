@@ -48,6 +48,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.components.TopBarUTMedium
@@ -82,7 +83,7 @@ fun MyAssistDetailView(
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Detalles de asistencia")
                 },
             ) { paddingValues ->
                 Column(
@@ -107,9 +108,9 @@ fun MyAssistDetailView(
                             TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.icono_materia_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_materia_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(
@@ -141,9 +142,9 @@ fun MyAssistDetailView(
                                 qrAsistenciaData?.let {
                                     if (it.second.lugar == "Salon") {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_place_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_place_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -159,9 +160,9 @@ fun MyAssistDetailView(
                                         )
                                     } else if (it.second.lugar == "Laboratorio") {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icon_school_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icon_school_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -193,9 +194,9 @@ fun MyAssistDetailView(
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.icono_horafecha_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_horafecha_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(

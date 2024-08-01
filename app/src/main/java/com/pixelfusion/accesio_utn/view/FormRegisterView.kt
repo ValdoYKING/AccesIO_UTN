@@ -32,6 +32,7 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -86,6 +87,7 @@ fun FormRegisterView(
     var passwordVisible by remember { mutableStateOf(false) }
     val state = rememberDatePickerState()
     var expanded by remember { mutableStateOf(false) }
+    var expandedCuatri by remember { mutableStateOf(false) }
     var textfieldSize by remember { mutableStateOf(Size.Zero) }
     val suggestions = listOf(
         "PERSONAL",
@@ -112,6 +114,19 @@ fun FormRegisterView(
         "MAESTRÍA EN GESTIÓN E INNOVACIÓN DE LAS ORGANIZACIONES",
         "MAESTRÍA EN SISTEMAS DE GESTIÓN AMBIENTAL",
         "MAESTRÍA EN INNOVACIÓN Y NEGOCIOS"
+    )
+    val divisiones = listOf(
+        "División de Informática y Computación",
+        "División de Gestión de la Producción",
+        "División de Comercialización",
+        "División de Administración",
+        "División de Tecnología Ambiental",
+        "División de Telemática",
+        "División de Aviónica" ,
+        "División de Chimalhuacán"
+    )
+    val cuatrimestre = listOf(
+        1,2,3,4,5,6,7,8,9,10
     )
     val icon = if (expanded)
         Icons.Filled.KeyboardArrowUp
@@ -340,8 +355,29 @@ fun FormRegisterView(
                             focusManager.moveFocus(
                                 FocusDirection.Down
                             )
-                        })
+                        }),
+                        trailingIcon = {
+                            Icon(icon, "contentDescription",
+                                Modifier.clickable { expandedCuatri = !expandedCuatri })
+                        }
                     )
+                    DropdownMenu(
+                        expanded = expandedCuatri,
+                        onDismissRequest = { expandedCuatri = false },
+                        /*modifier = Modifier
+                            .width(with(LocalDensity.current){textfieldSize.width.toDp()})*/
+                        modifier = Modifier
+                            .width(with(LocalDensity.current) { (textfieldSize.width * 0.9f).toDp() })
+                    ) {
+                        cuatrimestre.forEach { cuatri ->
+                            DropdownMenuItem(
+                                text = { Text(text = cuatri.toString()) },
+                                onClick = {
+                                    viewModel.onValue(cuatri.toString(), "cuatrimestre")
+                                    expandedCuatri = false
+                                })
+                        }
+                    }
                     Spacer(modifier = Modifier.height(8.dp))
                 }
                 if (dataU.carrera.isEmpty()) {

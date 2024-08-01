@@ -61,6 +61,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
@@ -194,7 +195,7 @@ fun ScanQRLugarView(navController: NavController, viewModel: ScanQRLugarViewMode
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Escanear QR de Lugar")
                 },
             ) { paddingValues ->
                 if (hasCameraPermission) {
@@ -207,7 +208,7 @@ fun ScanQRLugarView(navController: NavController, viewModel: ScanQRLugarViewMode
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        TopBarUT("Escanear QR de lugar")
+                        //TopBarUT("Escanear QR de lugar")
                         Spacer(modifier = Modifier.height(16.dp))
                         AndroidView(
                             factory = { previewView },
