@@ -126,6 +126,8 @@ dependencies {
     //print
     //implementation ("androidx.print:print:1.1.0-beta01")
     implementation(libs.androidx.print)
+    //implementation("com.itextpdf:itext7-core:7.2.5")
+    implementation(libs.itext7.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
