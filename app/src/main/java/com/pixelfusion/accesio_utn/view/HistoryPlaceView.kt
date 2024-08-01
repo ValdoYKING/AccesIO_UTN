@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.ScanQrLugarModel
@@ -66,7 +67,7 @@ fun HistoryPlaceView(navController: NavController, viewModel: HistoryPlaceViewMo
             Scaffold(
                 topBar = {
                     //SuperiorData(drawerState, scope)
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Historial de lugares")
                 },
             ) { paddingValues ->
                 Column(
@@ -77,7 +78,7 @@ fun HistoryPlaceView(navController: NavController, viewModel: HistoryPlaceViewMo
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    TopBarUT("Historial de lugares")
+                    //TopBarUT("Historial de lugares")
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         if (isLoadingMyHistoryPlace) {
@@ -161,9 +162,9 @@ private fun MyPlaceItem(
             },
             leadingContent = {
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
+                    R.drawable.icono_place_white
                 } else {
-                    R.drawable.icon_qr_dark
+                    R.drawable.icono_place_dark
                 }
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),

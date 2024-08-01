@@ -58,6 +58,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.SuperiorData
 import com.pixelfusion.accesio_utn.components.TopBarUT
@@ -96,7 +97,7 @@ fun ListQrGenerateView(navController: NavController, viewModel: ListQrGenerateVi
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController,"Mis QR's")
                 },
             ) { paddingValues ->
                 Column(
@@ -107,7 +108,7 @@ fun ListQrGenerateView(navController: NavController, viewModel: ListQrGenerateVi
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    TopBarUT("Mis QR's")
+                    //TopBarUT("Mis QR's")
 
                     // TabRow for switching between lists
                     TabRow(selectedTabIndex = selectedTabIndex) {
@@ -237,9 +238,9 @@ private fun QrAsistenciaItem(
             leadingContent = {
                 Spacer(modifier = Modifier.height(4.dp))
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
+                    R.drawable.icono_materia_white
                 } else {
-                    R.drawable.icon_qr_dark
+                    R.drawable.icono_materia_dark
                 }
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),
@@ -325,9 +326,9 @@ fun QrLugarItem(
             },
             leadingContent = {
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
+                    R.drawable.icono_place_white
                 } else {
-                    R.drawable.icon_qr_dark
+                    R.drawable.icono_place_dark
                 }
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),

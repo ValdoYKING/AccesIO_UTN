@@ -52,6 +52,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.FullScreenQRCodeDialog
 import com.pixelfusion.accesio_utn.components.TopBarUT
@@ -81,10 +82,12 @@ fun QrLugarDetailView(
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(
+                    ContenidoSuperiorWithTitle(
                         drawerState = rememberDrawerState(DrawerValue.Closed),
                         scope = rememberCoroutineScope(),
-                        navController = navController
+                        navController = navController,
+                        title = "QR Lugar"
+
                     )
                 },
             ) { paddingValues ->

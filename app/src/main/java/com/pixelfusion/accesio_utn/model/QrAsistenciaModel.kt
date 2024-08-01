@@ -4,7 +4,9 @@ data class QrAsistenciaModel(
     val titulo: String,
     val duracion: String,
     val division: String,
+    val carrera: String,
     val materia: String,
+    val cuatrimestre: String,
     val lugar: String,
     val fecha: String,
     val hora: String,
@@ -13,5 +15,5 @@ data class QrAsistenciaModel(
     val longitude: Double,
     val descripcion_lugar: String
 ) {
-    constructor() : this("", "", "", "", "", "", "", "", 0.0, 0.0, "")
+    constructor() : this("", "", "", "","", "","", "", "", "", 0.0, 0.0, "")
 }

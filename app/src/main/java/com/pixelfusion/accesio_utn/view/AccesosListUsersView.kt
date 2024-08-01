@@ -152,7 +152,7 @@ private fun ListAccessItem(
             leadingContent = {
                 //Spacer(modifier = Modifier.height(14.dp))
                 val imageGenerateQrResource =
-                    if (tipoDeRegistro == "Entrada") R.drawable.login_icon else R.drawable.exit_icon
+                    if (tipoDeRegistro == "Entrada") R.drawable.icono_entrada_green else R.drawable.icono_salida_red
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),
                     contentDescription = "Generar QR lugar",

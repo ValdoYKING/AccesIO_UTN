@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.model.QrAsistenciaModel
@@ -69,7 +70,7 @@ fun HistoryMyAssistView(navController: NavController, viewModel: HistoryMyAssist
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController,"Historial de asistencia")
                 },
             ) { paddingValues ->
                 Column(
@@ -80,7 +81,7 @@ fun HistoryMyAssistView(navController: NavController, viewModel: HistoryMyAssist
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    TopBarUT("Historial de asistencias")
+                    //TopBarUT("Historial de asistencias")
 
                     Box(modifier = Modifier.fillMaxSize()) {
                         if (isLoadingMyHistoryAssist) {
@@ -164,9 +165,9 @@ private fun MyAssitItem(
             },
             leadingContent = {
                 val imageGenerateQrResource = if (isSystemInDarkTheme()) {
-                    R.drawable.icons8_qr_code_100_l
+                    R.drawable.icono_done_white
                 } else {
-                    R.drawable.icon_qr_dark
+                    R.drawable.icono_done_dark
                 }
                 Image(
                     painter = painterResource(id = imageGenerateQrResource),
