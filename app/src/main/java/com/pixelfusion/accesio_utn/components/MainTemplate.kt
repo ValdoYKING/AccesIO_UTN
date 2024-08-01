@@ -53,8 +53,15 @@ fun MainTemplate(navController: NavController) {
         content = {
             Scaffold(
                 topBar = {
-                    //SuperiorData(drawerState, scope)
-                    ContenidoSuperior(drawerState, scope, navController)
+                    /*Barra de navegacion con icono UTN*/
+                    //ContenidoSuperior(drawerState, scope, navController)
+                    /*Barra de navegacion con titulo*/
+                    ContenidoSuperiorWithTitle(
+                        drawerState,
+                        scope,
+                        navController,
+                        "Agregar titulo superior"
+                    )
                 },
             ) { paddingValues ->
                 Column(
@@ -131,5 +138,28 @@ fun ButtonNext(navController: NavController, route: String){
         }
     ) {
         Text("Volver al menú principal ")
+    }
+}
+
+@Composable
+fun ButtonEdit(navController: NavController, route: String){
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            navController.navigate(route)
+        }
+    ) {
+        Text("Editar horario ")
+    }
+}
+@Composable
+fun ButtonCreateSchedule(navController: NavController, route: String){
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = {
+            navController.navigate(route)
+        }
+    ) {
+        Text("Crear horario ")
     }
 }

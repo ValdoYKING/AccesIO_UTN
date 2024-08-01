@@ -1,12 +1,18 @@
 package com.pixelfusion.accesio_utn.navigation
 
+import CreateScheduleView
+import EditScheduleView
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.firebase.auth.FirebaseAuth
+import com.itextpdf.layout.element.Text
 import com.pixelfusion.accesio_utn.components.SplashScreen
 import com.pixelfusion.accesio_utn.components.StartScreen
 import com.pixelfusion.accesio_utn.helper.PreferenceHelper
@@ -15,6 +21,7 @@ import com.pixelfusion.accesio_utn.view.AccesosListUsersView
 import com.pixelfusion.accesio_utn.view.AccessDetailUserView
 import com.pixelfusion.accesio_utn.view.AsistenciaListAlumnosView
 import com.pixelfusion.accesio_utn.view.CredentialView
+import com.pixelfusion.accesio_utn.view.DetailStudentAssistView
 //import com.pixelfusion.accesio_utn.view.FormHorariosView
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import com.pixelfusion.accesio_utn.view.GenerateQrView
@@ -27,6 +34,7 @@ import com.pixelfusion.accesio_utn.view.HorarioView
 import com.pixelfusion.accesio_utn.view.ImageCamView
 import com.pixelfusion.accesio_utn.view.ImageUserView
 import com.pixelfusion.accesio_utn.view.LegalScreen
+import com.pixelfusion.accesio_utn.view.ListAssistUsersQrView
 import com.pixelfusion.accesio_utn.view.ListQrGenerateView
 import com.pixelfusion.accesio_utn.view.LoginScreen
 import com.pixelfusion.accesio_utn.view.MyAccessDetailView
@@ -42,6 +50,7 @@ import com.pixelfusion.accesio_utn.viewmodel.AccesosListUsersViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AccessDetailUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.AsistenciaListAlumnosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
+import com.pixelfusion.accesio_utn.viewmodel.DetailStudentAssistViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormHorariosViewModel
 import com.pixelfusion.accesio_utn.viewmodel.FormRegisterViewModel
 import com.pixelfusion.accesio_utn.viewmodel.GenerateQrCodeViewModel
@@ -51,6 +60,7 @@ import com.pixelfusion.accesio_utn.viewmodel.HistoryUserViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HomeViewModel
 import com.pixelfusion.accesio_utn.viewmodel.HorarioProfesorViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ImageUserViewModel
+import com.pixelfusion.accesio_utn.viewmodel.ListAssistUsersQrViewModel
 import com.pixelfusion.accesio_utn.viewmodel.ListQrGenerateViewModel
 import com.pixelfusion.accesio_utn.viewmodel.LoginViewModel
 import com.pixelfusion.accesio_utn.viewmodel.MyAccessDetailViewModel
@@ -260,9 +270,45 @@ fun MyApp() {
                 viewModelHistoryPlace
             )
         }
+
+        composable("list_access_users_by_qr/{UidQRAccessUser}") { backStackEntry ->
+            val UidQRAccessUser = backStackEntry.arguments?.getString("UidQRAccessUser")
+            val ListAssistUsersQrViewModel: ListAssistUsersQrViewModel = viewModel()
+            if (UidQRAccessUser != null) {
+                ListAssistUsersQrView(navController, UidQRAccessUser, ListAssistUsersQrViewModel)
+            } else {
+                ListAssistUsersQrView(navController, "", ListAssistUsersQrViewModel)
+            }
+        }
+
+        composable("detail_student_assist/{UidQrAsistencia}/{UidUser}") { backStackEntry ->
+            val uidStudentAsistencia = backStackEntry.arguments?.getString("UidQrAsistencia")
+            val uidUserStudent = backStackEntry.arguments?.getString("UidUser")
+            val DetailStudentAssistViewModel: DetailStudentAssistViewModel = viewModel()
+
+            if (uidStudentAsistencia != null && uidUserStudent != null) {
+                DetailStudentAssistView(
+                    navController,
+                    uidStudentAsistencia,
+                    uidUserStudent,
+                    DetailStudentAssistViewModel
+                )
+            } else {
+                // Manejar el caso donde los argumentos son nulos
+                Text("Error: No se encontraron detalles de la asistencia.")
+            }
+        }
+
         /*
         REPORTES: PARA LOS EMPLEADOS
         * */
 
+        composable("edit_schedule_view") {
+            EditScheduleView(navController)
+        }
+
+        composable("create_schedule_view") {
+            CreateScheduleView(navController)
+        }
     }
 }

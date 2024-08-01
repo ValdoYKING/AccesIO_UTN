@@ -1,29 +1,10 @@
 package com.pixelfusion.accesio_utn.view
 
-import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,134 +13,152 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.pixelfusion.accesio_utn.components.ButtonNext
-import com.pixelfusion.accesio_utn.components.ContenidoSuperior
-import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
-import com.pixelfusion.accesio_utn.components.DrawerContent3
-import org.jetbrains.annotations.Async.Schedule
+import com.google.firebase.firestore.FirebaseFirestore
+import com.pixelfusion.accesio_utn.components.*
+import kotlinx.coroutines.tasks.await
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HorarioView(navController: NavController) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
     val scope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(true) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            //DrawerContent(navController)
             DrawerContent3(navController, currentRoute)
         },
         content = {
-
             Scaffold(
                 topBar = {
-                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Horario")
+                    ContenidoSuperior(drawerState, scope, navController)
                 },
-            ) { paddingValues ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
+                content = { paddingValues ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(paddingValues)
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            ButtonNext(navController, "home_user_view")
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Horario",
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        if (isLoading) {
+                            ButtonCreateSchedule(navController, "create_schedule_view")
+                        }
+                        InfoScheduleStudent(navController)
 
-                    ScheduleStudent()
-                    ButtonNext(navController, "home_user_view")
+                    }
                 }
-
-            }
-
-
+            )
         }
-
     )
 }
 
-
 @Composable
-fun ScheduleStudent() {
-    val daysOfWeek = listOf("Lunes", "Martes", "Miércoles", "Jueves", "Viernes")
-    val dataDays = listOf("Hora", "Materia")
-    // Usar LazyColumn para organizar los días verticalmente y permitir el desplazamiento
-    LazyColumn(
-    ) {
-        items(daysOfWeek) { day ->
-            Text(
-                text = day,
-                modifier = Modifier.padding(4.dp),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+fun InfoScheduleStudent(navController: NavController) {
+    val db = FirebaseFirestore.getInstance()
+    var horarios by remember { mutableStateOf<List<Map<String, Any>>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
 
-            )
-
-            // Dibuja una línea de separación después de cada día
-            HorizontalDivider(
-                thickness = 2.dp, // Puedes cambiar el grosor de la línea aquí
-               //AGREGAR COLOR PRIMARY
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-            // Lista de datos estáticos para cada día
-            Row (    modifier = Modifier
-                .padding(2.dp)
-                .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly) {
-                dataDays.forEach { data ->
-                    Text(
-                        text = data,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.padding(4.dp)
-
-                    )
-                }
-            }
-            InfoScheduleStudent()
+    LaunchedEffect(Unit) {
+        try {
+            val result = db.collection("horarios").get().await()
+            horarios = result.documents.map { it.data ?: emptyMap() }
+            horarios = horarios.groupBy { it["dia"] }.map { entry ->
+                mapOf(
+                    "dia" to entry.key,
+                    "horarios" to entry.value.map { horario ->
+                        mapOf(
+                            "materia" to horario["materia"],
+                            "inicia" to horario["inicia"],
+                            "termina" to horario["termina"]
+                        )
+                    }
+                )
+            } as List<Map<String, Any>>
+            println("Horarios: $horarios")
+            isLoading = false
+        } catch (e: Exception) {
+            println("Error getting documents: $e")
+            isLoading = false
         }
     }
-}
 
+    if (isLoading) {
+        CircularProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+        return
+    }
 
-@Composable
-fun InfoScheduleStudent() {
-    // Lista de horarios estáticos
+    if (horarios.isEmpty() || horarios.all { it.isEmpty() }) {
+        ButtonCreateSchedule(navController, "create_schedule_view")
+        return
+    }
 
-    val scheduleList = listOf(
-        "08:00 - 10:00 Clase de Matemáticas",
-        "10:15 - 12:15 Clase de Física",
-        "12:30 - 14:30 Clase de Química"
-    )
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
 
-
-    // Organizar los horarios verticalmente
-    Column(modifier = Modifier
-        .fillMaxWidth())
-
-    {
-        scheduleList.forEach { schedule ->
-
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+        items(horarios) { horario ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    //Border radius
-                    .padding(2.dp),
-
-            // Opcional: para redondear las esquinas
-                  // Opcional: para llenar todo el ancho disponible
+                    .padding(8.dp)
             ) {
+                Text(
+                    text = horario["dia"].toString(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                //separar por linea cada horario
+                HorizontalDivider(color = Color.Black)
+                Spacer(modifier = Modifier.height(8.dp))
+                (horario["horarios"] as List<Map<String, String>>).forEach { horarioDia ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = horarioDia["materia"].toString(),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "${horarioDia["inicia"]} - ${horarioDia["termina"]}",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                            //buton para agregar horario
 
-                    Text(
-                        text = schedule,
-                        modifier = Modifier.padding(8.dp),
-                        //color = Color.Black // Opcional: cambiar el color del texto
-                    )
+
+                    }
+
+                }
 
             }
+
         }
+
     }
 }

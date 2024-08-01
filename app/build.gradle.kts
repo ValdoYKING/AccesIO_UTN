@@ -57,6 +57,7 @@ dependencies {
     //implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.hilt.android)
     implementation(libs.play.services.location)
+    implementation(libs.firebase.firestore.ktx)
     //kapt("com.google.dagger:hilt-android-compiler:2.51.1")
     kapt(libs.hilt.android.compiler)
     //Retrofit
@@ -126,6 +127,12 @@ dependencies {
     //print
     //implementation ("androidx.print:print:1.1.0-beta01")
     implementation(libs.androidx.print)
+    //implementation("com.itextpdf:itext7-core:7.2.5")
+    implementation(libs.itext7.core)
+
+    implementation(libs.firebase.bom.v3271)
+
+    implementation(libs.google.firebase.firestore)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
