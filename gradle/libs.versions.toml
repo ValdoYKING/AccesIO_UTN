@@ -1,9 +1,12 @@
 [versions]
+accompanistCoilVersion = "0.22.0"
+accompanistPermissionsVersion = "0.22.0"
 agp = "8.5.1"
 animation = "1.6.8"
 barcodeScanning = "17.2.0"
 cameraCamera2 = "1.3.4"
 coilCompose = "2.4.0"
+coilComposeVersion = "2.2.2"
 constraintlayoutCompose = "1.0.1"
 converterGson = "2.11.0"
 core = "3.5.3"
@@ -33,8 +36,12 @@ firebaseAuth = "23.0.0"
 playServicesLocation = "21.3.0"
 firebaseFirestore = "24.0.0"
 firebaseFirestoreKtx = "25.0.0"
+playServicesCastFrameworkVersion = "21.5.0"
+firebaseFirestoreKtxVersion = "25.0.0"
+roomKtxVersion = "2.6.1"
 
 [libraries]
+accompanist-coil = { module = "com.google.accompanist:accompanist-coil", version.ref = "accompanistCoilVersion" }
 androidx-animation = { module = "androidx.compose.animation:animation", version.ref = "animation" }
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCamera2" }
 androidx-camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCamera2" }
@@ -47,10 +54,12 @@ androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", v
 androidx-print = { module = "androidx.print:print", version.ref = "print" }
 barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "barcodeScanning" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+coil-compose-v222 = { module = "io.coil-kt:coil-compose", version.ref = "coilComposeVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 core = { module = "com.google.zxing:core", version.ref = "core" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+google-accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
 firebase-bom-v3271 = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
 google-firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-database = { module = "com.google.firebase:firebase-database" }
