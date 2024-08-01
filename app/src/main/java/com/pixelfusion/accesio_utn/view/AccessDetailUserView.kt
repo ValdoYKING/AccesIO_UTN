@@ -270,9 +270,9 @@ fun AccessDetailUserView(
                             TopBarUTMedium(fechaText)
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.iconodoor_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_door_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(
@@ -299,9 +299,9 @@ fun AccessDetailUserView(
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                    R.drawable.historial_light
+                                    R.drawable.icono_horafecha_white
                                 } else {
-                                    R.drawable.historial_black
+                                    R.drawable.icono_horafecha_dark
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Image(

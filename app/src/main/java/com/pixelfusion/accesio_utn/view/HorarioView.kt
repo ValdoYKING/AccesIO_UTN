@@ -34,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.components.ButtonNext
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import org.jetbrains.annotations.Async.Schedule
 
@@ -55,7 +56,7 @@ fun HorarioView(navController: NavController) {
 
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(drawerState, scope, navController)
+                    ContenidoSuperiorWithTitle(drawerState, scope, navController, "Horario")
                 },
             ) { paddingValues ->
                 Column(
@@ -67,11 +68,7 @@ fun HorarioView(navController: NavController) {
                     verticalArrangement = Arrangement.Top
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Horario",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+
                     ScheduleStudent()
                     ButtonNext(navController, "home_user_view")
                 }

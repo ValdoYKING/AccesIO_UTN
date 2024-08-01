@@ -60,6 +60,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.TopBarUT
 import com.pixelfusion.accesio_utn.helper.getLocation
@@ -89,7 +90,11 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
     var expandedDivision by remember { mutableStateOf(false) }
     var selectedDivision by remember { mutableStateOf<String?>(null) }
     var expandedMateria by remember { mutableStateOf(false) }
-    //var selectedMateria by remember { mutableStateOf<String?>(null) }
+    var selectedMateria by remember { mutableStateOf<String?>(null) }
+    var expandedCarrrera by remember { mutableStateOf(false) }
+    var selectedCarrera by remember { mutableStateOf<String?>(null) }
+    var expandedCuatrimestre by remember { mutableStateOf(false) }
+    var selectedCuatrimestre by remember { mutableStateOf<String?>(null) }
     var expandedLugar by remember { mutableStateOf(false) }
     var selectedLugar by remember { mutableStateOf<String?>(null) }
     var expandedTipoLugar by remember { mutableStateOf(false) }
@@ -100,6 +105,7 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
     //var selectedLugarSalon by remember { mutableStateOf<String?>(null) }
     var expandedLugarLaboratorio by remember { mutableStateOf(false) }
     var selectedLugarLaboratorio by remember { mutableStateOf<String?>(null) }
+    var materias = viewModel.getMateriasPorCuatrimestre(selectedCuatrimestre.toString())
     val locationPermissionRequest = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted: Boolean ->
@@ -135,7 +141,7 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
         drawerContent = { DrawerContent3(navController, currentRoute) },
         content = {
             Scaffold(
-                topBar = { ContenidoSuperior(drawerState, scope, navController) },
+                topBar = { ContenidoSuperiorWithTitle(drawerState, scope, navController, "Generar QR") },
             ) { innerPadding ->
                 Column(
                     modifier = Modifier
@@ -147,7 +153,7 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                     horizontalAlignment = Alignment.CenterHorizontally,
                     //verticalArrangement = Arrangement.Center
                 ) {
-                    TopBarUT("Generar QR")
+                    //TopBarUT("Generar QR")
                     Spacer(modifier = Modifier.height(16.dp))
                     // Tipo de QR
                     ExposedDropdownMenuBox(
@@ -281,20 +287,21 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 }
                             }
                         }
+
                         Spacer(modifier = Modifier.height(8.dp))
-                        // Materia
+                        // carrera
                         ExposedDropdownMenuBox(
-                            expanded = expandedMateria,
-                            onExpandedChange = { expandedMateria = !expandedMateria }
+                            expanded = expandedCarrrera,
+                            onExpandedChange = { expandedCarrrera = !expandedCarrrera }
                         ) {
                             TextField(
-                                //value = selectedMateria ?: "",
-                                value = dataAsistencia.materia,
-                                onValueChange = { viewModel.onValueAsistencia(it, "materia") },
+                                //value = selectedCarrera ?: "",
+                                value = dataAsistencia.carrera,
+                                onValueChange = {  },
                                 readOnly = false,
-                                label = { Text("Materia") },
+                                label = { Text("Carrera") },
                                 placeholder = { Text("Seleccione...") },
-                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedMateria) },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCarrrera) },
                                 modifier = Modifier
                                     .menuAnchor()
                                     .fillMaxWidth(),
@@ -303,22 +310,113 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                 )
                             )
                             ExposedDropdownMenu(
-                                expanded = expandedMateria,
-                                onDismissRequest = { expandedMateria = false },
+                                expanded = expandedCarrrera,
+                                onDismissRequest = { expandedCarrrera = false },
                                 modifier = Modifier
                                     .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
                             ) {
-                                viewModel.suggestionsAsistenciaMateria.forEach { item ->
-                                    var juan = dataAsistencia.materia
+                                viewModel.suggestioncarreras.forEach { item ->
+                                    //var juan = dataAsistencia.carrera
                                     DropdownMenuItem(
                                         text = { Text(text = item) },
                                         onClick = {
-                                            //selectedMateria = item
-                                            juan = item
-                                            viewModel.onValueAsistencia(item, "materia")
-                                            expandedMateria = false
+                                            selectedCarrera = item
+                                            //juan = item
+                                            viewModel.onValueAsistencia(item, "carrera")
+                                            expandedCarrrera= false
                                         }
                                     )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // cuatrimestre
+                        ExposedDropdownMenuBox(
+                            expanded = expandedCuatrimestre,
+                            onExpandedChange = { expandedCuatrimestre = !expandedCuatrimestre }
+                        ) {
+                            TextField(
+                                value = selectedCuatrimestre ?: "",
+                                //value = dataAsistencia.cuatrimestre,
+                                onValueChange = {  },
+                                readOnly = false,
+                                label = { Text("Cuatrimestre") },
+                                placeholder = { Text("Seleccione...") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedCuatrimestre) },
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = TextFieldDefaults.textFieldColors(
+                                    containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                )
+                            )
+                            ExposedDropdownMenu(
+                                expanded = expandedCuatrimestre,
+                                onDismissRequest = { expandedCuatrimestre = false },
+                                modifier = Modifier
+                                    .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                            ) {
+                                viewModel.cuatrimestre.forEach { item ->
+                                    var juan = dataAsistencia.cuatrimestre
+                                    DropdownMenuItem(
+                                        text = { Text(text = item.toString()) },
+                                        onClick = {
+                                            selectedCuatrimestre = item.toString()
+                                            //juan = item.toString()
+                                            viewModel.onValueAsistencia(item.toString(), "cuatrimestre")
+                                            expandedCuatrimestre = false
+                                            selectedMateria = null
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        // Materia
+                        if (selectedCuatrimestre != null) {
+                            ExposedDropdownMenuBox(
+                                expanded = expandedMateria,
+                                onExpandedChange = { expandedMateria = !expandedMateria }
+                            ) {
+                                TextField(
+                                    //value = selectedMateria ?: "",
+                                    value = dataAsistencia.materia,
+                                    onValueChange = { },
+                                    readOnly = false,
+                                    label = { Text("Materia") },
+                                    placeholder = { Text("Seleccione...") },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(
+                                            expanded = expandedMateria
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .menuAnchor()
+                                        .fillMaxWidth(),
+                                    colors = TextFieldDefaults.textFieldColors(
+                                        containerColor = if (isSystemInDarkTheme()) utnGreenDark else utnGreenSuperLight
+                                    )
+                                )
+                                ExposedDropdownMenu(
+                                    expanded = expandedMateria,
+                                    onDismissRequest = { expandedMateria = false },
+                                    modifier = Modifier
+                                        .background(if (isSystemInDarkTheme()) utnGreen else utnGreenLightWhite)
+                                ) {
+                                    materias.forEach { item ->
+                                        var juan = dataAsistencia.materia
+                                        DropdownMenuItem(
+                                            text = { Text(text = item) },
+                                            onClick = {
+                                                //selectedMateria = item
+                                                juan = item
+                                                viewModel.onValueAsistencia(item, "materia")
+                                                expandedMateria = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -641,6 +739,8 @@ fun GenerateQrView(navController: NavController, viewModel: GenerateQrCodeViewMo
                                             && dataAsistencia.materia.isNotEmpty()
                                             && dataAsistencia.lugar.isNotEmpty()
                                             && dataAsistencia.descripcion_lugar.isNotEmpty()
+                                            && dataAsistencia.cuatrimestre.isNotEmpty()
+                                            && dataAsistencia.carrera.isNotEmpty()
                                         ) {
                                             viewModel.registrarQrAsistencia(navController)
                                         } else {

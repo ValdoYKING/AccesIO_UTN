@@ -149,9 +149,9 @@ private fun ListAccessItemUser(
             },
             leadingContent = {
                 val imageListAsistUser = if (isSystemInDarkTheme()) {
-                    R.drawable.icon_qr_dark
+                    R.drawable.icono_check_list_white
                 } else {
-                    R.drawable.icons8_qr_code_100_l
+                    R.drawable.icono_check_list_dark
                 }
                 Image(
                     painter = painterResource(imageListAsistUser),

@@ -59,6 +59,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.ContenidoSuperior
+import com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle
 import com.pixelfusion.accesio_utn.components.DrawerContent3
 import com.pixelfusion.accesio_utn.components.FullScreenQRCodeDialog
 import com.pixelfusion.accesio_utn.components.TopBarUT
@@ -88,10 +89,11 @@ fun QrAsistenciaDetailView(
         content = {
             Scaffold(
                 topBar = {
-                    ContenidoSuperior(
+                    ContenidoSuperiorWithTitle(
                         drawerState = rememberDrawerState(DrawerValue.Closed),
                         scope = rememberCoroutineScope(),
-                        navController = navController
+                        navController = navController,
+                        title = "QR Asistencia"
                     )
                 },
             ) { paddingValues ->
@@ -128,9 +130,9 @@ fun QrAsistenciaDetailView(
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_arena_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_arena_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -145,6 +147,7 @@ fun QrAsistenciaDetailView(
                                             fontSize = 20.sp
                                         )
                                     }
+
                                     Spacer(modifier = Modifier.height(4.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Spacer(modifier = Modifier.width(16.dp))
@@ -157,9 +160,9 @@ fun QrAsistenciaDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icon_school_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icon_school_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -186,9 +189,38 @@ fun QrAsistenciaDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_reloj_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_reloj_dark
+                                        }
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Image(
+                                            painter = painterResource(id = imageHistorialResource),
+                                            contentDescription = "Cuatrimestre",
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(6.dp))
+                                        Text(
+                                            text = "Cuatrimestre",
+                                            //fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                        Text(
+                                            text = asistencia.cuatrimestre,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 20.sp
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        val imageHistorialResource = if (isSystemInDarkTheme()) {
+                                            R.drawable.icono_materia_white
+                                        } else {
+                                            R.drawable.icono_materia_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -215,9 +247,9 @@ fun QrAsistenciaDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_place_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_place_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
@@ -244,9 +276,9 @@ fun QrAsistenciaDetailView(
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         val imageHistorialResource = if (isSystemInDarkTheme()) {
-                                            R.drawable.historial_light
+                                            R.drawable.icono_horafecha_white
                                         } else {
-                                            R.drawable.historial_black
+                                            R.drawable.icono_horafecha_dark
                                         }
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Image(
