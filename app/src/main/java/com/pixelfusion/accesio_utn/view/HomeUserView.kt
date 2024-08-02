@@ -1,6 +1,7 @@
 package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -81,6 +82,10 @@ fun HomeUserView(
     val buttonData = remember { mutableStateListOf<ButtonData>() }
     LaunchedEffect(Unit) {
         viewModelUser.fetchData()
+    }
+    // BackHandler para interceptar el botón de retroceso
+    BackHandler(enabled = true) {
+        showDialog = true
     }
 
     LaunchedEffect(dataH.id_rol) {
@@ -312,22 +317,22 @@ fun HomeUserView(
                                 .align(alignment = Alignment.CenterHorizontally)
                         )
                     } else {
-                        Text(
+                        /*Text(
                             text = "Mi cuenta",
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = dataH.id_rol,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(8.dp))*/
                         Text(
                             text = dataH.nombre + " " + dataH.apellido,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Normal
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = dataH.id_rol,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Medium
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Row(
