@@ -468,10 +468,18 @@ fun FormRegisterView(
             item {
                 Button(
                     onClick = {
+                        // Verificación de campos vacíos
                         if (dataU.nombre.isEmpty() || dataU.apellido.isEmpty() || dataU.matricula.isEmpty() || dataU.carrera.isEmpty() || dataU.correo_electronico.isEmpty()
                             || dataU.fecha_nacimiento.isEmpty() || dataU.contrasena.isEmpty()
                         ) {
                             Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                        } else if (!viewModel.isValidPassword(dataU.contrasena)) {
+                            // Verificación de la contraseña
+                            Toast.makeText(
+                                context,
+                                "La contraseña debe tener al menos 8 caracteres, incluyendo letras y números.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
                             //viewModel.registerUser(navController, context)
                             viewModel.fetchData(navController, context)

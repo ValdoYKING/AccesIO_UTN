@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
@@ -18,6 +19,7 @@ import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.model.UsuarioData
 import com.pixelfusion.accesio_utn.view.FormRegisterView
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class FormRegisterViewModel: ViewModel(){
     var state by mutableStateOf(UsuarioData())
@@ -30,19 +32,6 @@ class FormRegisterViewModel: ViewModel(){
     private val database = Firebase.database.reference
 
     val fecha_creacion = System.currentTimeMillis()
-
-    fun fetchData(navController: NavController, context: Context) {
-        viewModelScope.launch {
-            try {
-                isLoading = true
-                registerUser(navController, context)
-            } catch (e: Exception) {
-                println("Error ${e.message}")
-            } finally {
-                isLoading = false
-            }
-        }
-    }
 
 
     fun onValue(value: String, key: String){
@@ -92,41 +81,82 @@ class FormRegisterViewModel: ViewModel(){
         showDialog = false
     }
 
-    private suspend fun registerUser(navController: NavController, context: Context) {
-        auth = Firebase.auth
-        auth.createUserWithEmailAndPassword(state.correo_electronico, state.contrasena)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Registro exitoso, guarda los datos adicionales en la base de datos
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    user?.let {
-                        val userId = it.uid
-                        database.child("users").child(userId).setValue(state)
-                            .addOnCompleteListener { dbTask ->
-                                if (dbTask.isSuccessful) {
-                                    // Datos guardados exitosamente, navega a la siguiente pantalla
-                                    navController.navigate("legal_screen")
-                                } else {
-                                    Log.w(TAG, "setValue:failure", dbTask.exception)
-                                    Toast.makeText(
-                                        context,
-                                        "Failed to save user data.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                    }
-                } else {
-                    // Si el registro falla, muestra un mensaje al usuario
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+    private suspend fun checkEmailExists(email: String): Boolean {
+        return try {
+            val snapshot =
+                database.child("users").orderByChild("correo_electronico").equalTo(email).get()
+                    .await()
+            snapshot.exists()
+        } catch (e: Exception) {
+            Log.w(TAG, "checkEmailExists:failure", e)
+            false
+        }
+    }
+
+    fun fetchData(navController: NavController, context: Context) {
+        viewModelScope.launch {
+            try {
+                isLoading = true
+                val emailExists = checkEmailExists(state.correo_electronico)
+                if (emailExists) {
                     Toast.makeText(
                         context,
-                        "Authentication failed.",
+                        "El correo ya está registrado. Usa otro correo.",
                         Toast.LENGTH_SHORT
                     ).show()
+                } else {
+                    registerUser(navController, context)
                 }
+            } catch (e: Exception) {
+                println("Error ${e.message}")
+            } finally {
+                isLoading = false
             }
+        }
+    }
+
+    private suspend fun registerUser(navController: NavController, context: Context) {
+        auth = Firebase.auth
+        try {
+            val authResult =
+                auth.createUserWithEmailAndPassword(state.correo_electronico, state.contrasena)
+                    .await()
+            // Registro exitoso, guarda los datos adicionales en la base de datos
+            Log.d(TAG, "createUserWithEmail:success")
+            val user = authResult.user
+            user?.let {
+                val userId = it.uid
+                database.child("users").child(userId).setValue(state)
+                    .addOnCompleteListener { dbTask ->
+                        if (dbTask.isSuccessful) {
+                            // Datos guardados exitosamente, navega a la siguiente pantalla
+                            navController.navigate("legal_screen")
+                        } else {
+                            Log.w(TAG, "setValue:failure", dbTask.exception)
+                            Toast.makeText(context, "Failed to save user data.", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+            }
+        } catch (e: FirebaseAuthUserCollisionException) {
+            // El correo ya está registrado
+            Log.w(TAG, "createUserWithEmail:failure", e)
+            Toast.makeText(
+                context,
+                "El correo ya está registrado. Usa otro correo.",
+                Toast.LENGTH_SHORT
+            ).show()
+        } catch (e: Exception) {
+            // Otra excepción, error general
+            Log.w(TAG, "createUserWithEmail:failure", e)
+            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Función para validar la contraseña
+    fun isValidPassword(password: String): Boolean {
+        val passwordPattern = Regex("^(?=.*[a-zA-Z])(?=.*\\d).{8,}$")
+        return passwordPattern.matches(password)
     }
 
 }
