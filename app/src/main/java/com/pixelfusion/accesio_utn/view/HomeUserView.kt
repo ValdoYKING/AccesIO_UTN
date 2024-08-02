@@ -168,11 +168,6 @@ fun HomeUserView(
                     buttonData.addAll(
                         listOf(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
-                            ButtonData(
-                                "horario_profesor_view",
-                                "HorarioProfesorMenuItem",
-                                navController
-                            ),
                             ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
                             ButtonData("history_user_view", "HistorialMenuItem", navController),
                             ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
