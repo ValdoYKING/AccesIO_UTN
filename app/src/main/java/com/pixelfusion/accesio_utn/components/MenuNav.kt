@@ -212,8 +212,22 @@ fun DrawerContent3(navController: NavController, currentRoute: String?) {
 }
 
 private lateinit var auth: FirebaseAuth
-fun logout(navController: NavController) {
+
+/*fun logout(navController: NavController) {
     auth = Firebase.auth
     auth.signOut()
     navController.navigate("login_screen")
+}*/
+fun logout(navController: NavController) {
+    auth = Firebase.auth
+    auth.signOut()
+
+    // Navegar a la pantalla de inicio de sesión y limpiar la pila de navegación
+    navController.navigate("login_screen") {
+        // Limpiar toda la pila de navegación
+        popUpTo(0) {
+            inclusive = true
+        }
+        launchSingleTop = true
+    }
 }

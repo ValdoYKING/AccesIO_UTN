@@ -4,7 +4,9 @@ import CreateScheduleView
 import EditScheduleView
 import PerfilView
 import UserProfileViewModel
+import android.app.Activity
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -111,9 +113,19 @@ fun MyApp() {
             FormRegisterView(navController, viewModelU)
         }
 
-        composable("login_screen") {
+        /*composable("login_screen") {
             val viewModelUL: LoginViewModel = viewModel()
             LoginScreen(navController, viewModelUL)
+        }*/
+        composable("login_screen") {
+            val viewModelUL: LoginViewModel = viewModel()
+            val activity = (LocalContext.current as? Activity)
+            LoginScreen(navController, viewModelUL)
+
+            // Manejar el botón de retroceso para salir de la aplicación
+            BackHandler {
+                activity?.finish()
+            }
         }
 
         composable("legal_screen") {
