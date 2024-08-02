@@ -6,8 +6,14 @@ data class CredentialModel(
     val matricula : String,
     val id_rol: String,
     val carrera: String,
-    val image_path: String
+    val image_path: String,
+    val num_seguro_social: String?,
+    val telefono: String?
 ){
+
+
+
+
     constructor(): this(
         "",
         "",
@@ -15,6 +21,10 @@ data class CredentialModel(
         "",
         "",
         "",
+        "",
+        "",
+
+
     )
 }
 

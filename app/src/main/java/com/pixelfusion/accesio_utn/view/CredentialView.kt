@@ -66,7 +66,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.pixelfusion.accesio_utn.R

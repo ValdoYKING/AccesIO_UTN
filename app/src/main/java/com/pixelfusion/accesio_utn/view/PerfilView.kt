@@ -2,7 +2,9 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,16 +17,23 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.pixelfusion.accesio_utn.R
 import com.pixelfusion.accesio_utn.components.DrawerContent3
+import com.pixelfusion.accesio_utn.viewmodel.CredentialViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -41,6 +50,38 @@ fun PerfilView(
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
 
+    val rainbowColorsBrush = remember {
+        Brush.sweepGradient(
+            listOf(
+                Color(0xFFFFFFFF),
+                Color(0xFFFCE4EC),
+                Color(0xFFF8BBD0),
+                Color(0xFFF48FB1),
+                Color(0xFFF06292),
+                Color(0xFFEC407A),
+                Color(0xFFE91E63),
+                Color(0xFFD81B60),
+                Color(0xFFC2185B),
+                Color(0xFFAD1457),
+                Color(0xFF880E4F),
+                Color(0xFF6D0A3B),
+                Color(0xFF6D0A3B),
+                Color(0xFF880E4F),
+                Color(0xFFAD1457),
+                Color(0xFFC2185B),
+                Color(0xFFD81B60),
+                Color(0xFFE91E63),
+                Color(0xFFEC407A),
+                Color(0xFFF06292),
+                Color(0xFFF48FB1),
+                Color(0xFFF8BBD0),
+                Color(0xFFFCE4EC),
+                Color(0xFFFFFFFF)
+            )
+        )
+    }
+    val borderWidth = 4.dp
+
     LaunchedEffect(Unit) {
         viewModelU.fetchData()
     }
@@ -53,7 +94,7 @@ fun PerfilView(
         content = {
             Scaffold(
                 topBar = {
-                    com.pixelfusion.accesio_utn.components.ContenidoSuperiorWithTitle(
+                    ContenidoSuperiorWithTitle(
                         drawerState,
                         scope,
                         navController,
@@ -70,45 +111,50 @@ fun PerfilView(
                     verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        val painter = rememberImagePainter(
-                            data = state.image_path,
-                            builder = {
-                                crossfade(true)
-                                placeholder(R.drawable.placeholder)
-                                error(R.drawable.error)
-                            }
+                    val imagePath = state.image_path ?: ""
+                    if (imagePath.isNotEmpty()) {
+                        val imagePainter: Painter = rememberAsyncImagePainter(
+                            ImageRequest.Builder(LocalContext.current).data(data = imagePath)
+                                .apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                    placeholder(R.drawable.app_fondo)
+                                    error(R.drawable.error) // Manejo de error
+                                }).build()
                         )
-
-                        Spacer(modifier = Modifier.height(50.dp))
-
                         Image(
-                            painter = painter,
-                            contentDescription = null,
+                            painter = imagePainter,
+                            contentDescription = "Perfil usuario",
+                            contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(150.dp)
+                                .size(200.dp)
+                                .border(
+                                    BorderStroke(borderWidth, rainbowColorsBrush),
+                                    CircleShape
+                                )
+                                .padding(borderWidth)
                                 .clip(CircleShape)
-                                .clickable {
-                                    imageUri?.let { uri ->
-                                        viewModelU.updateProfileImage(uri, navController)
-                                    }
-                                },
-                            contentScale = ContentScale.Crop
                         )
+                    } else {
+                        Text("No se ha encontrado una imagen de perfil")
+                    }
 
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // Botones para tomar y seleccionar foto
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Button(onClick = { navController.navigate("edit_image_user_view") }) {
                             Text("Tomar Imagen")
                         }
 
-                        // Componente para seleccionar una nueva imagen
                         ImagePicker { uri ->
                             imageUri = uri
                             viewModelU.updateProfileImage(uri, navController)
                         }
                     }
+
 
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -159,12 +205,12 @@ fun ProfileDetailItem(label: String, value: String) {
             text = "$label:",
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
-            color = Color.Black
+
         )
         Text(
             text = value,
             fontSize = 16.sp,
-            color = Color.Black
+
         )
     }
 }
@@ -205,3 +251,5 @@ fun ContenidoSuperiorWithTitle(
         }
     )
 }
+
+
