@@ -1,10 +1,13 @@
 package com.pixelfusion.accesio_utn.view
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,11 +18,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
@@ -27,16 +33,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -116,14 +131,139 @@ fun DetailStudentAssistView(
                         }
 
                         else -> {
+                            val rainbowColorsBrush = remember {
+                                Brush.sweepGradient(
+                                    listOf(
+                                        Color(0xFFFFFFFF),
+                                        Color(0xFFFCE4EC),
+                                        Color(0xFFF8BBD0),
+                                        Color(0xFFF48FB1),
+                                        Color(0xFFF06292),
+                                        Color(0xFFEC407A),
+                                        Color(0xFFE91E63),
+                                        Color(0xFFD81B60),
+                                        Color(0xFFC2185B),
+                                        Color(0xFFAD1457),
+                                        Color(0xFF880E4F),
+                                        Color(0xFF6D0A3B),
+                                        Color(0xFF6D0A3B),
+                                        Color(0xFF880E4F),
+                                        Color(0xFFAD1457),
+                                        Color(0xFFC2185B),
+                                        Color(0xFFD81B60),
+                                        Color(0xFFE91E63),
+                                        Color(0xFFEC407A),
+                                        Color(0xFFF06292),
+                                        Color(0xFFF48FB1),
+                                        Color(0xFFF8BBD0),
+                                        Color(0xFFFCE4EC),
+                                        Color(0xFFFFFFFF)
+                                    )
+
+                                )
+                            }
+                            val borderWidth = 4.dp
                             // Mostrar los datos de asistencia y usuario
                             // Nombre del usuario
                             userDetails?.let { user ->
-                                Text(
-                                    text = "Nombre del usuario: ${user.nombre} ${user.apellido}",
-                                    fontSize = 20.sp,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                OutlinedCard(
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = MaterialTheme.colorScheme.surface.copy(
+                                            alpha = 0.8f
+                                        )
+                                    ),
+                                    border = BorderStroke(
+                                        1.dp,
+                                        if (isSystemInDarkTheme()) Color.White else Color.Black
+                                    ),
+                                    modifier = Modifier.fillMaxWidth(),
+                                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize()
+                                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.8f))
+                                    ) {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize()
+                                                .padding(16.dp),
+                                            horizontalAlignment = Alignment.CenterHorizontally,
+                                            verticalArrangement = Arrangement.SpaceEvenly
+                                        ) {
+                                            // Renderizar la información del usuario
+                                            val imagePath = user.image_path
+                                            if (imagePath.isNotEmpty()) {
+                                                val imagePainter: Painter =
+                                                    rememberAsyncImagePainter(
+                                                        ImageRequest.Builder(LocalContext.current)
+                                                            .data(data = imagePath)
+                                                            .apply(block = fun ImageRequest.Builder.() {
+                                                                crossfade(true)
+                                                                placeholder(R.drawable.app_fondo)
+                                                            }).build()
+                                                    )
+                                                Image(
+                                                    painter = imagePainter,
+                                                    contentDescription = "Perfil usuario",
+                                                    contentScale = ContentScale.Crop,
+                                                    modifier = Modifier
+                                                        .size(150.dp)
+                                                        .border(
+                                                            BorderStroke(
+                                                                borderWidth,
+                                                                rainbowColorsBrush
+                                                            ),
+                                                            CircleShape
+                                                        )
+                                                        .padding(borderWidth)
+                                                        .clip(CircleShape)
+                                                )
+                                            }
+                                            Spacer(modifier = Modifier.height(8.dp))
+                                            Column(
+                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                                            ) {
+                                                /*Text(
+                                                    text = "NOMBRE:",
+                                                    fontSize = 16.sp,
+                                                )*/
+                                                Text(
+                                                    text = user.nombre + " " + user.apellido,
+                                                    fontSize = 18.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                )
+                                                /*Text(
+                                                    text = "Matricula:",
+                                                    fontSize = 16.sp,
+                                                )*/
+                                                Text(
+                                                    text = user.matricula,
+                                                    fontSize = 18.sp,
+                                                    fontWeight = FontWeight.Bold,
+                                                )
+                                                Text(
+                                                    text = user.carrera,
+                                                    fontSize = 16.sp,
+                                                    textAlign = TextAlign.Center,
+                                                    //fontWeight = FontWeight.Bold,
+                                                )
+                                                Text(
+                                                    text = user.id_rol,
+                                                    fontSize = 16.sp,
+                                                    //fontWeight = FontWeight.Bold,
+                                                )
+                                            }
+                                            /*HorizontalDivider(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+                                                thickness = 1.dp
+                                            )*/
+
+                                        }
+                                    }
+                                }
                             } ?: run {
                                 Text(
                                     text = "No se encontró información del usuario.",
