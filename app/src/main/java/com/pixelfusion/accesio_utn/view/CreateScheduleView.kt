@@ -12,10 +12,18 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.pixelfusion.accesio_utn.components.ButtonNext
 import java.util.Locale
+import kotlin.random.Random
+
+
+fun generateUniqueId(): String {
+    return List(10) { Random.nextInt(0, 36).toString(36) }.joinToString("")
+}
 
 @Composable
 fun CreateScheduleView(navController: NavController) {
     val db = FirebaseFirestore.getInstance()
+    var id by remember { mutableStateOf("") }
+
     var dia by remember { mutableStateOf("") }
     var materia by remember { mutableStateOf("") }
     var inicia by remember { mutableStateOf("") }
@@ -111,6 +119,7 @@ fun CreateScheduleView(navController: NavController) {
         Button(
             onClick = {
                 val schedule = hashMapOf(
+
                     "dia" to dia,
                     "materia" to materia,
                     "inicia" to inicia,
@@ -124,6 +133,11 @@ fun CreateScheduleView(navController: NavController) {
                 if(!response ) {
                     return@Button
                 }
+                //crear un id unico para cada horario con una funcion
+                id = generateUniqueId()
+                //agregar el email
+                schedule["email"] = email
+                schedule["id"] = id
                 db.collection("horarios").add(schedule)
                     .addOnSuccessListener {
                         message = "Horario actualizado correctamente"
@@ -150,5 +164,4 @@ fun CreateScheduleView(navController: NavController) {
 
 
 }
-
 
