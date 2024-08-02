@@ -92,7 +92,7 @@ fun FormRegisterView(
     val suggestions = listOf(
         "PERSONAL",
         "ADMINISTRATIVO",
-        "PROFESOR",
+        "DOCENTE",
         "VISITA",
         "TSU en TI Infraestructura de Redes Digitales",
         "TSU en TI Desarrollo de Software Multiplataforma",
@@ -336,7 +336,7 @@ fun FormRegisterView(
                 }
             }
             item {
-                if (dataU.carrera.isNotEmpty() && dataU.carrera != "PERSONAL" && dataU.carrera != "ADMINISTRATIVO" && dataU.carrera != "PROFESOR" && dataU.carrera != "VISITA") {
+                if (dataU.carrera.isNotEmpty() && dataU.carrera != "PERSONAL" && dataU.carrera != "ADMINISTRATIVO" && dataU.carrera != "DOCENTE" && dataU.carrera != "VISITA") {
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = dataU.cuatrimestre,

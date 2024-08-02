@@ -164,7 +164,7 @@ fun HomeUserView(
                     )
                 }
 
-                "PROFESOR" -> {
+                "DOCENTE" -> {
                     buttonData.addAll(
                         listOf(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
