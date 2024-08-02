@@ -92,7 +92,7 @@ fun FormRegisterView(
     val suggestions = listOf(
         "PERSONAL",
         "ADMINISTRATIVO",
-        "PROFESOR",
+        "DOCENTE",
         "VISITA",
         "TSU en TI Infraestructura de Redes Digitales",
         "TSU en TI Desarrollo de Software Multiplataforma",
