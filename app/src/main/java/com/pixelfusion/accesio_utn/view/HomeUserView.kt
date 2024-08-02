@@ -92,7 +92,7 @@ fun HomeUserView(
         buttonData.clear()
         if (buttonData.isEmpty()) {
             when (dataH.id_rol) {
-                "ADMINISTRATIVO" -> {
+                "DEVELOPER" -> {
                     buttonData.addAll(
                         listOf(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
@@ -119,6 +119,34 @@ fun HomeUserView(
                             ButtonData(
                                 "asistencia_list_alumnos_view",
                                 "ListaAsistenciaAlumnos",
+                                navController
+                            ),
+                            ButtonData(
+                                "historial_qr_lugar_view",
+                                "HistorialLugares",
+                                navController
+                            ),
+                            ButtonData(
+                                "accesos_list_users_view",
+                                "ListaAccesosUsuarios",
+                                navController
+                            )
+
+                        )
+                    )
+                }
+                "ADMINISTRATIVO" -> {
+                    buttonData.addAll(
+                        listOf(
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("horario_view", "HorarioMenuItem", navController),
+                            ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
+                            ButtonData("generate_qr_view", "GenerarQRMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData("lista_mi_qr", "ListaQRMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_lugar_view",
+                                "EscanearQRLugarMenuItem",
                                 navController
                             ),
                             ButtonData(
@@ -170,7 +198,8 @@ fun HomeUserView(
                 "VISITA" -> {
                     buttonData.addAll(
                         listOf(
-                            ButtonData("credential_view", "CredencialMenuItem", navController)
+                            ButtonData("credential_view", "CredencialMenuItem", navController),
+                            ButtonData("history_user_view", "HistorialMenuItem", navController),
                         )
                     )
                 }
@@ -181,6 +210,11 @@ fun HomeUserView(
                             ButtonData("credential_view", "CredencialMenuItem", navController),
                             ButtonData("scan_qr_access_view", "EscanearQRMenuItem", navController),
                             ButtonData("history_user_view", "HistorialMenuItem", navController),
+                            ButtonData(
+                                "scan_qr_lugar_view",
+                                "EscanearQRLugarMenuItem",
+                                navController
+                            ),
                             ButtonData(
                                 "historial_qr_lugar_view",
                                 "HistorialLugares",
